@@ -1,0 +1,208 @@
+<script src="https://maps.googleapis.com/maps/api/js?libraries=geometry,marker,drawing&key=***MAPSKEY***"></script>
+
+<script>
+  let drawingManager;
+  let selectedShape;
+  const colour = "#D13800";
+  let selectedColor;
+  let colorButtons = {};
+  let mapMarkers = [];
+
+  function clearSelection() {
+    if (selectedShape) {
+      selectedShape.setEditable(false);
+      selectedShape = null;
+    }
+  }
+
+  const clearMeasurements = (markerShape) => {
+    if (mapMarkers) {
+      const markersOnShape = mapMarkers.filter((m) => m.shape === markerShape);
+      markersOnShape.map((l) => (l.marker.map = null));
+      mapMarkers = mapMarkers.filter((mm) => !markersOnShape.includes(mm));
+    }
+  };
+
+  const setPerimeter = (selection, map) => {
+    clearMeasurements(selection);
+    const path = selection.getPath();
+
+    for (let i = 1; i < path.getLength() + 1; i++) {
+      const v1LatLng = { lat: path.getAt(i - 1).lat(), lng: path.getAt(i - 1).lng() };
+      const v2LatLng = {
+        lat: path.getAt(i == path.getLength() ? 0 : i).lat(),
+        lng: path.getAt(i == path.getLength() ? 0 : i).lng(),
+      };
+
+      const midPoint = google.maps.geometry.spherical.interpolate(v1LatLng, v2LatLng, 0.5);
+      const distanceInM =
+        google.maps.geometry.spherical.computeDistanceBetween(v1LatLng, v2LatLng).toFixed(2) + "m";
+
+      const priceTag = document.createElement("div");
+      priceTag.className = "line-label";
+      priceTag.textContent = distanceInM;
+
+      const marker = new google.maps.marker.AdvancedMarkerElement({
+        map,
+        position: midPoint,
+        content: priceTag,
+      });
+
+      mapMarkers.push({ shape: selection, marker: marker });
+    }
+  };
+
+  function setSelection(shape, map) {
+    clearSelection();
+    selectedShape = shape;
+    shape.setEditable(true);
+    path = shape.getPath();
+
+    const polygonOptions = drawingManager.get("polygonOptions");
+    polygonOptions.fillColor = colour;
+    drawingManager.set("polygonOptions", polygonOptions);
+
+    google.maps.event.addListener(path, "set_at", () => {
+      calcar;
+      setPerimeter(selectedShape, map);
+    });
+    google.maps.event.addListener(path, "insert_at", () => {
+      calcar;
+      setPerimeter(selectedShape, map);
+    });
+  }
+
+  function calcar() {
+    const area = google.maps.geometry.spherical.computeArea(selectedShape.getPath());
+    document.getElementById("area").innerHTML = "Area =" + area.toFixed(2) + "m2";
+  }
+
+  function deleteSelectedShape() {
+    if (selectedShape) {
+      mapMarkers.forEach((marker) => (marker.map = null));
+      document.getElementById("area").innerHTML = null;
+      selectedShape.setMap(null);
+      clearMeasurements(selectedShape);
+    }
+  }
+
+  function initialize() {
+    const map = new google.maps.Map(document.getElementById("map"), {
+      zoom: 7,
+      center: new google.maps.LatLng(52.255, -2.262),
+      mapTypeId: google.maps.MapTypeId.HYBRID,
+      tilt: 0,
+      disableDefaultUI: true,
+      zoomControl: true,
+      mapId: "form_map",
+    });
+
+    const polyOptions = {
+      strokeWeight: 0,
+      fillOpacity: 0.75,
+      fillColor: "#D13800",
+      editable: true,
+    };
+
+    drawingManager = new google.maps.drawing.DrawingManager({
+      drawingMode: google.maps.drawing.OverlayType.POLYGON,
+      markerOptions: {
+        draggable: true,
+      },
+      polylineOptions: {
+        editable: true,
+      },
+      drawingControlOptions: {
+        drawingModes: [google.maps.drawing.OverlayType.POLYGON],
+      },
+      // rectangleOptions: polyOptions,
+      // circleOptions: polyOptions,
+      polygonOptions: polyOptions,
+      map: map,
+    });
+
+    google.maps.event.addListener(drawingManager, "overlaycomplete", function (e) {
+      if (e.type != google.maps.drawing.OverlayType.MARKER) {
+        drawingManager.setDrawingMode(null);
+        const newShape = e.overlay;
+        newShape.type = e.type;
+        google.maps.event.addListener(newShape, "click", function () {
+          setSelection(newShape, map);
+        });
+
+        const area = google.maps.geometry.spherical.computeArea(newShape.getPath());
+        document.getElementById("area").innerHTML = "Area =" + area.toFixed(2) + "m2";
+        setPerimeter(newShape, map);
+        setSelection(newShape, map);
+      }
+    });
+
+    google.maps.event.addListener(drawingManager, "drawingmode_changed", clearSelection);
+    google.maps.event.addListener(map, "click", clearSelection);
+    map.addListener("zoom_changed", () => {
+      const zoom = map.getZoom();
+      if (zoom) {
+        for (let i = 0; i < mapMarkers.length; i++) {
+          mapMarkers[i].marker.map = zoom > 16 ? map : null;
+          mapMarkers[i].marker.content.style.fontSize = zoom / 10 / 2 + "rem";
+        }
+      }
+    });
+    google.maps.event.addDomListener(
+      document.getElementById("delete-button"),
+      "click",
+      deleteSelectedShape
+    );
+  }
+  google.maps.event.addDomListener(window, "load", initialize);
+</script>
+
+<style>
+  html,
+  body {
+    padding: 0;
+    margin: 0;
+    height: 100%;
+  }
+
+  #map {
+    height: 90%;
+  }
+
+  #panel {
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: row;
+    font-size: 13px;
+    margin: 10px;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .line-label {
+    background-color: #d13800;
+    border-radius: 8px;
+    color: #ffffff;
+    font-size: 1rem;
+    padding: 5%;
+    position: relative;
+  }
+
+  .btn {
+    background-color: #d13800;
+    border-radius: 1rem;
+    border: unset;
+    height: 2rem;
+    width: 20%;
+    color: white;
+    cursor: pointer;
+  }
+</style>
+
+<title>Area Calc Tool</title>
+<div id="map"></div>
+<div id="panel">
+  <button id="delete-button" class="btn">Delete</button>
+  <button id="calculate" class="btn" onClick="calcar()">Calculate area</button>
+  <div id="area"></div>
+</div>
