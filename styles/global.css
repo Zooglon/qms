@@ -1,0 +1,11 @@
+.formSelector {
+  transform: scale(1);
+  transition: transform 1s;
+}
+
+.formSelector-active {
+  border-color: #d13800;
+  border-width: 0.5rem;
+  border-style: solid;
+  transform: scale(1.05);
+}
