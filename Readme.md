@@ -12,3 +12,5 @@ Set up subscription product
 Select 3, 5 etc quotes to be returned
 Client radius to see suppliers - or box with 3/6/9/12 etc suppliers
 SEO basics
+
+Form will need email address and phone number adding
