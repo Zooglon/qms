@@ -1,19 +1,20 @@
-# Form Details: 
+# Form Details:
 
 ## Main Parts:
 
 ### Stage - Overview
 
-Check if you're eligible for grant links - popup? 
+Check if you're eligible for grant links - popup?
 
-'All quotes based on a level site, for uneven site or to enquire about groundworks click HERE' 
+'All quotes based on a level site, for uneven site or to enquire about groundworks click HERE'
 
-### Page One - 
+### Page One -
 
-Title: 
+Title:
 Building(?) type
 
 Options:
+
 - Portal Frame (with image)
 - Mono Pitch (with image)
 - Mezzanine Floor (with image)
@@ -22,106 +23,114 @@ Options:
 - Concrete Slabs (with image?)
 - Solar Panels (with image?)
 - Doors
-    - Roller Shutters (with image?)
-    - Personnel doors (with image?)
+  - Roller Shutters (with image?)
+  - Personnel doors (with image?)
 
-### Page Two - 
+### Page Two -
 
 Title:
 What is the shed going to be used for?
 
-Options: 
+Options:
+
 - Commercial
 - General Purpose
-- Grain Store 
+- Grain Store
 - Muck Store
 - Animal Housing
-- Silage Cover 
+- Silage Cover
 - Other (please specify)
 
-### Page Three - 
+### Page Three -
 
 Title:
 Please confirm site is level
 
 Options:
+
 - Yes
 - No
 
-### Stage - Dimensions 
+### Stage - Dimensions
 
-### Page Four - 
+### Page Four -
 
 Title:
 Dimensions
 
 Options:
+
 - Imperial or Metric selector
-- Length 
+- Length
 - Width
 - Height (to eaves)
 - Bay Width
-- Pitch: 
-    - 12.5 degs
-    - 15 degs
-    - 22 degs
-        - Use trigonometery calc
-- Steel options 
-    - Painted
-    - Galvanised
+- Pitch:
+  - 12.5 degs
+  - 15 degs
+  - 22 degs
+    - Use trigonometery calc
+- Steel options
+  - Painted
+  - Galvanised
 
 (include diagram)
 
 ### Stage - Walls
 
-### Page Five - 
+### Page Five -
 
 Title:
-Would you like your shed to have walls?  
+Would you like your shed to have walls?
 
 Options:
+
 - Yes
 - No
-    How many sides will have walls? 
-    - custom entry
+  How many sides will have walls?
+  - custom entry
 
-### Page Six - 
+### Page Six -
 
 Title:
-Wall type 
+Wall type
 
 Options:
-- Concrete Panels
-- Mass(?) concrete 
 
-### Page Seven - 
+- Concrete Panels
+- Mass(?) concrete
+
+### Page Seven -
 
 Title:
 Panel height
 
 Options:
+
 - 1 metre
 - 1.2 metre
 - 1.5 metre
-- Custom entry 
+- Custom entry
 
-### Page Eight - 
+### Page Eight -
 
 Title:
 Panel Width/Thickness
 
 Options:
+
 - 100mm
 - 150mm
 - 200mm
-- Custom entry 
+- Custom entry
 
-### Page Nine - 
+### Page Nine -
 
 Title:
 Panel Height
 
 Options:
+
 - 1
 - 2
 - 3
@@ -130,57 +139,61 @@ Options:
 
 ### Stage - Purlins
 
-### Page Ten - 
+### Page Ten -
 
 Title:
 Purlins (i icon for description?)
 
 Options:
+
 - Timber
 - Zed (Folded Galvanised Steel)
 
 ### Stage - Roof
 
-### Page - 
+### Page -
 
 Title:
 Roof type
 
 Options:
-- Composite (insulated)
-    - 80mm 
-    - 100mm 
-    - 120mm
-- Fiber Cement
-    - Natural Grey
-    - Green (painted)
-    - Brown (painted)
-    - Black (painted)    
-- Box Profile Tin 
-    - Anti-Condensation (fleece lining)
-- Wriggly Tin 
-    - Painted
-    - Plastic Coating    
 
-### Page - 
+- Composite (insulated)
+  - 80mm
+  - 100mm
+  - 120mm
+- Fiber Cement
+  - Natural Grey
+  - Green (painted)
+  - Brown (painted)
+  - Black (painted)
+- Box Profile Tin
+  - Anti-Condensation (fleece lining)
+- Wriggly Tin
+  - Painted
+  - Plastic Coating
+
+### Page -
 
 Title:
 Roof Lights
 
-Options:   
-- Yes 
-    - How many in a bay? 
-        - 1
-        - 2 
-        - custom
-- No 
+Options:
 
-### Page - 
+- Yes
+  - How many in a bay?
+    - 1
+    - 2
+    - custom
+- No
+
+### Page -
 
 Title:
 Ridge Caps
 
 Options:
+
 - Vented
 - Closed
 - Adjustable
@@ -189,132 +202,142 @@ Options:
 
 ### Stage - Doors
 
-### Page - 
+### Page -
 
 Title:
-Will there be any doors? 
+Will there be any doors?
 
 Options:
+
 - Yes
 - No
 
-### Page - 
+### Page -
 
 Title:
 Is the doorway?
 
 Options:
+
 - Gable End
-    - How Many? 
-        - 1
-        - 2
-    - How Wide? 
-    - How High? 
-        - Maximum height? 
-        - Custom input      
+  - How Many?
+    - 1
+    - 2
+  - How Wide?
+  - How High?
+    - Maximum height?
+    - Custom input
 
-### Page - 
-
-Title:
-Personnel door? 
-
-Options:
-- Yes 
-- No 
-
-### Page - 
+### Page -
 
 Title:
-How many? 
+Personnel door?
 
 Options:
+
+- Yes
+- No
+
+### Page -
+
+Title:
+How many?
+
+Options:
+
 - Num input
 
 ### Stage - Cladding
 
-### Page - 
+### Page -
 
 Title:
 Cladding Type
 
 Options:
+
 - Composite
-    - 80mm
-    - 100mm
-    - 120mm
+  - 80mm
+  - 100mm
+  - 120mm
 - Timber
 - Yorkshire Boards
-- Castle Board (Closed Yorkshire Boarding)    
-- Wriggly Tin 
-    - Type 
-        - Box Profile
-        - Vented
-    - Colour [add colour picker]
-        - G/W/G (Green white Green)
-        - Juniper Green
-        - Slate Blue
-        - Brown
-        - Black 
-        - Other (custom input)
-    - Finish 
-        - Painted
-        - Plastic Coated 
+- Castle Board (Closed Yorkshire Boarding)
+- Wriggly Tin
+  - Type
+    - Box Profile
+    - Vented
+  - Colour [add colour picker]
+    - G/W/G (Green white Green)
+    - Juniper Green
+    - Slate Blue
+    - Brown
+    - Black
+    - Other (custom input)
+  - Finish
+    - Painted
+    - Plastic Coated
 
-### Page - 
+### Page -
 
 Title:
 Tecs/Fixings
 
 Options:
+
 - Plain
 - Plasitc Caps
 - Painted
 
 ### Stage - Guttering
 
-### Page - 
+### Page -
 
 Title:
 Gutter
 
 Options:
+
 - Black PVC
 - Glavanised Folded
-    - Plain 
-    - Cladding colour match
+  - Plain
+  - Cladding colour match
 
 ### Stage - Floor
 
-### Page - 
+### Page -
 
 Title:
-Will you be concreting the floor? 
+Will you be concreting the floor?
 
 Options:
-- Yes 
+
+- Yes
 - No
 
-### Page - 
+### Page -
 
 Title:
-Would you like a quote for a concrete floor? 
+Would you like a quote for a concrete floor?
 
 Options:
-- Yes 
+
+- Yes
 - No
 
 ### Stage - Solar Panels
 
-### Page - 
+### Page -
 
 Title:
 Will you want to put solar panels on the roof (now or future)
 
 Options:
-- Yes 
+
+- Yes
 - No
 
-### Page - 
+### Page -
 
 Title:
 Additional Comments
@@ -322,40 +345,43 @@ Additional Comments
 Options:
 free text box
 
-### Page - 
+### Page -
 
 Title:
 Map input
 
 Options:
-- Google maps plugin for location? 
-- Upload pics of site? 
+
+- Google maps plugin for location?
+- Upload pics of site?
 
 ### Stage - Mono Pitch Shed
 
-### Page - 
+### Page -
 
 Title:
-Will this building be? 
+Will this building be?
 
 Options:
+
 - Free Standing
 - Extension of exisitng building (lean to)
 
-### Page - 
+### Page -
 
 Title:
 Dimensions (image)
 
 Options:
-- Metric / Imperial Switch 
-- Length 
+
+- Metric / Imperial Switch
+- Length
 - Height (High Side)
 - Height (Low Side)
-- Width 
+- Width
 - Size of bay
 
-### Page - 
+### Page -
 
 Title:
 Comments
@@ -363,97 +389,106 @@ Comments
 Options:
 placeholder - 'Eg canter lever'
 
-### Page - 
+### Page -
 
 Title:
-If an extension, please give current height to - 
+If an extension, please give current height to -
 
 Options:
-- Top of eaves beam 
-- Size of bar 
+
+- Top of eaves beam
+- Size of bar
 - Size of existing posts
 - Pitch of the roof (if known)
 
 ### Stage - Mezzanine Floor
 
-### Page - 
+### Page -
 
 Title:
 Width of the building
 
 Options:
+
 - Metric / Imperial Switch
 - Width of building (from inside of post to inside of opposite post)
 - Size of the bays
-    - Custom input
+  - Custom input
 - Size of existing posts
-- Are posts in gable? 
-    - Yes 
-    - No
+- Are posts in gable?
+  - Yes
+  - No
 - How many posts to cover
 
-### Page - 
+### Page -
 
 Title:
 Woudl you like it to be?
 
 Options:
-- Clear Span 
-- Support Posts
-    - How high (based on a level floor)
 
-### Page - 
+- Clear Span S
+- Support Posts
+  - How high (based on a level floor)
+
+### Page -
 
 Title:
-What will the building be used for? 
+What will the building be used for?
 
 Options:
+
 - Free text input
 
-### Page - 
+### Page -
 
 Title:
 Purlins
 
 Options:
+
 - Zed (galvanised folded steel)
 - Timber
 - Block and Beam
 
-### Page - 
+### Page -
 
 Title:
 Floor
 
 Options:
+
 - Ply Board
 - Chip Board
-    - 24mm thick 
-    - 32mm thick
+  - 24mm thick
+  - 32mm thick
 
-### Page - 
+### Page -
 
 Title:
 Comments and Floor pic uploads
 
-Options:    
+Options:
+
 - Custom input
 
-### Page - 
+### Page -
 
 Title:
 Hand Rails
 
 Options:
-- Yes
-- No 
 
-### Page - 
+- Yes
+- No
+
+### Page -
 
 Title:
 Floor Access
 
 Options:
+
 - Stairs
 - Ladder
 - Lift
@@ -461,232 +496,246 @@ Options:
 
 ### Stage - Round House
 
-### Page - 
+### Page -
 
 Title:
 Size
 
-Options:
-    - 22m 
-    - 30m
-    - 45m
+Options: - 22m - 30m - 45m
 
 ### Stage - Concrete Slab
 
-### Page - 
+### Page -
 
 Title:
 Agricultural Government Grants May Be Available
 
 Options:
 
-### Page - 
+### Page -
 
 Title:
 Is the site prepared?
 
 Options:
+
 - Yes
 - No
 
-### Page - 
+### Page -
 
 Title:
 Size of the area (use mapping tool)
 
 Options:
+
 - Input in metre squared
 
-### Page - 
+### Page -
 
 Title:
-What is the use of the area when finished? 
+What is the use of the area when finished?
 
 Options:
+
 - Free text input
 
-### Page - 
+### Page -
 
 Title:
 Reinforcement Options
 
 Options:
+
 - Structural Fibres
 - Steel re-inforceing bars/mesh
 
-### Page - 
+### Page -
 
 Title:
 Finish Options
 
 Options:
+
 - Rough Tamp
 - Easy Float
 - Grooved
 - Brushed
 - Patterned (Roller, crazy paving, hex)
-    - Roller
-    - Crazy Paving 
-    - Hex Pattern 
-    - Other (please specify)
+  - Roller
+  - Crazy Paving
+  - Hex Pattern
+  - Other (please specify)
 - Power Float
-    - Frosted Finish
-    - Shiny/Smooth     
+  - Frosted Finish
+  - Shiny/Smooth
 
-### Page - 
+### Page -
 
 Title:
 Additional Comments
 
-Options:    
+Options:  
 placeholder - E.g Inspection pit etc
 
 ### Stage - Solar Panels
 
-### Page - 
+### Page -
 
 Title:
 Government grants maybe available, check link
 
 Options:
+
 - Link for checking grants
 
-### Page - 
+### Page -
 
 Title:
 Roof/Building Dimensions (use mapping tool)
 
 Options:
+
 - Roof Pitch (if known)
 - Bay Size
 - Pic upload box
 
-### Page - 
+### Page -
 
 Title:
-Coverage 
+Coverage
 
 Options:
-- Full Coverage 
+
+- Full Coverage
 - Part Coverage
-- Custom 
-    - Custom input box
+- Custom
+  - Custom input box
 
 ### Stage - Roller Shutter Doors and Personnel Doors
 
-### Page - 
+### Page -
 
 Title:
 New or additional building
 
 Options:
-- New 
+
+- New
 - Additional
 
 ### Stage - Roller Door
 
-### Page - 
+### Page -
 
 Title:
 How wide is the door way?
 
 Options:
+
 - Imperial / Metrix Switch
 - Custom input
 
-### Page - 
+### Page -
 
 Title:
 How high is the door way?
 
 Options:
+
 - Imperial / Metrix Switch
 - Custom input
 
-### Page - 
+### Page -
 
 Title:
 Would you like a bird brush
 
 Options:
+
 - Yes
 - No
 
-### Page - 
+### Page -
 
 Title:
-Power Feed 
+Power Feed
 
 Options:
+
 - Manual
 - Single phase motor (240v)
-- Three phase motor (400v) 
+- Three phase motor (400v)
 
-### Page - 
+### Page -
 
 Title:
 Finish
 
 Options:
+
 - Composite (insulated)
 - Plain Galvanised
 - Coloured to suit the building
-    - Free text input
+  - Free text input
 
 ### Stage - Personnel Door
 
-### Page - 
+### Page -
 
 Title:
 Door Dimensions
 
 Options:
-- Height 
+
+- Height
 - Width
 
-### Page - 
+### Page -
 
 Title:
 Is this an access door?
 
 Options:
-- Yes
-    - How many
-- No 
 
-### Page - 
+- Yes
+  - How many
+- No
+
+### Page -
 
 Title:
 Is this a fire door?
 
 Options:
+
 - Yes
-    - How many
-- No 
+  - How many
+- No
 
-### Stage - Review and confirm 
+### Stage - Review and confirm
 
-### Page - 
+### Page -
 
 Title:
 Personal Details
 
 Options:
+
 - Name
-- Email 
-- Phone Number 
+- Email
+- Phone Number
 
-### Stage - Thank-you and quote number 
+### Stage - Thank-you and quote number
 
-### Page - 
+### Page -
 
 Title:
 Thank-you
 
 Options:
-- Return to homepage 
 
-
+- Return to homepage
 
 FORM PHASE - {
 
@@ -710,34 +759,25 @@ FORM PHASE - {
 
 CONFIRMATION PHASE - {
 
-## Section - Review and confirm 
+## Section - Review and confirm
 
 }
 
 FINAL PHASE - {
 
-## Section - Submission, Thank-you and quote number 
+## Section - Submission, Thank-you and quote number
 
 }
 
+#### Q's for Mat -
 
-
-
-
-
-#### Q's for Mat - 
-
-- Are the 3 roof pitch degrees the only option? Is it worth having another option for 'custom' that leads to 'call to discuss'? 
+- Are the 3 roof pitch degrees the only option? Is it worth having another option for 'custom' that leads to 'call to discuss'?
 - 'Global' metric/imperial switch or per question?
 - Which answers are 'required' and which are 'optional'?
 - Doorway questions bit - i'm not 100%
-- With things like the additional comments box, would this be sent 'as is' with the quotes. 
+- With things like the additional comments box, would this be sent 'as is' with the quotes.
 - I would like the 'am i eligible for grants' bit to be at the end, it could disrupt the flow of the form
-- There seems to be two sections for doors in your notes, can we combine? 
+- There seems to be two sections for doors in your notes, can we combine?
 - Are purlin an option for walls, roof or both?
-- Can a shed be multi type? e.g mono pitched with a mezzanine? 
-- What if I wanted 3 doors of different sizes and placement? 
-
-
-
-
+- Can a shed be multi type? e.g mono pitched with a mezzanine?
+- What if I wanted 3 doors of different sizes and placement?
