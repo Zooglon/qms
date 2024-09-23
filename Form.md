@@ -8,6 +8,7 @@ Building types -
 - Mono Pitch (with image)
 - Mezzanine Floor (with image)
 - Round House (with image)
+- Dutch Barn (with image)
 
   ADDITIONAL OPTIONS -
 
