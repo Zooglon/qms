@@ -261,8 +261,8 @@ Options:
   - 100mm
   - 120mm
 - Timber
-- Yorkshire Boards
-- Castle Board (Closed Yorkshire Boarding)
+  - Yorkshire Boards
+  - Castle Board (Closed Yorkshire Boarding)
 - Wriggly Tin
   - Type
     - Box Profile
