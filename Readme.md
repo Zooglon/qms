@@ -4,17 +4,35 @@ A place to track the different scripts, snippets and general project work for th
 
 <h3>To Do's -</h3>
 
-<ul>
-<li>Client register steps and wiring</li>
-<li>Tooltips in the form</li>
-<li>Sign-up section</li>
-<li>Supplier dashboard</li>
-<li><strike>Set up subscription product</strike></li>
-<li>Select 3, 5 etc quotes to be returned</li>
-<li>Client radius to see suppliers - or box with 3/6/9/12 etc suppliers</li>
-<li>SEO basics</li>
-<li>Terms and conditions for supplier subscription</li>
-<li>Form will need email address and phone number adding</li>
-<li>Use code to 'hide' and collapse all elements before page load for easier editing</li>
-<li>Add a side progress bar</li>
-</ul>
+Client register steps and wiring
+Tooltips in the form
+
+- Supplier plans page - everything is QuoteMyShed.com in the font 'Boogaloo' (spacing 0.03em)
+
+
+
+- Become a supplier button on the main form. 
+- Set up email domain
+- remove measurement units and use '150mm/6"' in the other question options
+- Metric/Imperial at the end of the field - SEE PORTAL FRAME LENGTH 
+- Check quotes are all 3/5/10 for forms
+- Mezz floor, get steel dimensions images from designer - A B and C dimensions
+- Gable, Intermediate posts - pop the beam sizes in and also input images designer is making
+- Terms and conditions and privacy policy 
+- privacy policy notes - we will be sending details to the suppliers on our lists. Wix website standards apply.
+- if mobile, use 'greedy' gesturehandling - NEEDS TESTING
+
+
+
+- let designer know when email domain is live so he can set up - get instagram handle, - facebook 
+
+SEO basics
+Terms and conditions for supplier subscription
+
+Form will need email address and phone number adding
+
+
+
+<h4>Have dones - </h4>
+
+- Site accesbility statement 

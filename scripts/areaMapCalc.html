@@ -1,17 +1,59 @@
 <script src="https://maps.googleapis.com/maps/api/js?libraries=geometry,marker,drawing&key=***MAPSKEY***"></script>
 
 <script>
+  let ev;
   let drawingManager;
   let selectedShape;
-  const colour = "#D13800";
+  const colour = "#ed6a1f";
   let selectedColor;
   let colorButtons = {};
   let mapMarkers = [];
+  let mapMarkersLabels = []
+  let zl = 0;
 
-  function clearSelection() {
+  const clearSelection = () => {
     if (selectedShape) {
       selectedShape.setEditable(false);
       selectedShape = null;
+    }
+  }
+
+  const sendCoords = (path, area) => {
+    const cen = path.getArray().reduce((prev, curr) => prev.extend(curr), new google.maps.LatLngBounds()).getCenter()    
+    const o = ev ? ev.origin : "https://editor.wix.com/"
+
+    const mps = (p) => {
+        let pts = []
+        const arr = p.getArray()                
+        for (let i = 0; i < arr.length; i++) {          
+          pts.push(`${p.getAt(i).lat()},${p.getAt(i).lng()}`)
+        }
+        return pts.join("|")
+    }
+
+    const pt = mps(path)    
+    const mks = `&markers=color:white|size:tiny|${pt}`
+    const lp = `&path=color:red|weight:4|${pt}|${pt.slice(0, pt.indexOf("|"))}`    
+    const c = `center=${cen.lat()},${cen.lng()}`
+    const z = zl ?? 20;    
+    const q = c + "&zoom=" + z + "&size=400x400&maptype=satellite" + lp + mks + "&key=***MAPSKEY***"    
+    const fq = q.replace("|", 	"%7C")
+    const gbUl = `https://maps.googleapis.com/maps/api/staticmap?${fq}`
+
+    const msg = {
+      url: gbUl,
+      area: area,
+      centerLat: cen.lat(), 
+      centerLng: cen.lng(),
+      markers: pt,
+      lens: mapMarkersLabels
+    }
+
+    try {
+      window.parent.postMessage(msg, o);
+    } catch (err) {
+      document.getElementById("areaText").innerHTML = "Error saving area, please try again"
+      console.log("Error connecting to site", err)
     }
   }
 
@@ -38,14 +80,16 @@
       const distanceInM =
         google.maps.geometry.spherical.computeDistanceBetween(v1LatLng, v2LatLng).toFixed(2) + "m";
 
-      const priceTag = document.createElement("div");
-      priceTag.className = "line-label";
-      priceTag.textContent = distanceInM;
+      mapMarkersLabels.push(distanceInM)
+
+      const labelTag = document.createElement("div");
+      labelTag.className = "line-label";
+      labelTag.textContent = distanceInM;
 
       const marker = new google.maps.marker.AdvancedMarkerElement({
         map,
         position: midPoint,
-        content: priceTag,
+        content: labelTag,
       });
 
       mapMarkers.push({ shape: selection, marker: marker });
@@ -73,14 +117,17 @@
   }
 
   function calcar() {
-    const area = google.maps.geometry.spherical.computeArea(selectedShape.getPath());
-    document.getElementById("area").innerHTML = "Area =" + area.toFixed(2) + "m2";
+    const p = selectedShape.getPath()
+    const ar = google.maps.geometry.spherical.computeArea(p);    
+
+    document.getElementById("areaText").innerHTML = !ar ? "Please input a shape" : "Area =" + ar.toFixed(2) + "m2";
+    sendCoords(p, ar)    
   }
 
   function deleteSelectedShape() {
     if (selectedShape) {
       mapMarkers.forEach((marker) => (marker.map = null));
-      document.getElementById("area").innerHTML = null;
+      document.getElementById("areaText").innerHTML = null;
       selectedShape.setMap(null);
       clearMeasurements(selectedShape);
     }
@@ -95,12 +142,13 @@
       disableDefaultUI: true,
       zoomControl: true,
       mapId: "form_map",
+      gestureHandling: "greedy",
     });
 
     const polyOptions = {
       strokeWeight: 0,
       fillOpacity: 0.75,
-      fillColor: "#D13800",
+      fillColor: "#ED6A20",
       editable: true,
     };
 
@@ -114,9 +162,7 @@
       },
       drawingControlOptions: {
         drawingModes: [google.maps.drawing.OverlayType.POLYGON],
-      },
-      // rectangleOptions: polyOptions,
-      // circleOptions: polyOptions,
+      },      
       polygonOptions: polyOptions,
       map: map,
     });
@@ -131,7 +177,7 @@
         });
 
         const area = google.maps.geometry.spherical.computeArea(newShape.getPath());
-        document.getElementById("area").innerHTML = "Area =" + area.toFixed(2) + "m2";
+        document.getElementById("areaText").innerHTML = "Area =" + area.toFixed(2) + "m2";
         setPerimeter(newShape, map);
         setSelection(newShape, map);
       }
@@ -140,8 +186,9 @@
     google.maps.event.addListener(drawingManager, "drawingmode_changed", clearSelection);
     google.maps.event.addListener(map, "click", clearSelection);
     map.addListener("zoom_changed", () => {
-      const zoom = map.getZoom();
-      if (zoom) {
+      const zoom = map.getZoom();      
+      zl = zoom      
+      if (zoom) {        
         for (let i = 0; i < mapMarkers.length; i++) {
           mapMarkers[i].marker.map = zoom > 16 ? map : null;
           mapMarkers[i].marker.content.style.fontSize = zoom / 10 / 2 + "rem";
@@ -154,7 +201,13 @@
       deleteSelectedShape
     );
   }
-  google.maps.event.addDomListener(window, "load", initialize);
+  google.maps.event.addDomListener(window, "load", initialize);  
+
+  window.onmessage = (event) => {    
+    if (event.data) {      
+      ev = event;
+    }
+  };
 </script>
 
 <style>
@@ -165,24 +218,37 @@
     height: 90%;
   }
 
+  #delete-button {
+    border: unset;
+    height: 100%;
+    width: auto;
+    cursor: pointer;
+    background-color: transparent;
+    display: flex;
+    align-items: center;
+    color: #cd0000;
+  }
+
   #map {
     height: 90%;
     width: 90%;
-    margin:auto;
+    margin: auto;
   }
 
-  #panel {
+  .btnContainer {
     font-family: Arial, sans-serif;
     display: flex;
     flex-direction: row;
-    font-size: 13px;
-    margin: 10px;
+    font-size: 1rem;
+    width: 90%;
+    margin: 1rem auto;
     align-items: center;
+    justify-content: space-between;
     gap: 1rem;
   }
 
   .line-label {
-    background-color: #d13800;
+    background-color: #ed6a20;
     border-radius: 8px;
     color: #ffffff;
     font-size: 1rem;
@@ -191,21 +257,36 @@
   }
 
   .btn {
-    background-color: #d13800;
+    background-color: #ed6a20;
+    border: 1px solid #ed6a20;
     border-radius: 1rem;
-    border: unset;
-    height: 2rem;
-    width: 20%;
-    font-size: 80%;
+    font-size: 0.8rem;
     color: white;
     cursor: pointer;
+    padding: 1% 3%;
   }
 </style>
 
 <title>Area Calc Tool</title>
 <div id="map"></div>
-<div id="panel">
-  <button id="delete-button" class="btn">Delete</button>
+<div class="btnContainer">
   <button id="calculate" class="btn" onClick="calcar()">Calculate area</button>
-  <div id="area"></div>
+  <div id="areaText"></div>
+  <button id="delete-button">
+    <strong>Delete</strong>
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      height="2rem"
+      width="2rem"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke-width="1.5"
+      stroke="#cd0000"
+      class="size-6">
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+    </svg>
+  </button>
 </div>
