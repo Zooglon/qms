@@ -45,7 +45,7 @@ export const invoke = async ({ payload }) => {
 
       try {
         const results = await wixData.insert("SupplierList", insertObj);
-        console.log("Supplier plan added successfully", results._id); // Log the ID of the inserted item
+        console.log("Supplier plan added successfully", results._id); 
       } catch (error) {
         console.error("Error inserting data:", error);        
       }
