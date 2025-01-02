@@ -21,26 +21,30 @@ async function getPostcodeData(postcode) {
   return res
   }
 
+  const isValidPostcode = (i) =>
+    /[a-zA-Z]{1,2}[0-9]{1,2}[a-zA-Z]{0,1} ?[0-9][a-zA-Z]{2}/i.test(i.replace(/\s/g, ""));
+
 export const invoke = async ({ payload }) => {
-    // const postCode = payload.contact.address.postalCode
-    const postCode = "st16 1ld"    
-    // Insert the customer data into our site collection
-    // of contact data for plan purchasers
+  console.log("PL", payload)
+    const pc = payload.contact.address.postalCode        
     
-    if (/^[A-Z]{1,2}[0-9]{1,2}[A-Z]{0,1} ?[0-9][A-Z]{2}$/i.test(postCode.replace(/\s/g, ""))) {
-     const coords = await getPostcodeData(postCode)
+    if (isValidPostcode(pc)) {
+     const coords = await getPostcodeData(pc)
       
       if (coords) {     
       const insertObj = {
         supplierName: payload.contact.company ?? `${payload.contact.name.first} ${payload.contact.name.last}`,
+        emailAddress: payload.contact.emailAddres,
         planId: payload.plan_id,
         isActive: true,
+        quoteTypesProvided: "",
         address: payload.contact.address,    
-        postcode: postCode,
+        postcode: pc,
         longitude: coords.lng,
         latitude: coords.lat,
         subscriptionDate: new Date(payload.plan_start_date).toLocaleDateString('en-GB'),
         subscriptionEndDate: new Date(payload.plan_start_date.replace(/\d\d$/, (Number(payload.plan_start_date.slice(-2)) + 1))).toLocaleDateString('en-GB'),
+        agreesToMarketing: true,
       };      
 
       try {
