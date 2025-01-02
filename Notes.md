@@ -781,3 +781,17 @@ FINAL PHASE - {
 - Are purlin an option for walls, roof or both?
 - Can a shed be multi type? e.g mono pitched with a mezzanine?
 - What if I wanted 3 doors of different sizes and placement?
+
+
+
+
+
+
+
+#### Postcode actions - 
+
+- get lat/lng for all suppliers - run an automation when they set up a supplier account? 
+- if supplier changes address - update field? 
+- Add supplier quote type 
+
+- calculate distance to every supplier when form is submitted - maybve build in some sort of 'start with city/county/region' for better performance?
