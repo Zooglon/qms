@@ -30,6 +30,8 @@ async function getSuppliersCollection() {
         // const retrievedCollection = await collections.getDataCollection(cn);
         const retrievedCollection = await wixData
             .query(cn)
+            .eq("isActive", true)
+            .limit(1000)
             .find()
             .then((results) => results.items);
         return retrievedCollection;
