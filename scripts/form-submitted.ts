@@ -3,116 +3,149 @@
  * @param {import('./__schema__.js').Payload} options
  */
 
+import { triggeredEmails } from "wix-crm-backend";
 import { fetch } from "wix-fetch";
 import wixData from "wix-data";
 
+const distanceInMetres = (lng1, lat1, lng2, lat2) => {
+  const er = 6371e3;
+  const l1 = (lat1 * Math.PI) / 180;
+  const l2 = (lat2 * Math.PI) / 180;
+  const clat = ((lat2 - lat1) * Math.PI) / 180;
+  const clng = ((lng2 - lng1) * Math.PI) / 180;
 
-const distanceInMetres = (lng1, lat1, lng2, lat2) => {    
-    const er = 6371e3;
-    const l1 = lat1 * Math.PI / 180;
-    const l2 = lat2 * Math.PI / 180;
-    const clat = (lat2 - lat1) * Math.PI / 180;
-    const clng = (lng2 - lng1) * Math.PI / 180;
-
-    const a = Math.sin(clat / 2) * Math.sin(clat / 2) +
-        Math.cos(l1) * Math.cos(l2) *
-        Math.sin(clng / 2) * Math.sin(clng / 2);
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    // distance in metres
-    const d = er * c;
-    return d
-}
+  const a =
+    Math.sin(clat / 2) * Math.sin(clat / 2) +
+    Math.cos(l1) * Math.cos(l2) * Math.sin(clng / 2) * Math.sin(clng / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  // distance in metres
+  const d = er * c;
+  return d;
+};
 
 async function getSuppliersCollection() {
-    const cn = "SupplierList";
-
-    try {
-        // const retrievedCollection = await collections.getDataCollection(cn);
-        const retrievedCollection = await wixData
-            .query(cn)
-            .eq("isActive", true)
-            .limit(1000)
-            .find()
-            .then((results) => results.items);
-        return retrievedCollection;
-    } catch (error) {
-        console.log(`Error could not find collection ${cn}, details-\n${error}`);
-    }
+  const cn = "SupplierList";
+  try {
+    // const retrievedCollection = await collections.getDataCollection(cn);
+    const retrievedCollection = await wixData
+      .query(cn)
+      .eq("isActive", true)
+      .limit(1000)
+      .find()
+      .then((results) => results.items);
+    return retrievedCollection;
+  } catch (error) {
+    console.log(`Error could not find collection ${cn}, details-\n${error}`);
+  }
 }
 
 async function getPostcodeData(postcode) {
-    const url = `https://api.postcodes.io/postcodes/${postcode}`;
-    const res = fetch(url, { method: "get" })
-        .then((httpResponse) => {
-            if (httpResponse.ok) {
-                return httpResponse.json();
-            } else {
-                return Promise.reject("Error, failed to fetched valid postcode");
-            }
-        })
-        .then((json) => ({ lat: json.result.latitude, lng: json.result.longitude }))
-        .catch((err) => console.log(err));
+  const url = `https://api.postcodes.io/postcodes/${postcode}`;
+  const res = fetch(url, { method: "get" })
+    .then((httpResponse) => {
+      if (httpResponse.ok) {
+        return httpResponse.json();
+      } else {
+        return Promise.reject("Error, failed to fetched valid postcode");
+      }
+    })
+    .then((json) => ({ lat: json.result.latitude, lng: json.result.longitude }))
+    .catch((err) => console.log(err));
 
-    return res;
+  return res;
 }
 
-async function sendSupplierEmail(supplier) {
-    // Send email to supplier
-    console.log("Not yet implemented, sending email to", supplier.emailAddress);
+async function sendSupplierEmail(supplier, options) {
+  const emailOptions = {
+    variables: {
+      supplierName: supplier.supplierName,
+      ...options,
+    },
+  };
+  const emailId = "new_form_submission";
+  const contactId = supplier.contactId;
+
+  // Send email to supplier
+  triggeredEmails
+    .emailContact(emailId, contactId, emailOptions)
+    .then(() => {
+      console.log(`Email was sent to contact ${supplier.supplierName}: ${supplier.emailAddress}`);
+    })
+    .catch((error) => {
+      console.log(
+        `Error sending email to contact ${supplier.supplierName}: ${supplier.emailAddress}, details-\n${error}`
+      );
+    });
 }
+
+const stringifyForm = (form) => {
+  const fieldsToIgnore = ["How many quotes would you like to receive?"];
+  return form.submissions
+    .filter((s) => !fieldsToIgnore.includes(s.label))
+    .map((field) => `\n\n${field.label} -\n${field.value}`)
+    .join("");
+};
 
 const isValid = (i) =>
-    /[a-zA-Z]{1,2}[0-9]{1,2}[a-zA-Z]{0,1} ?[0-9][a-zA-Z]{2}/i.test(i.replace(/\s/g, ""));
+  /[a-zA-Z]{1,2}[0-9]{1,2}[a-zA-Z]{0,1} ?[0-9][a-zA-Z]{2}/i.test(i.replace(/\s/g, ""));
 
-export const invoke = async ({ payload }) => {    
+export const invoke = async ({ payload }) => {
+  // Get postcode of quote site
+  const form = payload;
+  const sa = form["field:site_address_multi"];
+  let pc = sa.match(/[a-zA-Z]{1,2}[0-9]{1,2}[a-zA-Z]{0,1} ?[0-9][a-zA-Z]{2}/g)[0];
+  const qn = form.formName.toLowerCase().includes("round house")
+    ? 1
+    : form["field:number_of_quotes"];
 
-    // Get postcode of quote site
-    const form = payload;
-    const sa = form["field:site_address_multi"];
-    let pc = sa.match(/[a-zA-Z]{1,2}[0-9]{1,2}[a-zA-Z]{0,1} ?[0-9][a-zA-Z]{2}/g)[0];    
-    // pc = pc[0];    
-    const qn = form.formName.toLowerCase().includes("round house")
-        ? 1
-        : form["field:number_of_quotes"];
+  // Get coords of postcode
+  const pcc = await getPostcodeData(pc);
+  // Test postcode is valid
+  if (!pc || !isValid(pc) || !pcc) {
+    return {};
+  }
+  // Get supplier collection
+  const sl = await getSuppliersCollection();
+  // Format form name
+  let ffn = form.formName.includes("Shed Quote Form - ")
+    ? form.formName.replace("Shed Quote Form - ", "")
+    : form.formName;
 
-   
+  const fnt =
+    !ffn.toLowerCase().includes("solar") && !ffn.toLowerCase().includes("roller") ? "Building" : "";
 
-    // Get coords of postcode
-    const pcc = await getPostcodeData(pc);
-     // Test postcode is valid
-    if (!pc || !isValid(pc) || !pcc) {
-        return {}
+  // Filter suppliers by active status and same quotation type
+  const fsl = sl.filter((s) => s.isActive && s.quoteTypesProvided.includes(ffn));
+
+  // Sort suppliers by distance
+  const ssl = fsl
+    .map((s) => ({
+      dist: distanceInMetres(pcc.lat, pcc.lng, s.latitude, s.longitude),
+      supplier: s,
+    }))
+    .sort((a, b) => a.dist - b.dist);
+
+  // Send email to each supplier with quote details
+  for (let i = 0; i <= (qn >= ssl.length ? ssl.length : qn) - 1; i++) {
+    const emailOptions = {
+      submittedName: form.contact.name.first + " " + form.contact.name.last,
+      submittedType: `New ${ffn} ${fnt}`,
+      submittedDistance: Math.trunc(ssl[i].dist / 1000),
+      formDetails: stringifyForm(form),
+    };
+
+    try {
+      sendSupplierEmail(ssl[i].supplier, emailOptions);
+    } catch (error) {
+      console.log(
+        `Error sending email to supplier: ${ssl[i].supplier.supplierName}\n`,
+        error.message
+      );
     }
-    // Get supplier collection
-    const sl = await getSuppliersCollection();
-    // Format form name
-    let ffn = (
-        form.formName.includes("Shed Quote Form - ")
-            ? form.formName.replace("Shed Quote Form - ", "")
-            : "concreteSlab"
-    ).replace(/\s/gi, "");
+  }
 
-    ffn = ffn.replace(/^.{1}/g, ffn[0].toLowerCase());
-    // Filter suppliers by active status and same quotation type
-    const fsl = sl.filter((s) => s.isActive && s.quoteTypesProvided.includes(ffn));
-
-    // Sort suppliers by distance
-    const ssl = fsl.map((s) => ({
-        dist: distanceInMetres(pcc.lat, pcc.lng, s.latitude, s.longitude),
-        supplier: s
-    })).sort((a, b) => a.dist - b.dist)
-    
-    // Send email to each supplier with quote details
-    for (let i = 0; i <= ((qn >= ssl.length ? ssl.length : qn) -1); i++) {
-        const sn = ssl[i].supplier.supplierName;
-        try {
-            sendSupplierEmail(ssl[i].supplier);
-        } catch (error) {
-            console.log(`Error sending email to supplier: ${sn}\n`, error.message);
-        }
-    }
-
-    return {}; // The function must return an empty object, do not delete
+  // The function must return an empty object, do not delete
+  return {};
 };
 
 // Get postcodes from supplier collection
@@ -352,7 +385,7 @@ export const invoke = async ({ payload }) => {
 //   "formId": "93553a26-2cd3-46d0-9833-8f5e59bd36fc"
 // }
 
-// SupplierLisy paylod
+// SupplierList paylod
 // [
 //     {
 //         "subscriptionEndDate": "12/10/2021",
