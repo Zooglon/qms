@@ -2,6 +2,7 @@
 
 <script>
   let ev;
+  let key;
   let drawingManager;
   let selectedShape;
   const colour = "#ed6a1f";
@@ -36,7 +37,7 @@
     const lp = `&path=color:red|weight:4|${pt}|${pt.slice(0, pt.indexOf("|"))}`    
     const c = `center=${cen.lat()},${cen.lng()}`
     const z = zl ?? 20;    
-    const q = c + "&zoom=" + z + "&size=400x400&maptype=satellite" + lp + mks + "&key=***MAPSKEY***"    
+    const q = c + "&zoom=" + z + "&size=400x400&maptype=satellite" + lp + mks + `&key=${key}`    
     const fq = q.replace("|", 	"%7C")
     const gbUl = `https://maps.googleapis.com/maps/api/staticmap?${fq}`
 
@@ -204,8 +205,9 @@
   google.maps.event.addDomListener(window, "load", initialize);  
 
   window.onmessage = (event) => {    
-    if (event.data) {      
-      ev = event;
+    if (event.data) {            
+      let key = event.data
+      ev = event;      
     }
   };
 </script>
@@ -213,9 +215,14 @@
 <style>
   html,
   body {
-    padding: 5px 0px;
+    padding: 5px 5px;
     margin: 0;
-    height: 90%;
+    height: 95%;    
+  }
+
+  body {
+    display: flex;
+    flex-direction: column;    
   }
 
   #delete-button {
@@ -230,8 +237,8 @@
   }
 
   #map {
-    height: 90%;
-    width: 90%;
+    height: 100%;
+    width: 100%;
     margin: auto;
   }
 
@@ -241,10 +248,10 @@
     flex-direction: row;
     font-size: 1rem;
     width: 90%;
-    margin: 1rem auto;
+    margin: 1rem auto 0rem;
     align-items: center;
     justify-content: space-between;
-    gap: 1rem;
+    gap: 1rem;    
   }
 
   .line-label {
