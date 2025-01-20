@@ -19,7 +19,6 @@ FORM -
 - change mm to m in all dimensions except post dimensions
 - change 'floor image upload' to be image/video in name (see mono pitch)
 - ALL BUILDINGS WITH CLADDING add question in cladding - 'Cladding height (starting at roof going down)'
-- change mm to m
 - please note, building height is relative to top of posts, not inlcuding roof space and any cantilevers (rewrite needed)
 - grey out rather than hide next button
 - Option for colour picker/palet - maybe link to new tab? or add in with building image?
@@ -66,18 +65,20 @@ NOTES/COSTS -
 - Terms and conditions and privacy policy
 - Set up contact us page
 - Form will need email address and phone number adding
-- Become a supplier button on the main form.
 - if mobile, use 'greedy' gesturehandling - NEEDS TESTING
 - Site accesbility statement
 - Metric/Imperial at the end of the field - SEE Concrete Sl LENGTH
 - remove measurement units and use '150mm/6"' in the other question options
 - Check quotes are all 3/5/10 for forms
+- Become a supplier button on the main form.
+- restart form button on page
+- bug - why does concrete slab not reset the form - FIXED
+- All intro and completion text in for the building quotes
+
+<h4>END Have dones - </h4>
 
 from 18th Jan list -
 
--- restart form button on page
--- bug - why does concrete slab not reset the form - FIXED
--- All buildings except mezz floor and concrete slab -
 [
 Government grants are available, to check you availability click here:
 https://www.gov.uk/find-funding-for-land-or-farms
@@ -113,8 +114,6 @@ Labour supplier No list -
 
 notes -
 
-- Roller shutter and solar panel forms are ONLY in repair replace
-
 - include quote for concrete floor - send to groundworkers
 
 - set up 'groundworks (earth)' and 'groundworks (concrete)' as supplier option
@@ -143,9 +142,9 @@ Repair replace, different boxes -
 - dismantle section
 - re-roof - just roof section - existing size and quantities of sheets? Solar options?
 - guttering - new form
-- solar panels - form
 - cladding - just cladding from mono pitch example
 - Walls - just walls for now
+- solar panels - form
 - roller shutter doors - form
 
 - for guttering, more interactive pictures? Click on your guttering to choose. all dimentions in MM
