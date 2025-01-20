@@ -92,6 +92,7 @@ const isValid = (i) =>
 export const invoke = async ({ payload }) => {
   // Get postcode of quote site
   const form = payload;
+
   const sa = form["field:site_address_multi"];
   let pc = sa.match(/[a-zA-Z]{1,2}[0-9]{1,2}[a-zA-Z]{0,1} ?[0-9][a-zA-Z]{2}/g)[0];
   const qn = form.formName.toLowerCase().includes("round house")
@@ -127,8 +128,8 @@ export const invoke = async ({ payload }) => {
 
   // Send email to each supplier with quote details
   for (let i = 0; i <= (qn >= ssl.length ? ssl.length : qn) - 1; i++) {
-    const emailOptions = {
-      submittedName: form.contact.name.first + " " + form.contact.name.last,
+    const emailOptions = {      
+      submittedName: form.submissions.filter((f) => f.label.toLowerCase() === "first name")[0].value + " " + form.submissions.filter((f) => f.label.toLowerCase() === "last name")[0].value,      
       submittedType: `New ${ffn} ${fnt}`,
       submittedDistance: Math.trunc(ssl[i].dist / 1000),
       formDetails: stringifyForm(form),
