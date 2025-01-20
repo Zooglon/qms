@@ -11,19 +11,18 @@ FRONTEND -
 - MAP -
   - Full screen the map? especially on mobile - check google maps options
   - Auto add dimensions when you draw a line not just the shape.
+- Maybe set up redirect page? 
 
 FORM -
 
 - Add repair/replace options
 - Review rules - grey out options?
-- change mm to m in all dimensions except post dimensions
-- change 'floor image upload' to be image/video in name (see mono pitch)
 - ALL BUILDINGS WITH CLADDING add question in cladding - 'Cladding height (starting at roof going down)'
 - please note, building height is relative to top of posts, not inlcuding roof space and any cantilevers (rewrite needed)
 - grey out rather than hide next button
 - Option for colour picker/palet - maybe link to new tab? or add in with building image?
 - MONO - cantilver - add question 'is this on the high or low side?'
-- Door sections in all forms to match mono pitch
+- Door sections in all forms to match mono pitch - make sure 'm' is on door measurements
 - All intro and completion text in for the repair/replace
 
 BACKEND -
@@ -59,7 +58,10 @@ NOTES/COSTS -
 <br/>
 <h4>Have dones - </h4>
 
+- Mezzanine height option, add m/ft 
+- change 'floor image upload' to be image/video in name (see mono pitch)
 - let designer know when email domain is live so he can set up - get instagram handle, - facebook
+- change mm to m in all dimensions except post dimensions
 - Site accesbility statement
 - Check quotes are all 3/5/10 for forms
 - Terms and conditions and privacy policy
@@ -73,13 +75,7 @@ NOTES/COSTS -
 - Become a supplier button on the main form.
 - restart form button on page
 - bug - why does concrete slab not reset the form - FIXED
-- All intro and completion text in for the building quotes
-
-<h4>END Have dones - </h4>
-
-from 18th Jan list -
-
-[
+- All intro and completion text in for the building quotes [
 Government grants are available, to check you availability click here:
 https://www.gov.uk/find-funding-for-land-or-farms
 
@@ -94,6 +90,10 @@ https://www.gov.uk/find-funding-for-land-or-farms
 -- text around the number of quotes like 'the average time to quote depends on the complexity of your quote but is usually a maximum of 4 weeks'.
 -- Ensure all but concrete slab and mezz floor have the grant text added
 -- Update form completon text
+
+<h4>END Have dones - </h4>
+
+from 18th Jan list -
 
 Repair/replace option -
 
