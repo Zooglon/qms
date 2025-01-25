@@ -20,31 +20,31 @@
   }
 
   const sendCoords = (path, area) => {
-    const cen = path.getArray().reduce((prev, curr) => prev.extend(curr), new google.maps.LatLngBounds()).getCenter()    
+    const cen = path.getArray().reduce((prev, curr) => prev.extend(curr), new google.maps.LatLngBounds()).getCenter()
     const o = ev ? ev.origin : "https://editor.wix.com/"
 
     const mps = (p) => {
-        let pts = []
-        const arr = p.getArray()                
-        for (let i = 0; i < arr.length; i++) {          
-          pts.push(`${p.getAt(i).lat()},${p.getAt(i).lng()}`)
-        }
-        return pts.join("|")
+      let pts = []
+      const arr = p.getArray()
+      for (let i = 0; i < arr.length; i++) {
+        pts.push(`${p.getAt(i).lat()},${p.getAt(i).lng()}`)
+      }
+      return pts.join("|")
     }
 
-    const pt = mps(path)    
+    const pt = mps(path)
     const mks = `&markers=color:white|size:tiny|${pt}`
-    const lp = `&path=color:red|weight:4|${pt}|${pt.slice(0, pt.indexOf("|"))}`    
+    const lp = `&path=color:red|weight:4|${pt}|${pt.slice(0, pt.indexOf("|"))}`
     const c = `center=${cen.lat()},${cen.lng()}`
-    const z = zl ?? 20;    
-    const q = c + "&zoom=" + z + "&size=400x400&maptype=satellite" + lp + mks + `&key=${key}`    
-    const fq = q.replace("|", 	"%7C")
+    const z = zl ?? 20;
+    const q = c + "&zoom=" + z + "&size=400x400&maptype=satellite" + lp + mks + `&key=${key}`
+    const fq = q.replace("|", "%7C")
     const gbUl = `https://maps.googleapis.com/maps/api/staticmap?${fq}`
 
     const msg = {
       url: gbUl,
       area: area,
-      centerLat: cen.lat(), 
+      centerLat: cen.lat(),
       centerLng: cen.lng(),
       markers: pt,
       lens: mapMarkersLabels
@@ -119,10 +119,10 @@
 
   function calcar() {
     const p = selectedShape.getPath()
-    const ar = google.maps.geometry.spherical.computeArea(p);    
+    const ar = google.maps.geometry.spherical.computeArea(p);
 
     document.getElementById("areaText").innerHTML = !ar ? "Please input a shape" : "Area =" + ar.toFixed(2) + "m2";
-    sendCoords(p, ar)    
+    sendCoords(p, ar)
   }
 
   function deleteSelectedShape() {
@@ -163,7 +163,7 @@
       },
       drawingControlOptions: {
         drawingModes: [google.maps.drawing.OverlayType.POLYGON],
-      },      
+      },
       polygonOptions: polyOptions,
       map: map,
     });
@@ -187,9 +187,9 @@
     google.maps.event.addListener(drawingManager, "drawingmode_changed", clearSelection);
     google.maps.event.addListener(map, "click", clearSelection);
     map.addListener("zoom_changed", () => {
-      const zoom = map.getZoom();      
-      zl = zoom      
-      if (zoom) {        
+      const zoom = map.getZoom();
+      zl = zoom
+      if (zoom) {
         for (let i = 0; i < mapMarkers.length; i++) {
           mapMarkers[i].marker.map = zoom > 16 ? map : null;
           mapMarkers[i].marker.content.style.fontSize = zoom / 10 / 2 + "rem";
@@ -197,35 +197,79 @@
       }
     });
     google.maps.event.addDomListener(
-      document.getElementById("delete-button"),
+      document.getElementById("deleteBtn"),
       "click",
       deleteSelectedShape
     );
   }
-  google.maps.event.addDomListener(window, "load", initialize);  
+  google.maps.event.addDomListener(window, "load", initialize);
 
-  window.onmessage = (event) => {    
-    if (event.data) {            
+  window.onmessage = (event) => {
+    if (event.data) {
       let key = event.data
-      ev = event;      
+      ev = event;
     }
   };
+
+  const fullscreen = (close) => {
+    const fullScreenEl = document.getElementById("mapContainer")
+    const closeFullScreen = document.getElementById("closeFullScreen")
+    const openFullScreen = document.getElementById("openFullScreen")
+
+    console.log("FULLSCREEN EL -", fullScreenEl)
+    console.log("fullscreen fired")
+
+    if (!close) {
+      console.log("element is fullscreen, closing...")
+      closeFullScreen.classList.remove("show")
+      closeFullScreen.classList.add("hidden")
+      openFullScreen.classList.remove("hidden")
+      openFullScreen.classList.add("show")
+
+      console.log("closing fullscreen...")
+      if (document.exitFullscreen) {
+        document.exitFullscreen();
+      } else if (document.webkitExitFullscreen) { /* Safari */
+        document.webkitExitFullscreen();
+      } else if (document.msExitFullscreen) { /* IE11 */
+        document.msExitFullscreen();
+      }
+    } else {
+
+      console.log("open fullscreen fired")
+      closeFullScreen.classList.remove("hidden")
+      closeFullScreen.classList.add("show")
+      openFullScreen.classList.remove("show")
+      openFullScreen.classList.add("hidden")
+
+      console.log("making fullscreen...")
+      if (fullScreenEl.requestFullscreen) {
+        fullScreenEl.requestFullscreen();
+      } else if (fullScreenEl.webkitRequestFullscreen) { /* Safari */
+        fullScreenEl.webkitRequestFullscreen();
+      } else if (fullScreenEl.msRequestFullscreen) { /* IE11 */
+        fullScreenEl.msRequestFullscreen();
+      }
+    }
+  }
+
 </script>
 
 <style>
   html,
-  body {
+  #mapContainer {
     padding: 5px 5px;
     margin: 0;
-    height: 95%;    
+    height: 95%;
+    background-color: #f5f5f5;
   }
 
-  body {
+  #mapContainer {
     display: flex;
-    flex-direction: column;    
+    flex-direction: column;
   }
 
-  #delete-button {
+  #deleteBtn {
     border: unset;
     height: 100%;
     width: auto;
@@ -235,6 +279,51 @@
     align-items: center;
     color: #cd0000;
   }
+
+  .fsBtn {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    position: absolute;
+  }
+
+  #closeFullScreen {    
+    border: none;
+    height: 10vh;
+    width: 10vh;    
+    background-color: transparent;
+    top: 4%;
+    right: 3%;
+  }
+
+  #closeFullScreen > svg {
+    height: 100%;
+    width: 100%;
+    fill: white;    
+  }
+
+  #openFullScreen {
+    border-radius: 50%;
+    height: 40px;
+    background-color: #ed6a20;
+    top: 7%;
+    right: 6%;
+  }
+
+  #openFullScreen>img {
+    height: 80%;
+    width: auto;
+  }
+
+  .hidden {
+    visibility: hidden !important;
+  }
+
+  .show {
+    visibility: visible !important;
+
+  }
+
 
   #map {
     height: 100%;
@@ -251,7 +340,7 @@
     margin: 1rem auto 0rem;
     align-items: center;
     justify-content: space-between;
-    gap: 1rem;    
+    gap: 1rem;
   }
 
   .line-label {
@@ -275,25 +364,29 @@
 </style>
 
 <title>Area Calc Tool</title>
-<div id="map"></div>
-<div class="btnContainer">
-  <button id="calculate" class="btn" onClick="calcar()">Calculate area</button>
-  <div id="areaText"></div>
-  <button id="delete-button">
-    <strong>Delete</strong>
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      height="2rem"
-      width="2rem"
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke-width="1.5"
-      stroke="#cd0000"
-      class="size-6">
-      <path
-        stroke-linecap="round"
-        stroke-linejoin="round"
+<div id="mapContainer">
+  <div id="map"></div>
+  <button id="closeFullScreen" class="fsBtn hidden" onclick="fullscreen(false)">
+    <svg xmlns="http://www.w3.org/2000/svg" height="2rem" width="2rem" fill="none" viewBox="0 0 24 24"
+      stroke-width="1.5" stroke="#ed6a20" class="size-6">
+      <path stroke-linecap="round" stroke-linejoin="round"
         d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
     </svg>
   </button>
+  <button id="openFullScreen" class="fsBtn show" onclick="fullscreen(true)">
+    <img src="https://static.wixstatic.com/media/858394_0608399792ac43348bd78b896a02414c~mv2.png"
+      alt="fullscreen icon" />
+  </button>
+  <div class="btnContainer">
+    <button id="calculate" class="btn" onClick="calcar()">Calculate area</button>
+    <div id="areaText"></div>
+    <button id="deleteBtn">
+      <strong>Delete</strong>
+      <svg xmlns="http://www.w3.org/2000/svg" height="2rem" width="2rem" fill="none" viewBox="0 0 24 24"
+        stroke-width="1.5" stroke="#cd0000" class="size-6">
+        <path stroke-linecap="round" stroke-linejoin="round"
+          d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+      </svg>
+    </button>
+  </div>
 </div>
