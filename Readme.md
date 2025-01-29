@@ -2,27 +2,29 @@
 
 A place to track the different scripts, snippets and general project work for the QMS site.
 
+<h3>Future notes-</h3>
+
 <h3>To Do's -</h3>
 
 FRONTEND -
-
-- Remove roller door and solar panels from form option (if enough space?)
-- Add colour picker option to the form - can I tweak product image size?
-- MAP -
-  - Full screen the map? especially on mobile - check google maps options
+- MAP -  
   - Auto add dimensions when you draw a line not just the shape.
-- Maybe set up redirect page? 
 
 FORM -
 
 - Add repair/replace options
+
 - Review rules - grey out options?
-- ALL BUILDINGS WITH CLADDING add question in cladding - 'Cladding height (starting at roof going down)'
-- please note, building height is relative to top of posts, not inlcuding roof space and any cantilevers (rewrite needed)
 - grey out rather than hide next button
-- Option for colour picker/palet - maybe link to new tab? or add in with building image?
+
+- ALL BUILDINGS WITH CLADDING add question in cladding - 'Cladding height (starting at roof going down)'
+
+- please note, building height is relative to top of posts, not inlcuding roof space and any cantilevers (rewrite needed)
+
 - MONO - cantilver - add question 'is this on the high or low side?'
+
 - Door sections in all forms to match mono pitch - make sure 'm' is on door measurements
+
 - All intro and completion text in for the repair/replace
 
 BACKEND -
@@ -90,6 +92,9 @@ https://www.gov.uk/find-funding-for-land-or-farms
 -- text around the number of quotes like 'the average time to quote depends on the complexity of your quote but is usually a maximum of 4 weeks'.
 -- Ensure all but concrete slab and mezz floor have the grant text added
 -- Update form completon text
+-- Add colour picker option to the form - can I tweak product image size?
+-- Full screen the map? especially on mobile - check google maps options
+-- Option for colour picker/palet - maybe link to new tab? or add in with building image? - ADDED aas popup
 
 <h4>END Have dones - </h4>
 
