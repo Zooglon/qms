@@ -1,188 +1,140 @@
-// Velo API Reference: https://www.wix.com/velo/reference/api-overview/introduction
+import wixData from "wix-data";
+import { openLightbox } from "wix-window-frontend";
+import { getMapCreds } from "./masterPage";
 
-$w.onReady(function () {
-  console.log("File loaded.");
+const DEBUG_MODE = true;
 
-  let buildingType;
-  let formObject;
+let mapCreds;
+let areaCalcObj = {};
 
-  const fsc = $w("#formStartContainer");
-  const fc = $w("#formContainer");
-  const ic = $w("#imgContainer");
-  const ts = [
-    $w("#portalFrameSelect"),
-    $w("#mezzanineFloorSelect"),
-    $w("#roundHouseSelect"),
-    $w("#monoPitchSelect"),
-  ];
-  const tt = [
-    $w("#portalFrameText"),
-    $w("#mezzanineFloorText"),
-    $w("#roundHouseText"),
-    $w("#monoPitchText"),
-  ];
-  const sb = $w("#buildBtnCont").children;
+const formOptions = {
+  concreteSlab: [
+    {
+      parentElement: $w("#concreteThickness-field-concreteSlab"),
+      optionElements: [
+        $w("#concreteThicknessCustom-field-concreteSlab"),
+        $w("#concreteThicknessCustom-text"),
+      ],
+    },
+    {
+      parentElement: $w("#finishedArea-field-concreteSlab"),
+      optionElements: [
+        $w("#finishedAreaCustom-field-concreteSlab"),
+        $w("#finishedAreaCustom-text"),
+      ],
+    },
+    {
+      parentElement: $w("#finishOptions-concreteSlab"),
+      optionElements: [$w("#patterned-field-concreteSlab"), $w("#powerFloat-field-concreteSlab")],
+    },
+    {
+      parentElement: $w("#patterned-field-concreteSlab"),
+      optionElements: [
+        $w("#patternedCustom-field-concreteSlab"),
+        $w("#patternedCustom-text-concreteSlab"),
+      ],
+    },
+  ],
+  roundHouse: [],
+};
 
-  ts.map((t) =>
-    t.onClick((ev) => {
-      handleSelection(ev.target);
-    })
-  );
+$w.onReady(async function () {
+  console.log("Site loaded - 000015");
+  mapCreds = await getMapCreds();
 
-  sb.map((btn) => btn.onClick((ev) => handleBuildForm(ev)));
+  const progressBar = $w("#progressBar");
+  let completedFields = [];
+  const formName = "concreteSlab";
 
-  const resetType = () => {
-    buildingType = undefined;
-    sb.forEach((b) => b.collapse());
-    ts.forEach(
-      (e) =>
-        e.customClassList.values().includes("formSelector-active") &&
-        e.customClassList.remove("formSelector-active")
-    );
-    tt.forEach(
-      (t) =>
-        t.customClassList.values().includes("formSelector-active") &&
-        t.customClassList.remove("formSelector-active")
-    );
+  $w("#formGUID-field-concreteSlab").value = crypto.randomUUID();
+
+  const getForm = (isAllFields) => {
+    let form = [];
+    $w("#formContainer").children.map((field) => {
+      getAllFields(form, field);
+    });
+
+    if (isAllFields) {
+      return form;
+    } else {
+      const filtForm = filterOutNonInputFields(form);
+      return filtForm;
+    }
   };
 
-  const handleSelection = (el) => {
-    resetType();
-    buildingType = el.id.slice(0, -6);
-    el.customClassList.add("formSelector-active");
-    sb.filter((btn) => btn.id.slice(0, -5) == buildingType)[0].expand();
-    tt.filter((btn) => btn.id.slice(0, -5) == buildingType)[0].customClassList.add(
-      "formSelector-active"
-    );
-  };
-
-  const handleBuildForm = (evt) => {
+  DEBUG_MODE &&
     console.log(
-      "BT",
-      buildingType,
-      formTypes.find((f) => f.buildingType === buildingType)
+      "Form loaded\nFillable fields",
+      getForm(false),
+      "Form loaded\nAll fields",
+      getForm(true)
     );
-    formObject = formTypes.find((f) => f.buildingType === buildingType);
-    updateFormTitle("One", formObject.name);
-    fsc.collapse();
-    fc.expand();
-    ic.expand();
-    setImgBoxContent(formObject);
-  };
+
+  // update progress bar
+  progressBar.value = 0;
+
+  getForm(false).forEach((field) => {
+    field.onChange((ev) => {
+      DEBUG_MODE && console.log("Field changed", ev.target.label, ev.target.value);
+      if (field.value !== "" && !completedFields.includes(field.id)) {
+        completedFields.push(field.id);
+        updateBar(getForm(false), progressBar);
+      }
+    });
+  });
+
+  // for each form add additional option show
+  formOptions[`${formName}`].forEach((option) => {
+    option.parentElement.onChange((ev) => {
+      if (ev.target.value.toLowerCase() === "custom" || ev.target.value.toLowerCase() === "other") {
+        option.optionElements.forEach((oe) => oe.expand());
+      } else {
+        option.optionElements.forEach((oe) =>
+          oe.id.slice(0, -6) === ev.target.value ? oe.expand() : oe.collapse()
+        );
+      }
+    });
+  });
+
+  $w("#areaCalcBtn-concreteSlab").onClick(async () => {
+    const dataToSend = mapCreds;
+    const retObj = await openLightbox("area-calculator", dataToSend);
+    const areaField = $w("#concreteArea-field-concreteSlab");
+    const areaDetailsField = $w("#areaDetails-field-concreteSlab");
+
+    for (let [key, value] of Object.entries(retObj)) {
+      const capitalise = (s) => (s && String(s[0]).toUpperCase() + String(s).slice(1)) || "";
+      let formatKey = capitalise(key).replace(/_/g, " ");
+      areaCalcObj[`${formatKey}`] = value;
+    }
+
+    if (areaField && areaDetailsField && retObj) {
+      areaField.value = Number(retObj.building_area_mono);
+      areaDetailsField.value = JSON.stringify(areaCalcObj);
+    }
+  });
 });
 
-export const formTypes = [
-  {
-    buildingType: "portalFrame",
-    name: "Portal Frame",
-    imgId: "formMainImage-portal",
-    formId: "formMain-portal",
-  },
-  {
-    buildingType: "mezzanineFloor",
-    name: "Mezzanine Floor",
-    imgId: "formMainImage-mezzanine",
-    formId: "formMain-mezzanine",
-  },
-  {
-    buildingType: "roundHouse",
-    name: "Round House (Dutch Barn)",
-    imgId: "formMainImage-round",
-    formId: "formMain-round",
-  },
-  {
-    buildingType: "monoPitch",
-    name: "Mono Pitch Roof",
-    imgId: "formMainImage-mono",
-    formId: "formMain-mono",
-  },
-];
+const updateBar = (f, b) => {
+  const needCompleting = f.filter((f) => f.required && f.isVisible).length;
+  const completed = f.filter((f) => f.required && f.isVisible && f.value).length;
+  b.value = (completed / needCompleting) * 100;
+};
 
-export function toggle(el) {
-  el.isVisible ? el.hide() : el.show();
-}
+const filterOutNonInputFields = (array) =>
+  array.filter(
+    (f) =>
+      f.type !== "$w.Button" &&
+      f.type !== "$w.Text" &&
+      f.type !== "$w.Box" &&
+      f.type !== "$w.FiveGridLine" &&
+      f.type !== "$w.UploadButton"
+  );
 
-export function checkCalcCont() {
-  const cc = $w("#calcCont");
-  if (!cc.isVisible) {
-    cc.show();
-  }
-}
-
-export function area_click(event) {
-  checkCalcCont();
-  const areaCalc = $w("#areaMapCalculator");
-  const pitchCalc = $w("#roofPitchCalculator");
-
-  pitchCalc.hide();
-  areaCalc.show();
-}
-
-export function pitch_click(event) {
-  checkCalcCont();
-  const areaCalc = $w("#areaMapCalculator");
-  const pitchCalc = $w("#roofPitchCalculator");
-
-  pitchCalc.show();
-  areaCalc.hide();
-}
-
-export function calculatePitch() {
-  let hyp = Number.parseFloat($w("#sideOne").value);
-  let run = Number.parseFloat($w("#sideTwo").value);
-  let rise = Number.parseFloat($w("#sideThree").value);
-
-  // Find hypotenuse
-  if (!hyp) hyp = Math.sqrt(run * run + rise * rise);
-  // Find run
-  if (!run) run = Math.sqrt(hyp * hyp - rise * rise);
-  // Find rise
-  if (!rise) rise = Math.sqrt(hyp * hyp - run * run);
-
-  const pitch = ((rise / run) * (180 / Math.PI)).toFixed();
-
-  if ((!hyp && !run) || (!hyp && !rise) || (!run && !rise)) {
-    $w("#roofPitchError").show();
+const getAllFields = (fieldsArray, element) => {
+  if (element.type === "$w.Box") {
+    element.children.map((ce) => getAllFields(fieldsArray, ce));
   } else {
-    $w("#roofPitchShowText").show();
-    $w("#roofPitchShowText").text = "Roof Pitch:" + " " + pitch + "°";
-  }
-}
-
-export const updateFormTitle = (ns, nt) => {
-  const sn = $w("#stepNumber");
-  const st = $w("#stepText");
-  if (ns) {
-    sn.text = `Step ${ns}:`;
-  }
-  if (nt) {
-    st.text = nt;
+    fieldsArray.push(element);
   }
 };
-
-export const setImgBoxContent = (data) => {
-  const imgEls = [
-    $w("#formMainImage-portal"),
-    $w("#formMainImage-mezzanine"),
-    $w("#formMainImage-round"),
-    $w("#formMainImage-mono"),
-  ];
-  const ibTitle = $w("#imgBoxBuildingType");
-  ibTitle.expand();
-  ibTitle.text = data.name;
-  setFormMainImage(imgEls.find((i) => i.id === data.imgId));
-};
-
-export const setFormMainImage = (img) => {
-  img ? img.expand() : $w("#formMainImage-error").expand();
-};
-
-export const rotateFormImage = (ev) => {
-  // const elem = $w('#formMainImage')
-  const imgs = [];
-};
-
-export function closeBox(event) {
-  const close = [$w("#areaMapCalculator"), $w("#roofPitchCalculator"), $w("#calcCont")];
-  close.forEach((i) => i.hide());
-}
