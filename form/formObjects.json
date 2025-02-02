@@ -1,0 +1,103 @@
+[
+  {
+    "formName": "concreteSlab",
+    "fields": [
+      {
+        "parentElement": {
+          "element": $w('#concreteThickness-field-concreteSlab'),
+          "value": "custom",
+          "required": true
+        },
+        "optionElements": [
+          {
+            "element": $w('#concreteThicknessCustom-field-concreteSlab')
+          },
+          {
+            "element": $w('#concreteThicknessCustom-text-concreteSlab')
+          }
+        ]
+      },
+      {
+        "parentElement": {
+          "element": $w('#finishedArea-field-concreteSlab'),
+          "value": "other",
+          "required": false
+        },
+        "optionElements": [
+          {
+            "element": $w('#finishedAreaCustom-field-concreteSlab')
+          },
+          {
+            "element": $w('#finishedAreaCustom-text-concreteSlab')
+          }
+        ]
+      },
+      {
+        "parentElement": {
+          "element": $w('#finishOptions-concreteSlab'),
+          "vaue": "patterned",
+          "required": false
+        },
+        "optionElements": [
+          {
+            "parentElement": {
+              "element": $w('#patterned-field-concreteSlab'),
+              "value": "custom",
+              "required": false
+            },
+            "optionElements": [
+              {
+                "element": $w('#patternedCustom-field-concreteSlab')
+              },
+              {
+                "element": $w('#patternedCustom-text-concreteSlab')
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "parentElement": {
+          "element": $w('#finishOptions-concreteSlab'),
+          "vaue": "powerFloat",
+          "required": false
+        },
+        "optionElements": [
+          {
+            "element": $w('#powerFloat-field-concreteSlab')
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "formName": "monoPitch",
+    "fields": [
+      {
+        "parentElement": {
+          "element": $w('#buildingType-field-monoPitch'),
+          "value": "extension",
+          "required": true
+        },
+        "optionElements": [
+          {
+            "element": $w('#postDimensionA-field-monoPitch'),
+            "required": true
+          },
+          {
+            "element": $w('#postDimensionB-field-monoPitch'),
+            "required": true
+          },
+          {
+            "element": $w('#postDimensionC-field-monoPitch'),
+            "required": true
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "formName": "roundHouse",
+    "fields": []
+  }
+]
