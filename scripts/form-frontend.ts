@@ -487,7 +487,6 @@ $w.onReady(async function () {
   const progressBar = $w("#progressBar");
   let completedFields = [];
   formName = "monoPitch";
-
   const formGuid = crypto.randomUUID();
   $w("#formGUID-field-concreteSlab").value = formGuid;
   console.log("Form GUID field:", $w("#formGUID-field-concreteSlab").value);
@@ -533,9 +532,11 @@ $w.onReady(async function () {
       let formatKey = capitaliseFirst(key).replace(/_/g, " ");
       areaCalcObj[`${formatKey}`] = value;
     }
-    console.log("Inputting - ", `${Number(retObj.building_area_mono)}`);
+    console.log("Inputting - ", `${Number(retObj.building_area_mono)
+      }`);
     if (areaField && areaDetailsField && retObj) {
-      areaField.value = `${Number(retObj.building_area_mono)}`;
+      areaField.value = `${Number(retObj.building_area_mono)
+        }`;
       areaDetailsField.value = JSON.stringify(areaCalcObj);
     }
   });
@@ -545,14 +546,32 @@ $w.onReady(async function () {
   });
 });
 
+
+
 const updateBar = (f, b) => {
   const needCompleting = f.filter((f) => f.required && f.isVisible).length;
   const completed = f.filter((f) => f.required && f.isVisible && f.value).length;
   b.value = (completed / needCompleting) * 100;
 };
 
+
 const lowerFirst = (s) => (s && String(s[0]).toLowerCase() + String(s).slice(1)) || "";
 const capitaliseFirst = (s) => (s && String(s[0]).toUpperCase() + String(s).slice(1)) || "";
+
+const getForm = (isAllFields) => {
+  let form = [];
+  $w("#formContainer").children.find(s => s.id === `formStack-${formName
+    }`).children.map((field) => {
+      getAllFields(form, field);
+    });
+
+  if (isAllFields) {
+    return form;
+  } else {
+    const filtForm = filterOutNonInputFields(form);
+    return filtForm;
+  }
+};
 
 const getForm = (isAllFields) => {
   let form = [];
@@ -579,7 +598,7 @@ const filterOutNonInputFields = (array) =>
       f.type !== "$w.Image" &&
       f.type !== "$w.FiveGridLine" &&
       f.type !== "$w.UploadButton" &&
-      f.type !== "$w.Captcha"
+      f.type !== "$w.Captcha"      
   );
 
 const getAllFields = (fieldsArray, element) => {
