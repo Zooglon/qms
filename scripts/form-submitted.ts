@@ -39,6 +39,28 @@ async function getSuppliersCollection() {
   }
 }
 
+async function handleErrors(msg) {
+  const getAdminDetails = await wixData
+    .query("QMSTeam")
+    .eq("role", "DEVELOPER")
+    .limit(100)
+    .find()
+    .then((results) => results.items);
+
+  for (const admin of getAdminDetails) {
+    console.log("Attempting to email admin", admin.email);
+    try {
+      triggeredEmails.emailMember("adminErrorAlert", admin._id, {
+        variables: {
+          errorMessage: JSON.stringify(msg),
+        },
+      });
+    } catch (error) {
+      console.log(`Error could not find QMS Team collection`);
+    }
+  }
+}
+
 async function getPostcodeData(postcode) {
   const url = `https://api.postcodes.io/postcodes/${postcode}`;
   const res = fetch(url, { method: "get" })
@@ -128,8 +150,11 @@ export const invoke = async ({ payload }) => {
 
   // Send email to each supplier with quote details
   for (let i = 0; i <= (qn >= ssl.length ? ssl.length : qn) - 1; i++) {
-    const emailOptions = {      
-      submittedName: form.submissions.filter((f) => f.label.toLowerCase() === "first name")[0].value + " " + form.submissions.filter((f) => f.label.toLowerCase() === "last name")[0].value,      
+    const emailOptions = {
+      submittedName:
+        form.submissions.filter((f) => f.label.toLowerCase() === "first name")[0].value +
+        " " +
+        form.submissions.filter((f) => f.label.toLowerCase() === "last name")[0].value,
       submittedType: `New ${ffn} ${fnt}`,
       submittedDistance: Math.trunc(ssl[i].dist / 1000),
       formDetails: stringifyForm(form),
@@ -138,6 +163,7 @@ export const invoke = async ({ payload }) => {
     try {
       sendSupplierEmail(ssl[i].supplier, emailOptions);
     } catch (error) {
+      handleErrors(error);
       console.log(
         `Error sending email to supplier: ${ssl[i].supplier.supplierName}\n`,
         error.message

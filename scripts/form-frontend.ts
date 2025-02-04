@@ -3,7 +3,7 @@
 import { openLightbox } from "wix-window-frontend";
 import { getMapCreds } from "./masterPage";
 
-let version = "000019";
+let version = "000012";
 let mapCreds;
 let measurementUnits;
 let formName;
@@ -16,53 +16,53 @@ const formOptions = [
     fields: [
       {
         parentElement: {
-          element: $w("#concreteThickness-field-concreteSlab"),
+          element: "$w('#concreteThickness-field-concreteSlab')",
           value: "custom",
           required: true,
         },
         optionElements: [
           {
-            element: $w("#concreteThicknessCustom-field-concreteSlab"),
+            element: "$w('#concreteThicknessCustom-field-concreteSlab')",
           },
           {
-            element: $w("#concreteThicknessCustom-text-concreteSlab"),
+            element: "$w('#concreteThicknessCustom-text-concreteSlab')",
           },
         ],
       },
       {
         parentElement: {
-          element: $w("#finishedArea-field-concreteSlab"),
+          element: "$w('#finishedArea-field-concreteSlab')",
           value: "other",
           required: false,
         },
         optionElements: [
           {
-            element: $w("#finishedAreaCustom-field-concreteSlab"),
+            element: "$w('#finishedAreaCustom-field-concreteSlab')",
           },
           {
-            element: $w("#finishedAreaCustom-text-concreteSlab"),
+            element: "$w('#finishedAreaCustom-text-concreteSlab')",
           },
         ],
       },
       {
         parentElement: {
-          element: $w("#finishOptions-concreteSlab"),
+          element: "$w('#finishOptions-concreteSlab')",
           value: "patterned",
           required: false,
         },
         optionElements: [
           {
             parentElement: {
-              element: $w("#patterned-field-concreteSlab"),
+              element: "$w('#patterned-field-concreteSlab')",
               value: "custom",
               required: false,
             },
             optionElements: [
               {
-                element: $w("#patternedCustom-field-concreteSlab"),
+                element: "$w('#patternedCustom-field-concreteSlab')",
               },
               {
-                element: $w("#patternedCustom-text-concreteSlab"),
+                element: "$w('#patternedCustom-text-concreteSlab')",
               },
             ],
           },
@@ -70,13 +70,13 @@ const formOptions = [
       },
       {
         parentElement: {
-          element: $w("#finishOptions-concreteSlab"),
+          element: "$w('#finishOptions-concreteSlab')",
           value: "powerFloat",
           required: false,
         },
         optionElements: [
           {
-            element: $w("#powerFloat-field-concreteSlab"),
+            element: "$w('#powerFloat-field-concreteSlab')",
           },
         ],
       },
@@ -87,83 +87,121 @@ const formOptions = [
     fields: [
       {
         parentElement: {
-          element: $w("#buildingType-field-monoPitch"),
+          element: "$w('#buildingType-field-monoPitch')",
           value: "extension",
           required: true,
         },
         optionElements: [
           {
-            element: $w("#postDimensionsContainer-monoPitch"),
+            element: "$w('#postDimensionsContainer-monoPitch')",
           },
           {
-            element: $w("#postDimensionA-field-monoPitch"),
+            element: "$w('#postDimensionA-field-monoPitch')",
           },
           {
-            element: $w("#postDimensionB-field-monoPitch"),
+            element: "$w('#postDimensionB-field-monoPitch')",
           },
           {
-            element: $w("#postDimensionC-field-monoPitch"),
+            element: "$w('#postDimensionC-field-monoPitch')",
           },
         ],
       },
       {
         parentElement: {
-          element: $w("#usage-field-monoPitch"),
+          element: "$w('#usage-field-monoPitch')",
+          value: "horseStable",
+          required: true,
+        },
+        optionElements: [
+          {
+            element: "$w('#usageHorseStable-field-monoPitch')",
+          },
+        ],
+      },
+      {
+        parentElement: {
+          element: "$w('#usage-field-monoPitch')",
+          value: "horseLooseHousing",
+          required: true,
+        },
+        optionElements: [
+          {
+            element: "$w('#usageInternals-field-monoPitch')",
+            option: ["cattleShed"],
+          },
+        ],
+      },
+      {
+        parentElement: {
+          element: "$w('#usage-field-monoPitch')",
+          value: "cattleShed",
+          required: true,
+        },
+        optionElements: [
+          {
+            element: "$w('#usageInternals-field-monoPitch')",
+            option: ["horseLooseHousing"],
+          },
+        ],
+      },
+      {
+        parentElement: {
+          element: "$w('#usage-field-monoPitch')",
           value: "custom",
           required: true,
         },
         optionElements: [
           {
-            element: $w("#usageCustom-field-monoPitch"),
+            element: "$w('#usageCustom-field-monoPitch')",
           },
           {
-            element: $w("#usageCustom-text-monoPitch"),
+            element: "$w('#usageCustom-text-monoPitch')",
           },
         ],
       },
       {
         parentElement: {
-          element: $w("#walls-field-monoPitch"),
+          element: "$w('#walls-field-monoPitch')",
           value: "yes",
           required: true,
         },
         optionElements: [
           {
-            element: $w("#wallsSides-field-monoPitch"),
+            element: "$w('#wallsSides-field-monoPitch')",
           },
           {
-            element: $w("#wallMaterial-field-monoPitch"),
+            element: "$w('#wallMaterial-field-monoPitch')",
           },
           {
-            element: $w("#wallNumberOfPanelHeight-field-monoPitch"),
+            element: "$w('#wallNumberOfPanelHeight-field-monoPitch')",
           },
           {
             parentElement: {
-              element: $w("#wallPanelHeight-field-monoPitch"),
+              element: "$w('#wallPanelHeight-field-monoPitch')",
               value: "custom",
               required: true,
             },
             optionElements: [
               {
-                element: $w("#wallPanelHeightCustom-field-monoPitch"),
+                element: "$w('#wallPanelHeightCustom-field-monoPitch')",
               },
               {
-                element: $w("#wallPanelHeightCustom-text-monoPitch"),
+                element: "$w('#wallPanelHeightCustom-text-monoPitch')",
               },
             ],
           },
           {
             parentElement: {
-              element: $w("#wallPanelThickness-field-monoPitch"),
+              element: "$w('#wallPanelThickness-field-monoPitch')",
               value: "custom",
               required: true,
             },
             optionElements: [
               {
-                element: $w("#wallPanelThicknessCustom-field-monoPitch"),
+                element: "$w('#wallPanelThicknessCustom-field-monoPitch')",
               },
               {
-                element: $w("#wallPanelThicknessCustom-text-monoPitch"),
+                element: "$w('#wallPanelThicknessCustom-text-monoPitch')",
               },
             ],
           },
@@ -171,304 +209,313 @@ const formOptions = [
       },
       {
         parentElement: {
-          element: $w("#roofMaterial-field-monoPitch"),
+          element: "$w('#roofMaterial-field-monoPitch')",
           value: "composite",
           required: true,
         },
         optionElements: [
           {
-            element: $w("#roofColour-field-monoPitch"),
+            element: "$w('#roofColour-field-monoPitch')",
             option: ["boxProfileSheet", "corrugatedSheet"],
           },
           {
-            element: $w("#roofColour-image-monoPitch"),
+            element: "$w('#roofColour-image-monoPitch')",
             option: ["boxProfileSheet", "corrugatedSheet"],
           },
           {
-            element: $w("#roofCompositeThickness-field-monoPitch"),
+            element: "$w('#roofCompositeThickness-field-monoPitch')",
           },
         ],
       },
       {
         parentElement: {
-          element: $w("#roofMaterial-field-monoPitch"),
+          element: "$w('#roofMaterial-field-monoPitch')",
           value: "boxProfileSheet",
           required: true,
         },
         optionElements: [
           {
-            element: $w("#roofColour-field-monoPitch"),
+            element: "$w('#roofColour-field-monoPitch')",
             option: ["composite", "corrugatedSheet"],
           },
           {
-            element: $w("#roofColour-image-monoPitch"),
+            element: "$w('#roofColour-image-monoPitch')",
             option: ["composite", "corrugatedSheet"],
           },
           {
-            element: $w("#roofBoxProfile-field-monoPitch"),
+            element: "$w('#roofBoxProfile-field-monoPitch')",
           },
         ],
       },
       {
         parentElement: {
-          element: $w("#roofMaterial-field-monoPitch"),
+          element: "$w('#roofMaterial-field-monoPitch')",
           value: "corrugatedSheet",
           required: true,
         },
         optionElements: [
           {
-            element: $w("#roofColour-field-monoPitch"),
+            element: "$w('#roofColour-field-monoPitch')",
             option: ["composite", "boxProfileSheet"],
           },
           {
-            element: $w("#roofColour-image-monoPitch"),
+            element: "$w('#roofColour-image-monoPitch')",
             option: ["composite", "boxProfileSheet"],
           },
           {
-            element: $w("#roofCorrugatedSheet-field-monoPitch"),
+            element: "$w('#roofCorrugatedSheet-field-monoPitch')",
           },
         ],
       },
       {
         parentElement: {
-          element: $w("#roofLights-field-monoPitch"),
+          element: "$w('#roofLights-field-monoPitch')",
           value: "yes",
           required: false,
         },
         optionElements: [
           {
-            element: $w("#roofLightsPerBay-field-monoPitch"),
+            element: "$w('#roofLightsPerBay-field-monoPitch')",
           },
         ],
       },
       {
         parentElement: {
-          element: $w("#roofSolarPanels-field-monoPitch"),
+          element: "$w('#roofSolarPanels-field-monoPitch')",
           value: "no",
           required: true,
         },
         optionElements: [
           {
-            element: $w("#roofSolarPanelsFuture-field-monoPitch"),
+            element: "$w('#roofSolarPanelsFuture-field-monoPitch')",
           },
         ],
       },
       {
         parentElement: {
-          element: $w("#roofSolarPanels-field-monoPitch"),
+          element: "$w('#roofSolarPanels-field-monoPitch')",
           value: "yes",
           required: true,
         },
         optionElements: [
           {
-            element: $w("#roofSolarPanelsCoverage-field-monoPitch"),
+            element: "$w('#roofSolarPanelsCoverage-field-monoPitch')",
           },
           {
-            element: $w("#roofSolarPanelsQuoteFromProvider-field-monoPitch"),
+            element: "$w('#roofSolarPanelsQuoteFromProvider-field-monoPitch')",
           },
         ],
       },
       {
         parentElement: {
-          element: $w("#buildingType-field-monoPitch"),
+          element: "$w('#buildingType-field-monoPitch')",
           value: "freestanding",
           required: true,
         },
         optionElements: [
           {
-            element: $w("#roofCantilever-field-monoPitch"),
+            element: "$w('#roofCantilever-field-monoPitch')",
           },
           {
-            element: $w("#roofRidgeCaps-field-monoPitch"),
+            element: "$w('#roofRidgeCaps-field-monoPitch')",
           },
         ],
       },
       {
         parentElement: {
-          element: $w("#cladding-field-monoPitch"),
+          element: "$w('#cladding-field-monoPitch')",
+          value: "yes",
+          required: true,
+        },
+        optionElements: [
+          {
+            element: "$w('#claddingType-field-monoPitch')",
+          },
+        ],
+      },
+      {
+        parentElement: {
+          element: "$w('#claddingType-field-monoPitch')",
           value: "composite",
           required: true,
         },
         optionElements: [
           {
-            element: $w("#claddingColour-field-monoPitch"),
+            element: "$w('#claddingColour-field-monoPitch')",
             option: ["boxProfileSheet", "corrugatedSheet"],
           },
           {
-            element: $w("#claddingColour-image-monoPitch"),
+            element: "$w('#claddingColour-image-monoPitch')",
             option: ["boxProfileSheet", "corrugatedSheet"],
           },
           {
-            element: $w("#claddingType-field-monoPitch"),
+            element: "$w('#claddingType-field-monoPitch')",
           },
         ],
       },
       {
         parentElement: {
-          element: $w("#cladding-field-monoPitch"),
+          element: "$w('#claddingType-field-monoPitch')",
           value: "boxProfileSheet",
           required: true,
         },
         optionElements: [
           {
-            element: $w("#claddingColour-field-monoPitch"),
+            element: "$w('#claddingColour-field-monoPitch')",
             option: ["composite", "corrugatedSheet"],
           },
           {
-            element: $w("#claddingColour-image-monoPitch"),
+            element: "$w('#claddingColour-image-monoPitch')",
             option: ["composite", "corrugatedSheet"],
           },
           {
-            element: $w("#claddingType-field-monoPitch"),
+            element: "$w('#claddingType-field-monoPitch')",
           },
         ],
       },
       {
         parentElement: {
-          element: $w("#cladding-field-monoPitch"),
+          element: "$w('#claddingType-field-monoPitch')",
           value: "corrugatedSheet",
           required: true,
         },
         optionElements: [
           {
-            element: $w("#claddingColour-field-monoPitch"),
+            element: "$w('#claddingColour-field-monoPitch')",
             option: ["composite", "boxProfileSheet"],
           },
           {
-            element: $w("#claddingColour-image-monoPitch"),
+            element: "$w('#claddingColour-image-monoPitch')",
             option: ["composite", "boxProfileSheet"],
           },
-          {
-            element: $w("#claddingType-field-monoPitch"),
-          },
         ],
       },
       {
         parentElement: {
-          element: $w("#cladding-field-monoPitch"),
+          element: "$w('#claddingType-field-monoPitch')",
           value: "composite",
           required: true,
         },
         optionElements: [
           {
-            element: $w("#claddingCompositeThickness-field-monoPitch"),
+            element: "$w('#claddingCompositeThickness-field-monoPitch')",
           },
         ],
       },
       {
         parentElement: {
-          element: $w("#cladding-field-monoPitch"),
+          element: "$w('#claddingType-field-monoPitch')",
           value: "composite",
           required: true,
         },
         optionElements: [
           {
-            element: $w("#claddingTimberBoardType-field-monoPitch"),
+            element: "$w('#claddingTimberBoardType-field-monoPitch')",
           },
         ],
       },
       {
         parentElement: {
-          element: $w("#cladding-field-monoPitch"),
-          value: "composite",
+          element: "$w('#claddingType-field-monoPitch')",
+          value: "boxProfile",
           required: true,
         },
         optionElements: [
           {
-            element: $w("#claddingBoxProfileType-field-monoPitch"),
+            element: "$w('#claddingBoxProfileType-field-monoPitch')",
           },
         ],
       },
       {
         parentElement: {
-          element: $w("#cladding-field-monoPitch"),
-          value: "composite",
+          element: "$w('#claddingType-field-monoPitch')",
+          value: "corrugatedSheet",
           required: true,
         },
         optionElements: [
           {
-            element: $w("#claddingCorrugatedSheetType-field-monoPitch"),
+            element: "$w('#claddingCorrugatedSheetType-field-monoPitch')",
           },
         ],
       },
       {
         parentElement: {
-          element: $w("#doorsRollerDoors-field-monoPitch"),
+          element: "$w('#doorsRollerDoors-field-monoPitch')",
           value: "yes",
           required: true,
         },
         optionElements: [
           {
-            element: $w("#doorsRollerDoors-text-monoPitch"),
+            element: "$w('#doorsRollerDoors-text-monoPitch')",
           },
           {
             parentElement: {
-              element: $w("#doorsRollerNumber-field-monoPitch"),
+              element: "$w('#doorsRollerNumber-field-monoPitch')",
               value: "custom",
               required: true,
             },
             optionElements: [
               {
-                element: $w("#doorsRollerNumberCustom-field-monoPitch"),
+                element: "$w('#doorsRollerNumberCustom-field-monoPitch')",
               },
               {
-                element: $w("#doorsRollerNumberCustom-test-monoPitch"),
+                element: "$w('#doorsRollerNumberCustom-test-monoPitch')",
               },
             ],
           },
           {
-            element: $w("#doorsRollerWidth-field-monoPitch"),
+            element: "$w('#doorsRollerWidth-field-monoPitch')",
           },
           {
-            element: $w("#doorsRollerHeight-field-monoPitch"),
+            element: "$w('#doorsRollerHeight-field-monoPitch')",
           },
           {
-            element: $w("#doorsRollerBirdBrush-field-monoPitch"),
+            element: "$w('#doorsRollerBirdBrush-field-monoPitch')",
           },
           {
-            element: $w("#doorsRollerRubberSeal-field-monoPitch"),
+            element: "$w('#doorsRollerRubberSeal-field-monoPitch')",
           },
           {
-            element: $w("#doorsRollerPowerFeed-field-monoPitch"),
-          },
-        ],
-      },
-      {
-        parentElement: {
-          element: $w("#doorsPersonnel-field-monoPitch"),
-          value: "yes",
-          required: true,
-        },
-        optionElements: [
-          {
-            element: $w("#doorsPersonnelNumber-field-monoPitch"),
-          },
-          {
-            element: $w("#doorsPersonnelWidth-field-monoPitch"),
-          },
-          {
-            element: $w("#doorsPersonnelFire-field-monoPitch"),
-          },
-          {
-            element: $w("#doorsPersonnelNumberOfFireDoors-field-monoPitch"),
+            element: "$w('#doorsRollerPowerFeed-field-monoPitch')",
           },
         ],
       },
       {
         parentElement: {
-          element: $w("#concretingFloor-field-monoPitch "),
+          element: "$w('#doorsPersonnel-field-monoPitch')",
           value: "yes",
           required: true,
         },
         optionElements: [
           {
-            element: $w("concretingFloorQuote-field-monoPitch"),
+            element: "$w('#doorsPersonnelNumber-field-monoPitch')",
           },
           {
-            element: $w("floorAdditionalNotes-field-monoPitch"),
+            element: "$w('#doorsPersonnelWidth-field-monoPitch')",
           },
           {
-            element: $w("floorUpload-field-monoPitch"),
+            element: "$w('#doorsPersonnelFire-field-monoPitch')",
+          },
+          {
+            element: "$w('#doorsPersonnelNumberOfFireDoors-field-monoPitch')",
+          },
+        ],
+      },
+      {
+        parentElement: {
+          element: "$w('#concretingFloor-field-monoPitch ')",
+          value: "yes",
+          required: true,
+        },
+        optionElements: [
+          {
+            element: "$w('#concretingFloorQuote-field-monoPitch')",
+          },
+          {
+            element: "$w('#floorAdditionalNotes-field-monoPitch')",
+          },
+          {
+            element: "$w('#floorUpload-field-monoPitch')",
           },
         ],
       },
@@ -532,11 +579,9 @@ $w.onReady(async function () {
       let formatKey = capitaliseFirst(key).replace(/_/g, " ");
       areaCalcObj[`${formatKey}`] = value;
     }
-    console.log("Inputting - ", `${Number(retObj.building_area_mono)
-      }`);
+    console.log("Inputting - ", `${Number(retObj.building_area_mono)}`);
     if (areaField && areaDetailsField && retObj) {
-      areaField.value = `${Number(retObj.building_area_mono)
-        }`;
+      areaField.value = `${Number(retObj.building_area_mono)}`;
       areaDetailsField.value = JSON.stringify(areaCalcObj);
     }
   });
@@ -546,32 +591,14 @@ $w.onReady(async function () {
   });
 });
 
-
-
 const updateBar = (f, b) => {
   const needCompleting = f.filter((f) => f.required && f.isVisible).length;
   const completed = f.filter((f) => f.required && f.isVisible && f.value).length;
   b.value = (completed / needCompleting) * 100;
 };
 
-
 const lowerFirst = (s) => (s && String(s[0]).toLowerCase() + String(s).slice(1)) || "";
 const capitaliseFirst = (s) => (s && String(s[0]).toUpperCase() + String(s).slice(1)) || "";
-
-const getForm = (isAllFields) => {
-  let form = [];
-  $w("#formContainer").children.find(s => s.id === `formStack-${formName
-    }`).children.map((field) => {
-      getAllFields(form, field);
-    });
-
-  if (isAllFields) {
-    return form;
-  } else {
-    const filtForm = filterOutNonInputFields(form);
-    return filtForm;
-  }
-};
 
 const getForm = (isAllFields) => {
   let form = [];
@@ -598,7 +625,7 @@ const filterOutNonInputFields = (array) =>
       f.type !== "$w.Image" &&
       f.type !== "$w.FiveGridLine" &&
       f.type !== "$w.UploadButton" &&
-      f.type !== "$w.Captcha"      
+      f.type !== "$w.Captcha"
   );
 
 const getAllFields = (fieldsArray, element) => {
@@ -613,6 +640,7 @@ const handleAllOptions = (field) => {
   field.parentElement.element.onChange((ev) => {
     console.log(
       "FIELD",
+      ev,
       "targetVal",
       lowerFirst(ev.target.value),
       "parentVal",
@@ -620,6 +648,7 @@ const handleAllOptions = (field) => {
       "match",
       lowerFirst(ev.target.value) === field.parentElement.value
     );
+
     if (lowerFirst(ev.target.value) === field.parentElement.value) {
       field.optionElements.forEach((oe) => {
         if (oe.element) {
