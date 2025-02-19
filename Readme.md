@@ -7,12 +7,16 @@ A place to track the different scripts, snippets and general project work for th
 <h3>To Do's -</h3>
 
 FRONTEND -
-- MAP -  
+
+- MAP -
   - Auto add dimensions when you draw a line not just the shape.
+  - Add a download button to save 'screenshot' for grants office
 
 FORM -
 
 - Add repair/replace options
+
+- add sticky side menu for area tool, ft/mm converter and roof pitch calculator
 
 - Review rules - grey out options?
 - grey out rather than hide next button
@@ -60,7 +64,7 @@ NOTES/COSTS -
 <br/>
 <h4>Have dones - </h4>
 
-- Mezzanine height option, add m/ft 
+- Mezzanine height option, add m/ft
 - change 'floor image upload' to be image/video in name (see mono pitch)
 - let designer know when email domain is live so he can set up - get instagram handle, - facebook
 - change mm to m in all dimensions except post dimensions
@@ -78,16 +82,16 @@ NOTES/COSTS -
 - restart form button on page
 - bug - why does concrete slab not reset the form - FIXED
 - All intro and completion text in for the building quotes [
-Government grants are available, to check you availability click here:
-https://www.gov.uk/find-funding-for-land-or-farms
+  Government grants are available, to check you availability click here:
+  https://www.gov.uk/find-funding-for-land-or-farms
 
-        For planning permission and advice please visit:
+          For planning permission and advice please visit:
 
-        https://www.gov.uk/planning-permission-england-wales
-        https://www.planningportal.co.uk
+          https://www.gov.uk/planning-permission-england-wales
+          https://www.planningportal.co.uk
 
-        All quotes based on a level site
-        ]
+          All quotes based on a level site
+          ]
 
 -- text around the number of quotes like 'the average time to quote depends on the complexity of your quote but is usually a maximum of 4 weeks'.
 -- Ensure all but concrete slab and mezz floor have the grant text added
