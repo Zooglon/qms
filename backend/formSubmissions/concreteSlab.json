@@ -1,4 +1,5 @@
 {
+  "TEST_COMPLETION": true,
   "field:comp-m79hnsvv:details_concreteReinforcementOptions": "steelReinforcingBarsMesh",
   "formName": "Home - submit into Concrete Slab Quotes collection",
   "field:comp-m79hnsvv:details_finishedAreaUsageOther": "Helipad",
@@ -14,6 +15,20 @@
     "trigger": { "key": "cms-dataset_form_submitted" },
     "configuration": { "_id": "4f4bfd8d-7131-4fb1-873b-6017b79562e9" },
     "activation": { "_id": "873446b3-85cb-451e-80b9-e6b5d72162e8" }
+  },
+  "field:comp-m709keah:address": {
+    "subdivisions": [
+      { "code": "England", "name": "England", "type": "ADMINISTRATIVE_AREA_LEVEL_1" },
+      { "code": "Staffordshire", "name": "Staffordshire", "type": "ADMINISTRATIVE_AREA_LEVEL_2" },
+      { "code": "GB", "name": "United Kingdom", "type": "COUNTRY" }
+    ],
+    "city": "Stafford",
+    "location": { "latitude": 52.8258715, "longitude": -2.1292907 },
+    "streetAddress": { "number": "365", "name": "Stone Road", "apt": "", "formattedAddressLine": "365 Stone Rd" },
+    "formatted": "365 Stone Rd, Stafford ST16 1LD, UK",
+    "country": "GB",
+    "postalCode": "ST16 1LD",
+    "subdivision": "ENG"
   },
   "field:comp-m79hnsvv:details_concreteSlabAdditionalNotes": "Big ass H painted",
   "field:comp-m79hnsvv:firstName": "Nath",

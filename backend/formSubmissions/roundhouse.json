@@ -1,4 +1,5 @@
 {
+  "TEST_COMPLETION": true,
   "formName": "Home - submit into Round House Form collection",
   "field:comp-m6z1d4og:_updatedDate": "Sat Feb 15 2025 12:09:28 GMT+0000 (Greenwich Mean Time)",
   "field:comp-m6z1d4og:firstName": "Nath",
@@ -12,6 +13,20 @@
     "trigger": { "key": "cms-dataset_form_submitted" },
     "configuration": { "_id": "4f4bfd8d-7131-4fb1-873b-6017b79562e9" },
     "activation": { "_id": "d4d3e1cb-3d41-4152-b030-0fbdaa002847" }
+  },
+  "field:comp-m709keah:address": {
+    "subdivisions": [
+      { "code": "England", "name": "England", "type": "ADMINISTRATIVE_AREA_LEVEL_1" },
+      { "code": "Staffordshire", "name": "Staffordshire", "type": "ADMINISTRATIVE_AREA_LEVEL_2" },
+      { "code": "GB", "name": "United Kingdom", "type": "COUNTRY" }
+    ],
+    "city": "Stafford",
+    "location": { "latitude": 52.8258715, "longitude": -2.1292907 },
+    "streetAddress": { "number": "365", "name": "Stone Road", "apt": "", "formattedAddressLine": "365 Stone Rd" },
+    "formatted": "365 Stone Rd, Stafford ST16 1LD, UK",
+    "country": "GB",
+    "postalCode": "ST16 1LD",
+    "subdivision": "ENG"
   },
   "field:comp-m6z1d4og:_createdDate": "Sat Feb 15 2025 12:09:28 GMT+0000 (Greenwich Mean Time)",
   "field:comp-m6z1d4og:email": "nduncan992@gmail.com",

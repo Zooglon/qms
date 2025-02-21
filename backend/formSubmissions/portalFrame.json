@@ -1,4 +1,5 @@
 {
+  "TEST_COMPLETION": true,
   "field:comp-m6w8c6ve:roof_roofCompositeThickness": "",
   "field:comp-m6w8c6ve:firstName": "Nath",
   "field:comp-m6w8c6ve:details_roofPitchCustom": "",
@@ -12,6 +13,7 @@
   "field:comp-m6w8c6ve:roof_roofCorrugatedSheetOption": "",
   "field:comp-m6w8c6ve:doors_rollerDoorwayHeight": "2000",
   "field:comp-m6w8c6ve:email": "nduncan992@gmail.com",
+  "field:comp-m6w8c6ve:howManyQuotes": 3,
   "field:comp-m6w8c6ve:doors_rollerDoorBirdBrush": "yes",
   "field:comp-m6w8c6ve:details_roofPitch": "12.5",
   "field:comp-m6w8c6ve:walls_buildingHasWalls": "yes",
@@ -23,6 +25,20 @@
   "field:comp-m6w8c6ve:doors_numberOfPersonnelDoorsCustom": "",
   "field:comp-m6w8c6ve:details_buildingBayWidth": "2000",
   "field:comp-m6w8c6ve:walls_wallHeightNumberOfPanels": "1",
+  "field:comp-m709keah:address": {
+    "subdivisions": [
+      { "code": "England", "name": "England", "type": "ADMINISTRATIVE_AREA_LEVEL_1" },
+      { "code": "Staffordshire", "name": "Staffordshire", "type": "ADMINISTRATIVE_AREA_LEVEL_2" },
+      { "code": "GB", "name": "United Kingdom", "type": "COUNTRY" }
+    ],
+    "city": "Stafford",
+    "location": { "latitude": 52.8258715, "longitude": -2.1292907 },
+    "streetAddress": { "number": "365", "name": "Stone Road", "apt": "", "formattedAddressLine": "365 Stone Rd" },
+    "formatted": "365 Stone Rd, Stafford ST16 1LD, UK",
+    "country": "GB",
+    "postalCode": "ST16 1LD",
+    "subdivision": "ENG"
+  },
   "context": {
     "metaSiteId": "44e400a2-80db-47ef-b7c5-cd101c8abe97",
     "activationId": "7745aed1-69de-47ab-b90c-323cc61e74d7"
