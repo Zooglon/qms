@@ -4,8 +4,9 @@
  */
 import wixData from "wix-data";
 import { triggeredEmails, contacts } from "wix-crm-backend";
+import { fetch } from "wix-fetch";
 
-const TEST_MODE = true;
+let TEST_MODE = true;
 
 const monoPitchFormFields = {
   formDetails: {
@@ -30,6 +31,7 @@ const monoPitchFormFields = {
     additionalNotes: undefined,
     siteVisuals: undefined,
     areaMapDetails: undefined,
+    MySplat: undefined,
   },
   formWalls: {
     willTheBuildingHaveWalls: undefined,
@@ -132,7 +134,7 @@ const concreteSlabFormFields = {
   },
 };
 
-const portalFrameFormFields = {
+let portalFrameFormFields = {
   formDetails: {
     quoteForLevellingSite: undefined,
     quoteForInstallation: undefined,
@@ -201,6 +203,7 @@ const portalFrameFormFields = {
     claddingCompositeThickness: undefined,
     claddingTimberBoardconsts: undefined,
     claddingBoxProfileconst: undefined,
+    claddingBoxProfileType: undefined,
     claddingCorrugatedSheetFinish: undefined,
     claddingTecsFixings: undefined,
     guttering: undefined,
@@ -214,7 +217,7 @@ const portalFrameFormFields = {
   formContact: {
     firstName: undefined,
     lastName: undefined,
-    company: undefined,
+    companyName: undefined,
     email: undefined,
     phoneNumber: undefined,
     address: undefined,
@@ -276,15 +279,7 @@ const mezzanineFloorFormFields = {
   },
 };
 
-const getFormDetailsFromCollection = async (type, guid) => {
-  const collectionList = [
-    "MezzanineFloorForm",
-    "ConcreteSlabQuotes",
-    "MonoPitchQuotes",
-    "PortalFrameQuotes",
-    "RoundHouseForm",
-  ];
-
+const getFormDetailsFromCollection = async (collection, guid) => {
   const fieldsToIgnore = [
     "howManyQuotesWouldYouLikeToReceive",
     "formId",
@@ -296,22 +291,15 @@ const getFormDetailsFromCollection = async (type, guid) => {
     "_updatedDate",
   ];
 
-  let typeString = type.replace(" ", "");
-  let typeRegExp = new RegExp(typeString, "gi");
-  let collection = collectionList.find((i) => {
-    return !!i.match(typeRegExp);
-  });
   const formGuid = guid ?? "test";
-  const queryCollection = await wixData
-    .query(collection)
-    .eq("formGuid", formGuid)
-    .find()
-    .then((results) => results.items);
+  const queryCollection = await getCollectionData(collection, "formGuid", formGuid);
 
   if (!queryCollection.length) {
     handleErrors(`Could not locate form ${guid} in collection ${collection}`);
     console.log("No data found in collection", collection);
   }
+
+  console.log("Filtered collection data:", queryCollection);
 
   const filteredCollectionData = Object.fromEntries(
     Object.entries(queryCollection[0]).filter(([k, v]) => v !== null && v !== "" && !fieldsToIgnore.includes(k))
@@ -319,16 +307,18 @@ const getFormDetailsFromCollection = async (type, guid) => {
   return filteredCollectionData;
 };
 
-async function getSuppliers(quoteTypeOption) {
+async function getNearestSuppliers(quoteTypeOption, quoteLatLng, numberOfQuotes) {
   const cn = "SupplierList";
+  const lat = quoteLatLng.lat;
+  const lng = quoteLatLng.lng;
 
   // Use to filter by quote type - i.e 'Solar Panels'
   const quoteOption = quoteTypeOption;
 
   try {
-    let retrievedCollection;
+    let suppliers;
     if (quoteOption) {
-      retrievedCollection = await wixData
+      suppliers = await wixData
         .query(cn)
         .eq("isActive", true)
         .hasSome("quoteTypesProvided", [quoteOption])
@@ -336,26 +326,32 @@ async function getSuppliers(quoteTypeOption) {
         .find()
         .then((results) => results.items);
     } else {
-      retrievedCollection = await wixData
-        .query(cn)
-        .eq("isActive", true)
-        .limit(1000)
-        .find()
-        .then((results) => results.items);
+      suppliers = await getCollectionData(cn, "isActive", true, 1000);
     }
 
-    // Filter suppliers by active status and same quotation type
-    // const fsl = sl.filter((s) => s.isActive && s.quoteTypesProvided.includes(ffn));
+    const distanceInMetres = (lng1, lat1, lng2, lat2) => {
+      const er = 6371e3;
+      const l1 = (lat1 * Math.PI) / 180;
+      const l2 = (lat2 * Math.PI) / 180;
+      const clat = ((lat2 - lat1) * Math.PI) / 180;
+      const clng = ((lng2 - lng1) * Math.PI) / 180;
 
-    // Sort suppliers by distance
-    // const ssl = fsl
-    //   .map((s) => ({
-    //     dist: distanceInMetres(pcc.lat, pcc.lng, s.latitude, s.longitude),
-    //     supplier: s,
-    //   }))
-    //   .sort((a, b) => a.dist - b.dist);
+      const a =
+        Math.sin(clat / 2) * Math.sin(clat / 2) + Math.cos(l1) * Math.cos(l2) * Math.sin(clng / 2) * Math.sin(clng / 2);
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+      // distance in metres
+      const d = er * c;
+      return d;
+    };
 
-    return retrievedCollection;
+    // Return x nearest suppliers
+    return suppliers
+      .map((s) => ({
+        dist: distanceInMetres(lat, lng, s.latitude, s.longitude),
+        supplier: s,
+      }))
+      .sort((a, b) => a.dist - b.dist)
+      .slice(0, numberOfQuotes);
   } catch (error) {
     console.log(`Error could not find collection ${cn}, details-\n${error}`);
   }
@@ -385,36 +381,40 @@ const stringifyForm = (form, name) => {
       ? portalFrameFormFields
       : {};
 
-  TEST_MODE && console.log("FormTypeObj - PRE", formTypeObj);
+  TEST_MODE && console.log(`Used ${name} to select form template ${JSON.stringify(formTypeObj)}`);
 
   // Iterate over form fields and populate template form objects
-  Object.entries(form).forEach((field) => {
+  Object.entries(form).map((field) => {
     const key = field[0].replace(/.+_/gi, "");
     let value;
 
     if (key.toLowerCase() === "address") {
       value = field[1].formatted ?? JSON.stringify(field[1]);
     } else if (key.toLowerCase() === "concreteaream2") {
-      value = formatField(field[1] + "m²");
+      value =
+        formatField(field[1] + "m²")
+          .slice(0, 1)
+          .toUpperCase() + field[1].slice(1);
+    } else if (typeof field[1] === "string") {
+      value = formatField(field[1]).slice(0, 1).toUpperCase() + field[1].slice(1);
     } else {
-      value = formatField(field[1]);
+      value = field[1];
     }
 
-    // If cant find form template - send email to developer and also use generic form template.
     if (formTypeObj.formDetails && Object.keys(formTypeObj.formDetails).includes(key)) {
-      formTypeObj.formDetails[key] = value;
+      formTypeObj.formDetails[`${key}`] = value;
     } else if (formTypeObj.formWalls && Object.keys(formTypeObj.formWalls).includes(key)) {
-      formTypeObj.formWalls[key] = value;
+      formTypeObj.formWalls[`${key}`] = value;
     } else if (formTypeObj.formRoof && Object.keys(formTypeObj.formRoof).includes(key)) {
-      formTypeObj.formRoof[key] = value;
+      formTypeObj.formRoof[`${key}`] = value;
     } else if (formTypeObj.formCladding && Object.keys(formTypeObj.formCladding).includes(key)) {
-      formTypeObj.formCladding[key] = value;
+      formTypeObj.formCladding[`${key}`] = value;
     } else if (formTypeObj.formDoors && Object.keys(formTypeObj.formDoors).includes(key)) {
-      formTypeObj.formDoors[key] = value;
+      formTypeObj.formDoors[`${key}`] = value;
     } else if (formTypeObj.formFloor && Object.keys(formTypeObj.formFloor).includes(key)) {
-      formTypeObj.formFloor[key] = value;
+      formTypeObj.formFloor[`${key}`] = value;
     } else if (formTypeObj.formContact && Object.keys(formTypeObj.formContact).includes(key)) {
-      formTypeObj.formContact[key] = value;
+      formTypeObj.formContact[`${key}`] = value;
     } else {
       TEST_MODE && console.log(`Missing form template field for ${key} - ${value}`);
     }
@@ -438,26 +438,45 @@ const stringifyForm = (form, name) => {
     }
   });
   return {
-    formDetails: formDetails.join(""),
-    formWalls: formWalls.join(""),
-    formRoof: formRoof.join(""),
-    formCladding: formCladding.join(""),
-    formDoors: formDoors.join(""),
-    formFloor: formFloor.join(""),
-    formContact: formContact.join(""),
+    formDetails: formDetails.length > 0 ? formDetails.join("") : "No details provided",
+    formWalls: formWalls.length > 0 ? formWalls.join("") : "No wall details provided",
+    formRoof: formRoof.length > 0 ? formRoof.join("") : "No roof details provided",
+    formCladding: formCladding.length > 0 ? formCladding.join("") : "No cladding details provided",
+    formDoors: formDoors.length > 0 ? formDoors.join("") : "No door details provided",
+    formFloor: formFloor.length > 0 ? formFloor.join("") : "No floor details provided",
+    formContact: formContact.length > 0 ? formContact.join("") : "No contact details given",
   };
 };
 
-async function handleErrors(msg) {
-  const getAdminDetails = await wixData
-    .query("QMSTeam")
-    .eq("role", "DEVELOPER")
-    .limit(100)
+const getCollectionData = async (collection, filterField, filter, limit) => {
+  TEST_MODE && console.log(`Getting data from ${collection} with filter ${filterField}=${filter}`);
+  const queryCollection = await wixData
+    .query(collection)
+    .eq(filterField, filter)
+    .limit(limit ?? 100)
     .find()
     .then((results) => results.items);
 
+  if (!queryCollection.length) {
+    handleErrors(`Could not locate collection ${collection}`);
+    console.log("No data found in collection", collection);
+    return;
+  }
+  TEST_MODE &&
+    console.log(
+      `Returning ${queryCollection.length} ${
+        queryCollection.length > 0 ? "items" : "item"
+      } from collection ${collection}`
+    );
+  return queryCollection;
+};
+
+const handleErrors = async (msg) => {
+  const getAdminDetails = await getCollectionData("QMSTeam", "role", "DEVELOPER", 100);
+
+  console.log("Sending error notification - ", msg);
+
   for (const admin of getAdminDetails) {
-    console.log("Attempting to email admin", admin.email);
     try {
       triggeredEmails.emailMember("adminErrorAlert", admin._id, {
         variables: {
@@ -468,9 +487,9 @@ async function handleErrors(msg) {
       console.log(`Error could not find QMS Team collection`);
     }
   }
-}
+};
 
-async function sendSupplierEmail(supplier, options) {
+async function sendSupplierEmail(supplier, options, collection) {
   const emailOptions = {
     variables: {
       supplierName: supplier.supplierName,
@@ -480,24 +499,58 @@ async function sendSupplierEmail(supplier, options) {
   const emailId = "new_form_submission";
   const contactId = supplier.contactId;
 
-  console.log("Emails options", emailOptions);
-
   // Send email to supplier
-  triggeredEmails
-    .emailContact(emailId, contactId, emailOptions)
-    .then(() => {
-      console.log(`Email was sent to contact ${supplier.supplierName}: ${supplier.emailAddress}`);
-    })
-    .catch((error) => {
-      console.log(
-        `Error sending email to contact ${supplier.supplierName}: ${supplier.emailAddress}, details-\n${error}`
-      );
-    });
+  try {
+    triggeredEmails.emailContact(emailId, contactId, emailOptions);
+
+    console.log(`Email was sent to contact ${supplier.supplierName}`);
+    // update supplier CMS with id of quotes sent
+    const collectionData = await getCollectionData("SupplierList", "_id", supplier._id);
+    if (collectionData.length > 0) {
+      let supplier = collectionData[0];
+      if (Array.isArray(supplier.quotesSent) && supplier.quotesSent.length > 0) {
+        let supplierQuotes = supplier.quotesSent ?? [];
+        supplierQuotes.push(collection.formGuid);
+        supplier.quotesSent = supplierQuotes;
+        wixData.update(collection, supplier);
+        console.log(`Contact ${supplier.supplierName} quote list updated with form ${collection.formGuid}`);
+      }
+    }
+  } catch (error) {
+    handleErrors(
+      `Error sending email to supplier ${supplier.supplierName}: ${supplier.emailAddress}, details-\n${error}`
+    );
+  }
 }
 
+const getLatLng = (addressField, guid) => {
+  if (addressField.location.latitude && addressField.location.longitude) {
+    return {
+      lat: addressField.location.latitude,
+      lng: addressField.location.longitude,
+    };
+  } else if (addressField.postcode) {
+    const url = `https://api.postcodes.io/postcodes/${addressField.postcode}`;
+    const res = fetch(url, { method: "get" })
+      .then((httpResponse) => {
+        if (httpResponse.ok) {
+          return httpResponse.json();
+        } else {
+          return Promise.reject("Error, failed to fetched valid postcode");
+        }
+      })
+      .then((json) => ({ lat: json.result.latitude, lng: json.result.longitude }))
+      .catch((err) => console.log(err));
+
+    return res;
+  } else {
+    handleErrors(`No location or postcode provided for form ${guid} - ${JSON.stringify(addressField)}`);
+  }
+};
+
 export const invoke = async ({ payload }) => {
-  // Get postcode of quote site
-  console.log("PAYLOAD", payload);
+  if (payload.TEST_COMPLETION) TEST_MODE = true;
+  console.log("TESTMODE", TEST_MODE, "\n", "PAYLOAD", payload);
   let formObject = {};
 
   // strip out everything but field names
@@ -506,34 +559,51 @@ export const invoke = async ({ payload }) => {
   }
 
   // Format form name
-  formObject.formName = formObject.formName
-    .replace("Home - submit into ", "")
-    .replace(" Quotes collection", "")
-    .replace(" Form collection", "");
+  const formName = formObject.formName
+    ? formObject.formName
+        .replace("Home - submit into ", "")
+        .replace(" Quotes collection", "")
+        .replace(" Form collection", "")
+    : "Unknown";
 
-  console.log(
-    "FORMOBJECT",
-    formObject,
-    "\n",
-    `formName: ${formObject.formName}`,
-    "\n",
-    `formGuid: ${formObject.formGuid}`
-  );
+  const formGuid = formObject.formGuid;
 
-  if (formObject.formGuid) {
-    const completedForm = await getFormDetailsFromCollection(formObject.formName, formObject.formGuid);
+  console.log("FORMOBJECT", formObject, "\n", `formName: ${formName}`, "\n", `formGuid: ${formGuid}`);
+
+  const collectionList = [
+    "MezzanineFloorForm",
+    "ConcreteSlabQuotes",
+    "MonoPitchQuotes",
+    "PortalFrameQuotes",
+    "RoundHouseForm",
+  ];
+  let typeString = formName.replace(" ", "");
+  let typeRegExp = new RegExp(typeString, "gi");
+  let collection = collectionList.find((i) => {
+    return !!i.match(typeRegExp);
+  });
+
+  if (formGuid && formName) {
+    const completedForm = await getFormDetailsFromCollection(collection, formGuid);
 
     console.log("COMP FORM", completedForm);
 
-    const numberOfQuotes = Object.keys(formObject).find((key) => key.toLowerCase().startsWith("howmanyquotes"));
+    const numberOfQuotes = Object.entries(formObject).find((keyVal) =>
+      keyVal[0].toLowerCase().startsWith("howmanyquotes")
+    )[1];
+
+    const quoteLatLng = getLatLng(completedForm.address, formGuid);
 
     console.log("NUMBER OF QUOTES", numberOfQuotes);
 
     // Suppliers needed - always building, then pass in solar panels, concrete, erection etc etc
     // IF only a concrete supplier etc - only send them relative fields
 
-    const suppliers = TEST_MODE ? await getSuppliers("test") : await getSuppliers();
-    const solarSuppliers = await getSuppliers("Solar Panels");
+    const suppliers = TEST_MODE
+      ? await getNearestSuppliers("test", quoteLatLng, numberOfQuotes)
+      : await getNearestSuppliers(formName, quoteLatLng, numberOfQuotes);
+
+    const solarSuppliers = await getNearestSuppliers("Solar Panels", quoteLatLng, numberOfQuotes);
 
     console.log("SUPPLIERS", suppliers);
     console.log("Solar SUPPLIERS", solarSuppliers);
@@ -543,7 +613,7 @@ export const invoke = async ({ payload }) => {
 
       // solar panel quote
       if (completedForm.solarPanelQuoteFromProvider) {
-        quoteTypes.push("Solar_Panels");
+        quoteTypes.push("Solar Panels");
       }
       // installation quote
       if (completedForm.quoteForInstallation) {
@@ -555,13 +625,13 @@ export const invoke = async ({ payload }) => {
       }
       // concrete floor quote
       if (completedForm.quoteForInstallation) {
-        quoteTypes.push("Concrete_Internal");
+        quoteTypes.push("Concrete Internal");
       }
     };
 
     // Filter suppliers by active status and same quotation type
     const getBuildingSuppliers = suppliers.filter(
-      (supplier) => supplier.isActive && supplier.quoteTypesProvided.includes(quoteTypesPresentInForm)
+      (supp) => supp.supplier.isActive && supp.supplier.quoteTypesProvided.includes(quoteTypesPresentInForm)
     );
 
     // Email suppliers for main buildings
@@ -578,13 +648,13 @@ export const invoke = async ({ payload }) => {
     // Send email to each supplier with quote details
     //   for (let i = 0; i <= (qn >= ssl.length ? ssl.length : qn) - 1; i++) {
 
-    const stringifiedForm = stringifyForm(completedForm, formObject.formName);
+    const stringifiedForm = stringifyForm(completedForm, formName);
 
     TEST_MODE && console.log("Stringified Form", stringifiedForm);
 
     const emailOptions = {
       submittedName: completedForm.firstName + " " + completedForm.lastName,
-      submittedType: `New ${formObject.formName}`,
+      submittedType: `New ${formName}`,
       //   submittedDistance: Math.trunc(ssl[i].dist / 1000),
       submittedDistance: 40,
       formDetails: stringifiedForm.formDetails,
@@ -597,15 +667,16 @@ export const invoke = async ({ payload }) => {
     };
 
     suppliers.forEach((ssl) => {
+      console.log("SSL", ssl);
       try {
-        sendSupplierEmail(ssl, emailOptions);
+        sendSupplierEmail(ssl.supplier, emailOptions, { formGuid: formGuid, formCollection: collection });
       } catch (error) {
         handleErrors(error);
-        console.log(`Error sending email to supplier: ${ssl.supplierName}\n`, error.message);
+        console.log(`Error sending email to supplier: ${ssl.supplier.supplierName}\n`, error.message);
       }
     });
   } else {
-    handleErrors(`Missing formGuid for form ${formObject.formName}`);
+    handleErrors(`Missing formGuid for form ${formName}`);
   }
 
   // The function must return an empty object, do not delete
