@@ -310,7 +310,6 @@ const formOptions = [
             parentElement: {
               element: $w("#roofSolarPanelsCoverage-field-monoPitch"),
               value: "custom",
-              required: true,
             },
             optionElements: [
               {
