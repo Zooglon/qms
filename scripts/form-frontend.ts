@@ -432,6 +432,9 @@ const formOptions = [
             element: $w("#doorsRollerDoors-text-monoPitch"),
           },
           {
+            element: $w("#doorsDoorLocation-field-monoPitch"),
+          },
+          {
             parentElement: {
               element: $w("#doorsRollerNumber-field-monoPitch"),
               value: "custom",
