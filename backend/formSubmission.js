@@ -383,6 +383,10 @@ const stringifyForm = (form, name) => {
 
   TEST_MODE && console.log(`Used ${name} to select form template ${JSON.stringify(formTypeObj)}`);
 
+  let measurementUnits = form.measurementUnits === "metric" ? "mm" : "ft";
+
+  console.log("Measure units:", measurementUnits);
+
   // Iterate over form fields and populate template form objects
   Object.entries(form).map((field) => {
     const key = field[0].replace(/.+_/gi, "");
