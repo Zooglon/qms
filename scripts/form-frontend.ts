@@ -345,6 +345,12 @@ const formOptions = [
         },
         optionElements: [
           {
+            element: $w("#claddingHeight-field-monoPitch"),
+          },
+          {
+            element: $w("#claddingHeight-text-monoPitch"),
+          },
+          {
             element: $w("#claddingType-field-monoPitch"),
           },
         ],
@@ -736,6 +742,17 @@ const formOptions = [
       },
       {
         parentElement: {
+          element: $w("#roofCantilever-field-monoPitch"),
+          value: "yes",
+        },
+        optionElements: [
+          {
+            element: $w("#roofCantileverSide-field-monoPitch"),
+          },
+        ],
+      },
+      {
+        parentElement: {
           element: $w("#roofLights-field-portalFrame"),
           value: "yes",
           required: true,
@@ -769,7 +786,6 @@ const formOptions = [
             parentElement: {
               element: $w("#solarPanelCoverage-field-portalFrame"),
               value: "custom",
-              required: true,
             },
             optionElements: [
               {
@@ -807,7 +823,7 @@ const formOptions = [
           {
             parentElement: {
               element: $w("#numberOfRollerDoors-field-portalFrame"),
-              value: "yes",
+              value: "custom",
               required: true,
             },
             optionElements: [
