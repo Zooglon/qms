@@ -6,7 +6,7 @@ import wixData from "wix-data";
 import { triggeredEmails, contacts } from "wix-crm-backend";
 import { fetch } from "wix-fetch";
 
-let TEST_MODE = true;
+let TEST_MODE = false;
 
 const monoPitchFormFields = {
   formDetails: {
@@ -54,6 +54,7 @@ const monoPitchFormFields = {
     roofLightsPerBay: undefined,
     roofLightsPerBayCustom: undefined,
     hasCantilever: undefined,
+    cantileverSide: undefined,
     ridgeCaps: undefined,
     solarPanels: undefined,
     solarPanelsInTheFuture: undefined,
@@ -69,6 +70,7 @@ const monoPitchFormFields = {
     claddingTimberBoardType: undefined,
     claddingBoxProfileType: undefined,
     claddingCorrugatedSheetType: undefined,
+    claddingHeight: undefined,
     claddingTecsFixings: undefined,
     guttering: undefined,
     gutteringOutlets: undefined,
@@ -205,6 +207,7 @@ let portalFrameFormFields = {
     claddingBoxProfileconst: undefined,
     claddingBoxProfileType: undefined,
     claddingCorrugatedSheetFinish: undefined,
+    cladding_claddingHeight: undefined,
     claddingTecsFixings: undefined,
     guttering: undefined,
     gutteringOutlets: undefined,

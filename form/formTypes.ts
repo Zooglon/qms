@@ -41,6 +41,7 @@ type MonoPitchForm = {
     roofLightsPerBay: string;
     roofLightsPerBayCustom: string;
     roofHasCantilever: string;
+    cantileverSide: string;
     roofRidgeCaps: string;
     solarPanels: string;
     solarPanelsInTheFuture: string;
@@ -56,6 +57,7 @@ type MonoPitchForm = {
     claddingTimberBoardType: string;
     claddingBoxProfileType: string;
     claddingCorrugatedSheetType: string;
+    claddingHeight: string;
     claddingTecsFixings: string;
     guttering: string;
     gutteringOutlets: number;
@@ -219,6 +221,7 @@ type portalFrameForm = {
     cladding_claddingTimberBoardTypes: string;
     cladding_claddingBoxProfileType: string;
     cladding_claddingCorrugatedSheetFinish: string;
+    cladding_claddingHeight: string;
     cladding_claddingTecsFixings: string;
     cladding_guttering: string;
     cladding_gutteringOutlets: number;
