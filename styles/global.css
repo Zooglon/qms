@@ -108,35 +108,158 @@ div[data-hook="product"] fieldset[data-hook="product-quantity"] {
 
 /* FORM STYLES */
 
-.formContainer {
-  /* display: flex;
-   flex-direction: column;
-   gap: 1rem;
-   justify-content: flex-start;      */
-  background-color: oldlace;
+.formSection {
+  padding: 1%;
+  /* background-color: lime; */
 }
 
-#concreteArea-field {
-  content: "";
+.formSection .formStack {
+  padding: 2px;
 }
 
-#concreteArea-field::after {
-  content: "m2";
+.formSection .formStack > div,
+.formSection .formStack > div[class*=" form__"] {
+  width: 100%;
 }
 
-/* custom formfield */
+.form__areaMeasure .form__input {
+  gap: 0.5rem;
+}
+
+.formStack > div:has(.form__input + .form__units) {
+  max-width: 100%;
+}
+
+.formStack > div:has(.form__input + .form__units) > .form__input {
+  width: 75%;
+  max-width: 350px;
+  margin: unset;
+  gap: 0.5rem;
+}
+
+.formStack > div:has(.form__input + .form__units) > .form__units {
+  width: 25%;
+  text-align: left;
+  padding-inline-start: 2rem;
+}
+
+.formStack .text-input,
+.formStack .text-box,
+.formStack .radio-button-group,
+.formStack .upload-button,
+.formStack .dropdown,
+.formStack .form__areaMeasure {
+  /* background: lightcoral; */
+  max-width: 94%;
+}
+
+.formStack .text-input {
+  max-width: 400px;
+}
+
+.formSection .form__line {
+  max-width: 50%;
+  min-width: 30%;
+}
+
+.formSection .form__input {
+  height: 4rem;
+}
+
+.formSection .form__dropdown,
+.formSection .form__upload {
+  width: 99%;
+}
+
+.formSection .form__radio {
+  gap: 1rem;
+  width: 99%;
+}
+
 .form__radio [data-testid="radioGroup"] {
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: flex-start;
   flex-wrap: wrap;
+  align-items: center;
 }
 
-.form__radio [data-testid="radioGroup"] > * {
+.form__radio [data-testid="radioGroup"] > label {
   flex: 1 1 30%;
+  max-width: 48%;
 }
 
-/* .form__input input {
-    border: 5px solid green;
-} */
+.form__radio__triple [data-testid="radioGroup"] > label {
+  flex: 1 1 29%;
+  max-width: 32%;
+}
+
+.form__radio__multiple [data-testid="radioGroup"] > label {
+  flex: 1 1 50%;
+  max-width: 46%;
+}
+
+.formSection a {
+  color: #0000ee;
+}
+
+.formSection div[data-testid="groupLabel"],
+div[class*=" form__"] label {
+  font-weight: bold;
+  word-break: keep-all;
+  font-size: clamp(14px, 1rem, 22px);
+}
+
+div[class*=" form__"] input {
+  font-size: clamp(12px, 0.8rem, 22px);
+}
+
+.form__radio div[data-testid="label"] {
+  word-break: keep-all;
+  font-size: clamp(12px, 0.8rem, 22px);
+}
+
+.formSection p:not(.form__areaMeasure p) {
+  word-break: keep-all;
+  font-size: clamp(12px, 0.8rem, 22px);
+  color: #6b6b6b;
+}
+
+.formSection h1 {
+  font-weight: bold;
+  word-break: keep-all;
+}
+
+/* Mobile Style */
+@media screen and (max-width: 750px) {
+  .formSection h1 {
+    font-size: clamp(16px, 1.5rem, 32px);
+  }
+}
+
+/* Tablet Style */
+@media screen and (max-width: 1000px) {
+  .formSection h1 {
+    font-size: clamp(32px, 1.5rem, 32px);
+  }
+}
+
+@media screen and (min-width: 1000px) {
+  .formSection h1 {
+    font-size: clamp(48px, 1.5rem, 32px);
+  }
+}
+
+.testClass {
+  background: blue;
+}
+
+/* Colour swatches */
+/* 
+  select:has(> option[value="juniperGreen"]):after {
+    content: "";
+    width: 1rem;
+    height: 1rem;
+    background-color: aquamarine;
+  } */
 
 /* END FORM STYLES */
