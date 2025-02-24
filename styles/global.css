@@ -110,16 +110,30 @@ div[data-hook="product"] fieldset[data-hook="product-quantity"] {
 
 .formSection {
   padding: 1%;
-  /* background-color: lime; */
+  height: auto;
+  max-height: min-content !important;
+}
+
+.formSection * {
+  max-width: 100%;
 }
 
 .formSection .formStack {
   padding: 2px;
+  max-width: 100%;
 }
 
 .formSection .formStack > div,
 .formSection .formStack > div[class*=" form__"] {
   width: 100%;
+  margin-bottom: 2.5rem;
+}
+
+.formSection .formStack > div:last-child,
+.formSection .formStack > div[class*=" form__"]:last-child {
+  width: 100%;
+  margin-bottom: 0px;
+  max-width: 100%;
 }
 
 .form__areaMeasure .form__input {
