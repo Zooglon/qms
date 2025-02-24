@@ -18,17 +18,6 @@ FORM -
 
 - add sticky side menu for area tool, ft/mm converter and roof pitch calculator
 
-- Review rules - grey out options?
-- grey out rather than hide next button
-
-- ALL BUILDINGS WITH CLADDING add question in cladding - 'Cladding height (starting at roof going down)'
-
-- please note, building height is relative to top of posts, not inlcuding roof space and any cantilevers (rewrite needed)
-
-- MONO - cantilver - add question 'is this on the high or low side?'
-
-- Door sections in all forms to match mono pitch - make sure 'm' is on door measurements
-
 - All intro and completion text in for the repair/replace
 
 BACKEND -
@@ -36,7 +25,6 @@ BACKEND -
 - Add new supplier categories
 - Wire up new supplier categories with form submit function
 - Edit emails so that certain supplier types get certain info
-- update supplier CMS to include the ID of quotes sent through.
 - for supplier form and CMS options like 'sheds up to Xft long etc'
 - set up an automation to customers - after 3 weeks? - 'have you recieved a quote? Did you accept the quote? maybe a 'chase' button?'
   - if YES - 'have you gone with any of those quotes?' - IF YES then green tick or handle in supplier database
@@ -64,6 +52,14 @@ NOTES/COSTS -
 <br/>
 <h4>Have dones - </h4>
 
+- ALL BUILDINGS WITH CLADDING add question in cladding - 'Cladding height (starting at roof going down)'
+
+- Changed 'installation the site' typo for portal frame
+- addded 'Yard' option to concrete slab
+- please note, building height is relative to top of posts, not inlcuding roof space and any cantilevers (rewrite needed)
+- MONO - cantilver - add question 'is this on the high or low side?'
+- Door sections in all forms to match mono pitch - make sure 'm' is on door measurements
+- update supplier CMS to include the ID of quotes sent through.
 - Mezzanine height option, add m/ft
 - change 'floor image upload' to be image/video in name (see mono pitch)
 - let designer know when email domain is live so he can set up - get instagram handle, - facebook
@@ -157,3 +153,5 @@ Repair replace, different boxes -
 - roller shutter doors - form
 
 - for guttering, more interactive pictures? Click on your guttering to choose. all dimentions in MM
+
+Loading spinner for the submit button?
