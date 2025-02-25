@@ -9,16 +9,20 @@ A place to track the different scripts, snippets and general project work for th
 FRONTEND -
 
 - MAP -
+
   - Auto add dimensions when you draw a line not just the shape.
   - Add a download button to save 'screenshot' for grants office
+
+- add form blub - OPTIONAL - THINK? `At QMS.com we want to provide you, the customer, with a free easy to use platform, that allows you to go through the styeps to ordering a shed or concrete once, whilst controlling how many quotes you receive.`
 
 FORM -
 
 - Add repair/replace options
-
-- add sticky side menu for area tool, ft/mm converter and roof pitch calculator
-
+- add sticky side menu for area tool, ft/mm converter and roof pitch calculator/spirit level
 - All intro and completion text in for the repair/replace
+- Add spirit level option for phones/tablets
+- for ROOF - add option to get multiple material quotes - i.e Composite and Timer etc
+- Add mezzanine options in portal frame and mono pitch - remove option for specifying existing posts.
 
 BACKEND -
 
@@ -40,6 +44,17 @@ OTHER -
 - Update privacy policy, t&cs etc with email address when created
 - Update google maps secret in secret file. Maybe custom element insteasd of iframe?
 
+<br/>
+<br/>
+
+Needs -
+
+- Need image and content for Polytunnel
+- Need questions for repair/replace
+
+<br/>
+<br/>
+
 NOTES/COSTS -
 
 - $2 a month for email - Need to move email and domain over to Wix for ease
@@ -53,6 +68,10 @@ NOTES/COSTS -
 <h4>Have dones - </h4>
 
 - ALL BUILDINGS WITH CLADDING add question in cladding - 'Cladding height (starting at roof going down)'
+
+- add polytunnel options
+- Order change - Concrete Slab > Portal Frame > mono pitch (bottom row-) Mezz, roundhouse, polytunnel
+- Add 'none' option for ridge caps
 
 - Changed 'installation the site' typo for portal frame
 - addded 'Yard' option to concrete slab
