@@ -18,11 +18,12 @@ FRONTEND -
 FORM -
 
 - Add repair/replace options
-- add sticky side menu for area tool, ft/mm converter and roof pitch calculator/spirit level
 - All intro and completion text in for the repair/replace
 - Add spirit level option for phones/tablets
 - for ROOF - add option to get multiple material quotes - i.e Composite and Timer etc
-- Add mezzanine options in portal frame and mono pitch - remove option for specifying existing posts.
+- Add mezzanine options in portal frame and mono pitch - remove option for specifying existing and gable posts.
+- add a disclaimer about personal data - ensure all personal data fields are set to be encrypted
+- add a radius slider for quotes
 
 BACKEND -
 
@@ -72,6 +73,8 @@ NOTES/COSTS -
 - add polytunnel options
 - Order change - Concrete Slab > Portal Frame > mono pitch (bottom row-) Mezz, roundhouse, polytunnel
 - Add 'none' option for ridge caps
+- dimensions changed from 'mm' to 'm' - except for post dimensions
+- add sticky side menu for area tool, ft/mm converter and roof pitch calculator/spirit level
 
 - Changed 'installation the site' typo for portal frame
 - addded 'Yard' option to concrete slab
