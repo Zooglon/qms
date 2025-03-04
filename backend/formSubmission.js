@@ -97,6 +97,9 @@ const monoPitchFormFields = {
     additionalNotesFloor: undefined,
     floorVisuals: undefined,
   },
+  formMezzanineFloor: {
+    buildingHasMezzanineFloor: undefined,
+  },
   formContact: {
     firstName: undefined,
     lastName: undefined,
@@ -583,6 +586,7 @@ export const invoke = async ({ payload }) => {
     "MonoPitchQuotes",
     "PortalFrameQuotes",
     "RoundHouseForm",
+    "PolytunnelQuotes",
   ];
   let typeString = formName.replace(" ", "");
   let typeRegExp = new RegExp(typeString, "gi");
