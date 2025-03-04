@@ -1,8 +1,8 @@
-import { calculatePitch, helloThere, getMapCreds } from "./masterPage";
+import { helloThere, getMapCreds } from "./masterPage";
 import wixWindowFrontend from "wix-window-frontend";
 import { openLightbox } from "wix-window-frontend";
 
-let version = "000083";
+let version = "000130";
 let mapCreds;
 let measurementUnits;
 let formName;
@@ -345,12 +345,6 @@ const formOptions = [
         },
         optionElements: [
           {
-            element: $w("#claddingHeight-field-monoPitch"),
-          },
-          {
-            element: $w("#claddingHeight-text-monoPitch"),
-          },
-          {
             element: $w("#claddingType-field-monoPitch"),
           },
         ],
@@ -514,6 +508,66 @@ const formOptions = [
           },
           {
             element: $w("#floorUpload-field-monoPitch"),
+          },
+        ],
+      },
+      {
+        parentElement: {
+          element: $w("#hasMezzanine-field-monoPitch"),
+          value: "yes",
+          required: true,
+        },
+        optionElements: [
+          {
+            element: $w("#mezzanineInstallation-field-monoPitch"),
+          },
+          {
+            element: $w("#mezzanineFreestanding-field-monoPitch"),
+          },
+          {
+            element: $w("#mezzanineSteelOptions-field-monoPitch"),
+          },
+          {
+            parentElement: {
+              element: $w("#mezzanineBayWidth-field-monoPitch"),
+              value: "other",
+              required: false,
+            },
+            optionElements: [
+              {
+                element: $w("#mezzanineBayWidthOther-field-monoPitch"),
+              },
+            ],
+          },
+          {
+            parentElement: {
+              element: $w("#mezzanineSpanOptions-field-monoPitch"),
+              value: "supportPosts",
+              required: true,
+            },
+            optionElements: [
+              {
+                element: $w("#mezzanineHeight-field-monoPitch"),
+              },
+            ],
+          },
+          {
+            element: $w("#mezzaninePurlins-field-monoPitch"),
+          },
+          {
+            element: $w("#mezzanineFloorOptions-field-monoPitch"),
+          },
+          {
+            element: $w("#mezzanineHandrails-field-monoPitch"),
+          },
+          {
+            element: $w("#mezzanineFloorAccess-field-monoPitch"),
+          },
+          {
+            element: $w("#mezzanineForkliftBay-field-monoPitch"),
+          },
+          {
+            element: $w("#mezzanineAdditionalNotes-field-monoPitch"),
           },
         ],
       },
@@ -742,17 +796,6 @@ const formOptions = [
       },
       {
         parentElement: {
-          element: $w("#roofCantilever-field-monoPitch"),
-          value: "yes",
-        },
-        optionElements: [
-          {
-            element: $w("#roofCantileverSide-field-monoPitch"),
-          },
-        ],
-      },
-      {
-        parentElement: {
           element: $w("#roofLights-field-portalFrame"),
           value: "yes",
           required: true,
@@ -957,6 +1000,69 @@ const formOptions = [
           },
         ],
       },
+      {
+        parentElement: {
+          element: $w("#hasMezzanine-field-portalFrame"),
+          value: "yes",
+          required: true,
+        },
+        optionElements: [
+          {
+            element: $w("#mezzanineInstallation-field-portalFrame"),
+          },
+          {
+            element: $w("#mezzanineFreestanding-field-portalFrame"),
+          },
+          {
+            parentElement: {
+              element: $w("#mezzanineBayWidth-field-portalFrame"),
+              value: "other",
+              required: false,
+            },
+            optionElements: [
+              {
+                element: $w("#mezzanineBayWidthOther-field-portalFrame"),
+              },
+            ],
+          },
+          {
+            parentElement: {
+              element: $w("#mezzanineSpanOptions-field-portalFrame"),
+              value: "supportPosts",
+              required: true,
+            },
+            optionElements: [
+              {
+                element: $w("#mezzanineOptionsSpanHeight-box-portalFrame"),
+              },
+              {
+                element: $w("#mezzanineHeight-field-portalFrame"),
+              },
+            ],
+          },
+          {
+            element: $w("#mezzanineSteelOptions-field-portalFrame"),
+          },
+          {
+            element: $w("#mezzaninePurlins-field-portalFrame"),
+          },
+          {
+            element: $w("#mezzanineFloorOptions-field-portalFrame"),
+          },
+          {
+            element: $w("#mezzanineHandrails-field-portalFrame"),
+          },
+          {
+            element: $w("#mezzanineFloorAccess-field-portalFrame"),
+          },
+          {
+            element: $w("#mezzanineForkliftBay-field-portalFrame"),
+          },
+          {
+            element: $w("#mezzanineAdditionalNotes-field-portalFrame"),
+          },
+        ],
+      },
     ],
   },
   {
@@ -1030,6 +1136,230 @@ const formOptions = [
       },
     ],
   },
+  {
+    formName: "polyTunnelForm",
+    fields: [
+      {
+        parentElement: {
+          element: $w("#polytunnelSiteLevel-field-polytunnel"),
+          value: "yes",
+          required: true,
+        },
+        optionElements: [
+          {
+            element: $w("#polytunnelSiteLevelQuote-field-polytunnel"),
+          },
+        ],
+      },
+      {
+        parentElement: {
+          element: $w("#polytunnelWidth-field-polytunnel"),
+          value: "1.83m",
+          required: true,
+          // option: ["2.44m", "3.05m", "3.66m", "4.27m", "4.88m", "5.49m", "6.4m", "7.32m", "8.23m", "9.15m"],
+        },
+        optionElements: [
+          { element: $w("#polytunnelLength6ft-field-polytunnel") },
+          {
+            element: $w("#polytunnelLengthCoveringSmall-field-polytunnel"),
+            // option: ["8ft", "10ft", "12ft", "14ft"]
+            option: ["2.44m", "3.05m", "3.66m", "4.27m"],
+          },
+        ],
+      },
+      {
+        parentElement: {
+          element: $w("#polytunnelWidth-field-polytunnel"),
+          value: "2.44m",
+          required: true,
+          // option: ["1.83m", "3.05m", "3.66m", "4.27m", "4.88m", "5.49m", "6.4m", "7.32m", "8.23m", "9.15m"],
+        },
+        optionElements: [
+          { element: $w("#polytunnelLength8ft-field-polytunnel") },
+          {
+            element: $w("#polytunnelLengthCoveringSmall-field-polytunnel"),
+            // option: ["6ft", "10ft", "12ft", "14ft"]
+            option: ["1.83m", "3.05m", "3.66m", "4.27m"],
+          },
+        ],
+      },
+      {
+        parentElement: {
+          element: $w("#polytunnelWidth-field-polytunnel"),
+          value: "3.05m",
+          required: true,
+          // option: ["1.83m", "2.44m", "3.66m", "4.27m", "4.88m", "5.49m", "6.4m", "7.32m", "8.23m", "9.15m"],
+        },
+        optionElements: [
+          { element: $w("#polytunnelLength10ft-field-polytunnel") },
+          {
+            element: $w("#polytunnelLengthCoveringSmall-field-polytunnel"),
+            // option: ["6ft", "8ft", "12ft", "14ft"]
+            option: ["1.83m", "2.44m", "3.66m", "4.27m"],
+          },
+        ],
+      },
+      {
+        parentElement: {
+          element: $w("#polytunnelWidth-field-polytunnel"),
+          value: "3.66m",
+          required: true,
+          // option: ["1.83m", "2.44m", "3.05m", "4.27m", "4.88m", "5.49m", "6.4m", "7.32m", "8.23m", "9.15m"],
+        },
+        optionElements: [
+          { element: $w("#polytunnelLength12ft14fts-field-polytunnel") },
+          {
+            element: $w("#polytunnelLengthCoveringSmall-field-polytunnel"),
+            // option: ["6ft", "8ft", "12ft", "14ft"]
+            option: ["1.83m", "2.44m", "3.05m", "4.27m"],
+          },
+        ],
+      },
+      {
+        parentElement: {
+          element: $w("#polytunnelWidth-field-polytunnel"),
+          value: "4.27m",
+          required: true,
+          // option: ["1.83m", "2.44m", "3.05m", "3.66m", "4.88m", "5.49m", "6.4m", "7.32m", "8.23m", "9.15m"],
+        },
+        optionElements: [
+          {
+            parentElement: { element: $w("#hoopSpacing-field-polytunnel"), value: "5ft" },
+            optionElements: [
+              {
+                element: $w("#polytunnelLength12ft14fts-field-polytunnel"),
+              },
+            ],
+          },
+          {
+            parentElement: { element: $w("#hoopSpacing-field-polytunnel"), value: "6ft" },
+            optionElements: [
+              {
+                element: $w("#polytunnelLength14ft-field-polytunnel"),
+              },
+            ],
+          },
+          {
+            element: $w("#polytunnelLengthCoveringSmall-field-polytunnel"),
+            // option: ["6ft", "8ft", "12ft", "14ft"]
+            option: ["1.83m", "2.44m", "3.05m", "3.66m"],
+          },
+        ],
+      },
+      {
+        parentElement: {
+          element: $w("#polytunnelWidth-field-polytunnel"),
+          value: "4.88m",
+          required: true,
+          // option: ["1.83m", "2.44m", "3.05m", "3.66m", "4.27m", "5.49m", "6.4m", "7.32m", "8.23m", "9.15m"],
+        },
+        optionElements: [
+          { element: $w("#polytunnelLengthLarge-field-polytunnel"), option: ["5.49m"] },
+          {
+            element: $w("#polytunnelLengthCoveringLarge-field-polytunnel"),
+            // option: ["18ft", "21ft", "24ft", "27ft", "30ft"],
+            option: ["5.49m", "6.4m", "7.32m", "8.23m", "9.15m"],
+          },
+        ],
+      },
+      {
+        parentElement: {
+          element: $w("#polytunnelWidth-field-polytunnel"),
+          value: "5.49m",
+          required: true,
+          // option: ["1.83m", "2.44m", "3.05m", "3.66m", "4.27m", "4.88m", "6.4m", "7.32m", "8.23m", "9.15m"],
+        },
+        optionElements: [
+          { element: $w("#polytunnelLengthLarge-field-polytunnel"), option: ["4.88m"] },
+          {
+            element: $w("#polytunnelLengthCoveringLarge-field-polytunnel"),
+            // option: ["16ft", "21ft", "24ft", "27ft", "30ft"],
+            option: ["4.88m", "6.4m", "7.32m", "8.23m", "9.15m"],
+          },
+        ],
+      },
+      {
+        parentElement: {
+          element: $w("#polytunnelWidth-field-polytunnel"),
+          value: "6.4m",
+          required: true,
+          // option: ["1.83m", "2.44m", "3.05m", "3.66m", "4.27m", "4.88m", "5.49m", "7.32m", "8.23m", "9.15m"],
+        },
+        optionElements: [
+          {
+            element: $w("#polytunnelLengthXtraLarge-field-polytunnel"),
+            // option: ["24ft", "27ft", "30ft"]
+            option: ["7.32m", "8.23m", "9.15m"],
+          },
+          {
+            element: $w("#polytunnelLengthCoveringLarge-field-polytunnel"),
+            // option: ["16ft", "18ft", "24ft", "27ft", "30ft"],
+            option: ["4.88m", "5.49m", "7.32m", "8.23m", "9.15m"],
+          },
+        ],
+      },
+      {
+        parentElement: {
+          element: $w("#polytunnelWidth-field-polytunnel"),
+          value: "7.32m",
+          required: true,
+          // option: ["1.83m", "2.44m", "3.05m", "3.66m", "4.27m", "4.88m", "5.49m", "6.4m", "8.23m", "9.15m"],
+        },
+        optionElements: [
+          {
+            element: $w("#polytunnelLengthXtraLarge-field-polytunnel"),
+            // option: ["21ft", "27ft", "30ft"]
+            option: ["6.4m", "8.23m", "9.15m"],
+          },
+          {
+            element: $w("#polytunnelLengthCoveringLarge-field-polytunnel"),
+            // option: ["16ft", "18ft", "21ft", "27ft", "30ft"],
+            option: ["4.88m", "5.49m", "6.4m", "8.23m", "9.15m"],
+          },
+        ],
+      },
+      {
+        parentElement: {
+          element: $w("#polytunnelWidth-field-polytunnel"),
+          value: "8.23m",
+          required: true,
+          // option: ["1.83m", "2.44m", "3.05m", "3.66m", "4.27m", "4.88m", "5.49m", "6.4m", "7.32m", "9.15m"],
+        },
+        optionElements: [
+          {
+            element: $w("#polytunnelLengthXtraLarge-field-polytunnel"),
+            // option: ["21ft", "24ft", "30ft"]
+            option: ["6.4m", "7.32m", "9.15m"],
+          },
+          {
+            element: $w("#polytunnelLengthCoveringLarge-field-polytunnel"),
+            // option: ["16ft", "18ft", "21ft", "24ft", "30ft"],
+            option: ["4.88m", "5.49m", "6.4m", "7.32m", "9.15m"],
+          },
+        ],
+      },
+      {
+        parentElement: {
+          element: $w("#polytunnelWidth-field-polytunnel"),
+          value: "9.15m",
+          required: true,
+          // option: ["1.83m", "2.44m", "3.05m", "3.66m", "4.27m", "4.88m", "5.49m", "6.4m", "7.32m", "8.23m"],
+        },
+        optionElements: [
+          {
+            element: $w("#polytunnelLengthXtraLarge-field-polytunnel"),
+            // option: ["21ft", "24ft", "27ft"]
+            option: ["6.4m", "7.32m", "8.23m"],
+          },
+          {
+            element: $w("#polytunnelLengthCoveringLarge-field-polytunnel"),
+            // option: ["16ft", "18ft", "21ft", "24ft", "27ft"],
+            option: ["4.88m", "5.49m", "6.4m", "7.32m", "8.23m"],
+          },
+        ],
+      },
+    ],
+  },
 ];
 
 // Variables Start
@@ -1046,16 +1376,16 @@ const buildingTypeRepeaterChild = $w("#buildingTypeRepeaterChild");
 const quoteStateContainer = $w("#quoteStateContainer");
 const mainFormImage = $w("#mainFormImage");
 const formTitle = $w("#formTitle");
-const calcStateContainer = $w("#calcStateContainer");
-const pitchSwitches = [$w("#pitchCalcTriggerBtn"), $w("#closePitch")];
-const areaSwitches = [$w("#areaCalcTriggerBtn"), $w("#closeArea")];
-const forms = [
-  $w("#monoPitchForm-content"),
-  $w("#portalFrameForm-content"),
-  $w("#mezzanineFloorForm-content"),
-  $w("#roundHouseForm-content"),
-  $w("#concreteSlabForm-content"),
-];
+// const calcStateContainer = $w("#calcStateContainer");
+// const pitchSwitches = [$w("#pitchCalcTriggerBtn"), $w("#closePitch")];
+// const areaSwitches = [$w("#areaCalcTriggerBtn"), $w("#closeArea")];
+// const forms = [
+//   $w("#monoPitchForm-content"),
+//   $w("#portalFrameForm-content"),
+//   $w("#mezzanineFloorForm-content"),
+//   $w("#roundHouseForm-content"),
+//   $w("#concreteSlabForm-content"),
+// ];
 
 const formFields = [
   {
@@ -1086,6 +1416,12 @@ const formFields = [
     formContainer: $w("#roundHouseForm"),
     errorMsg: $w("#submitFailed-roundHouse"),
     guidField: $w("#formGUID-field-roundHouse"),
+    // areaField: $w("#areaDetail-field-roundHouse"),
+  },
+  {
+    formContainer: $w("#polyTunnelForm"),
+    errorMsg: $w("#submitFailed-polytunnel"),
+    guidField: $w("#formGUID-field-polytunnel"),
     // areaField: $w("#areaDetail-field-roundHouse"),
   },
 ];
@@ -1119,14 +1455,6 @@ let formState;
 let activeDataset;
 let selectedFormFields;
 
-// Roof Pitch Elements
-
-const rpSideOne = $w("#sideOne");
-const rpsideTwo = $w("#sideTwo");
-const rpsideThree = $w("#sideThree");
-const rpErr = $w("#roofPitchError");
-const rpShowText = $w("#roofPitchShowText");
-
 // Area Calc Element
 const acc = $w("#mapComponent");
 
@@ -1144,6 +1472,7 @@ $w.onReady(async function () {
 
 // Functions
 const loadForm = (formName) => {
+  console.log("Load form fired,", formName, formState);
   let completedFields = [];
 
   const fillableFormFields = getForm(false);
@@ -1221,35 +1550,57 @@ const loadForm = (formName) => {
       areaDetailsField.value = JSON.stringify(areaCalcObj);
     }
   });
+
+  $w("#pitchCalcBtn").onClick(async () => await openLightbox("pitch-calculator"));
+  $w("#convertCalcBtn").onClick(async () => await openLightbox("conversion-calculator"));
 };
 
 const datasetSet = (dataset) => {
   // Add dataset in
+  console.log("DATASET", dataset);
   switch (dataset) {
-    case "monoPitchDataset": {
-      activeDataset = { id: "monoPitchDataset", element: $w("#monoPitchDataset") };
+    case "monoPitchQuotesDataset": {
+      console.log("MATCH Pt 1, monoPitchQuotesDataset");
+      activeDataset = { id: "monoPitchQuotesDataset", element: $w("#monoPitchQuotesDataset") };
+      console.log("MATCH ", "monoPitchQuotesDataset", dataset, "||", JSON.stringify(activeDataset));
       break;
     }
     case "concreteSlabDataset": {
-      activeDataset = { id: "concreteSlabDataset", element: $w("#concreteSlabQuotes") };
+      console.log("MATCH Pt 1, concreteSlabDataset");
+      activeDataset = { id: "concreteSlabDataset", element: $w("#concreteSlabDataset") };
+      console.log("MATCH ", "concreteSlabDataset", dataset, "||", JSON.stringify(activeDataset));
       break;
     }
-    case "portalFrameDataset": {
-      activeDataset = { id: "portalFrameDataset", element: $w("#portalFrameDataset") };
+    case "portalFrameQuotesDataset": {
+      console.log("MATCH Pt 1, portalFrameQuotesDataset");
+      activeDataset = { id: "portalFrameQuotesDataset", element: $w("#portalFrameQuotesDataset") };
+      console.log("MATCH ", "portalFrameQuotesDataset", dataset, "||", JSON.stringify(activeDataset));
       break;
     }
-    case "roundHouseDataset": {
-      activeDataset = { id: "roundHouseDataset", element: $w("#roundHouseDataset") };
+    case "roundHouseQuotesDataset": {
+      console.log("MATCH Pt 1, roundHouseQuotesDataset");
+      activeDataset = { id: "roundHouseQuotesDataset", element: $w("#roundHouseQuotesDataset") };
+      console.log("MATCH ", "roundHouseQuotesDataset", dataset, "||", JSON.stringify(activeDataset));
       break;
     }
-    case "mezzanineFloorDataset": {
-      activeDataset = { id: "mezzanineFloorDataset", element: $w("#mezzanineFloorDataset") };
+    case "mezzanineFloorQuotesDataset": {
+      console.log("MATCH Pt 1, mezzanineFloorQuotesDataset");
+      activeDataset = { id: "mezzanineFloorQuotesDataset", element: $w("#mezzanineFloorQuotesDataset") };
+      console.log("MATCH ", "mezzanineFloorQuotesDataset", dataset, "||", JSON.stringify(activeDataset));
+      break;
+    }
+    case "polyTunnelQuotesDataset": {
+      console.log("MATCH Pt 1, polyTunnelQuotesDataset");
+      activeDataset = { id: "polyTunnelQuotesDataset", element: $w("#polyTunnelQuotesDataset") };
+      console.log("MATCH ", "polyTunnelQuotesDataset", dataset, "||", JSON.stringify(activeDataset));
       break;
     }
     default: {
+      console.log("DEFAULT", dataset);
       break;
     }
   }
+
   const formGuid = crypto.randomUUID();
   const areaDetails = "";
 
@@ -1257,6 +1608,8 @@ const datasetSet = (dataset) => {
   guidField.value = formGuid;
   // const areaField = selectedFormFields.areaField
   // areaField.value = areaDetails
+
+  // console.log("activeDataset", activeDataset, dataset);
 
   activeDataset.element.onBeforeSave(() => {
     const errorMessageBox = selectedFormFields.errorMsg;
@@ -1311,45 +1664,24 @@ const updateFormState = (dataset) => {
   }
 };
 
-const toggleCalcs = (e) => {
-  let cc = $w("#calcCont");
-  let state = calcStateContainer.currentState.id;
-
-  if (areaSwitches.includes(e)) {
-    if (cc.customClassList.contains("expanded") && state === "areaMapCalculator") {
-      cc.customClassList.remove("expanded");
-    } else {
-      calcStateContainer.changeState("areaMapCalculator");
-      cc.customClassList.add("expanded");
-    }
-  } else {
-    if (cc.customClassList.contains("expanded") && state === "roofPitchCalculator") {
-      cc.customClassList.remove("expanded");
-    } else {
-      calcStateContainer.changeState("roofPitchCalculator");
-      cc.customClassList.add("expanded");
-    }
-  }
-};
-
-const prepareMap = (msg) => {
-  acc.postMessage(msg);
-  acc.onMessage((event) => {
-    let receivedMessage = event.data;
-    if (formState.quoteFormId === "concreteSlabForm-content") {
-      let selectedForm = forms.find((form) => form.id === formState.quoteFormId);
-      formAdditionalFiels = receivedMessage;
-      selectedForm.setFieldValues({
-        building_area_mono: Number(Number(formAdditionalFiels.area).toFixed(2)),
-        site_satellite_area: `${Number(formAdditionalFiels.area).toFixed(2)}m2`,
-        site_maps_link: `https://www.google.com/maps/place/${formAdditionalFiels.centerLat},${formAdditionalFiels.centerLng}`,
-        line_lengths: `${formAdditionalFiels.lens.join(",\n")}`,
-        site_satellite_view_image: `${formAdditionalFiels.url}`,
-      });
-      selectedForm.save;
-    }
-  });
-};
+// const prepareMap = (msg) => {
+//   acc.postMessage(msg);
+//   acc.onMessage((event) => {
+//     let receivedMessage = event.data;
+//     if (formState.quoteFormId === "concreteSlabForm-content") {
+//       let selectedForm = forms.find((form) => form.id === formState.quoteFormId);
+//       formAdditionalFiels = receivedMessage;
+//       selectedForm.setFieldValues({
+//         building_area_mono: Number(Number(formAdditionalFiels.area).toFixed(2)),
+//         site_satellite_area: `${Number(formAdditionalFiels.area).toFixed(2)}m2`,
+//         site_maps_link: `https://www.google.com/maps/place/${formAdditionalFiels.centerLat},${formAdditionalFiels.centerLng}`,
+//         line_lengths: `${formAdditionalFiels.lens.join(",\n")}`,
+//         site_satellite_view_image: `${formAdditionalFiels.url}`,
+//       });
+//       selectedForm.save;
+//     }
+//   });
+// };
 
 // OnClicks
 formStartBtn.onClick(() => formStateContainer.changeState("newQuoteState"));
@@ -1358,6 +1690,7 @@ buildQuoteFooterBtn.onClick(() => formStateContainer.changeState("newQuoteState"
 
 buildingTypeRepeaterChild.onClick((event) => {
   formState = buildingTypeRepeater.data.find((item) => item._id === event.context.itemId);
+  console.log("buildingTypeState", formState);
   formStateContainer.changeState("formState");
   quoteStateContainer.changeState(formState.quoteFormId.replace("-content", ""));
   updateFormState(formState);
@@ -1365,6 +1698,7 @@ buildingTypeRepeaterChild.onClick((event) => {
 
 repairReplaceRepeaterChild.onClick((event) => {
   formState = repairReplaceRepeater.data.find((item) => item._id === event.context.itemId);
+  console.log("repairReplace", formState);
   formStateContainer.changeState("formState");
   quoteStateContainer.changeState(formState.quoteFormId.replace("-content", ""));
   updateFormState(formState);
@@ -1372,6 +1706,7 @@ repairReplaceRepeaterChild.onClick((event) => {
 
 // When selecting New building or repair/replace...
 quoteTypeRepeaterChild.onClick((event) => {
+  console.log("quoteType", event);
   let id = quoteTypeRepeater.data.find((item) => item._id === event.context.itemId);
   if (id.title === "New Building") {
     newOrRepairStateContainer.changeState("newBuildingState");
@@ -1379,12 +1714,6 @@ quoteTypeRepeaterChild.onClick((event) => {
     newOrRepairStateContainer.changeState("repairReplaceState");
   }
 });
-
-// calculatePitchBtn.onClick(() =>
-//   calculatePitch(rpSideOne, rpsideTwo, rpsideThree, rpErr, rpShowText)
-// );
-
-// pitchSwitches.concat(areaSwitches).forEach((ts) => ts.onClick((ev) => toggleCalcs(ev.target)));
 
 resetBtns.forEach((rb) =>
   rb.onClick(() => {
@@ -1405,11 +1734,9 @@ const capitaliseFirst = (s) => (s && String(s[0]).toUpperCase() + String(s).slic
 
 const getForm = (isAllFields) => {
   let form = [];
-
   selectedFormFields = formFields.find((fc) => fc.formContainer.id === formName);
   const getForm = selectedFormFields.formContainer;
   const getFormStack = getForm.children.find((s) => s.id === `formStack-${formName.replace("-content", "")}`);
-
   getFormStack.children.map((field) => {
     getAllFields(form, field);
   });
@@ -1451,7 +1778,49 @@ const getAllFields = (fieldsArray, element) => {
 
 const handleAllOptions = (field) => {
   field.parentElement.element.onChange((ev) => {
-    if (lowerFirst(ev.target.value) === field.parentElement.value) {
+    console.log("FIELD", field);
+    if (lowerFirst(ev.target.value) !== field.parentElement.value) {
+      field.optionElements.forEach((oe) => {
+        if (oe.element) {
+          oe.element.id === "hoopSpacing-field-polytunnel" && console.log("Appeared?");
+          if (oe.element.value) {
+            oe.element.value = "";
+          }
+          if (oe.element.required) {
+            oe.element.required = false;
+          }
+          if (!(oe.option && oe.option.includes(lowerFirst(ev.target.value)))) {
+            oe.element.id === "hoopSpacing-field-polytunnel" && console.log("Appeared?");
+            oe.element.collapse();
+          }
+        } else {
+          console.log("Whats this?", oe); // this is child option elements
+          const collapseElem = (f) => {
+            if (f.element) {
+              f.element.id === "hoopSpacing-field-polytunnel" && console.log("Appeared in collapse 1?");
+              f.element.collapse();
+            } else {
+              f.optionElements.forEach((opte) => {
+                opte.element.id === "hoopSpacing-field-polytunnel" && console.log("Appeared in collapse 2?");
+                collapseElem(opte);
+                if (opte.element.value) {
+                  opte.element.value = "";
+                }
+              });
+              f.parentElement.element.collapse();
+              if (f.parentElement.element.value) {
+                f.parentElement.element.value = "";
+              }
+            }
+          };
+          if (!(oe.option && oe.option.includes(lowerFirst(ev.target.value)))) {
+            console.log("Appeared at base", oe.option);
+            collapseElem(oe);
+          }
+        }
+      });
+    } else {
+      console.log("Step One", field, "click target val", ev.target.value, "field parent value", ev.target.value);
       field.optionElements.forEach((oe) => {
         if (oe.element) {
           oe.element.expand();
@@ -1471,40 +1840,6 @@ const handleAllOptions = (field) => {
           }
 
           handleAllOptions(oe);
-        }
-      });
-    } else {
-      field.optionElements.forEach((oe) => {
-        if (oe.element) {
-          if (oe.element.value) {
-            oe.element.value = "";
-          }
-          if (oe.element.required) {
-            oe.element.required = false;
-          }
-          if (!(oe.option && oe.option.includes(lowerFirst(ev.target.value)))) {
-            oe.element.collapse();
-          }
-        } else {
-          const collapseElem = (f) => {
-            if (f.element) {
-              f.element.collapse();
-            } else {
-              f.optionElements.forEach((opte) => {
-                collapseElem(opte);
-                if (opte.element.value) {
-                  opte.element.value = "";
-                }
-              });
-              f.parentElement.element.collapse();
-              if (f.parentElement.element.value) {
-                f.parentElement.element.value = "";
-              }
-            }
-          };
-          if (!(oe.option && oe.option.includes(lowerFirst(ev.target.value)))) {
-            collapseElem(oe);
-          }
         }
       });
     }
