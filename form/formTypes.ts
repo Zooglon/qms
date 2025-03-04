@@ -84,6 +84,22 @@ type MonoPitchForm = {
     additionalNotesFloor: string;
     floorVisuals: string;
   };
+  mezzanineFloor: {
+    mezzanineFloor_buildingHasMezzanineFloor: string;
+    mezzanineFloor_quoteFromSupplier: string;
+    mezzanineFloor_freestanding: string;
+    mezzanineFloor_BayWidth: string;
+    mezzanineFloor_BayWidthOther: string;
+    mezzanineFloor_SpanOptions: string;
+    mezzanineFloor_Height: string;
+    mezzanineFloor_SteelOptions: string;
+    mezzanineFloor_Purlins: string;
+    mezzanineFloor_Options: string;
+    mezzanineFloor_HandRails: string;
+    mezzanineFloor_Access: string;
+    mezzanineFloor_ForkliftBay: string;
+    mezzanineFloor_AdditionalNotes: string;
+  };
   contact: {
     howManyQuotes: number;
     firstName: string;
@@ -231,6 +247,22 @@ type portalFrameForm = {
     floor_quoteForConcreteFloor: string;
     floor_additionalNotesFloor: string;
   };
+  mezzanineFloor: {
+    mezzanineFloor_buildingHasMezzanineFloor: string;
+    mezzanineFloor_quoteFromSupplier: string;
+    mezzanineFloor_freestanding: string;
+    mezzanineFloor_BayWidth: string;
+    mezzanineFloor_BayWidthOther: string;
+    mezzanineFloor_SpanOptions: string;
+    mezzanineFloor_Height: string;
+    mezzanineFloor_SteelOptions: string;
+    mezzanineFloor_Purlins: string;
+    mezzanineFloor_Options: string;
+    mezzanineFloor_HandRails: string;
+    mezzanineFloor_Access: string;
+    mezzanineFloor_ForkliftBay: string;
+    mezzanineFloor_AdditionalNotes: string;
+  };
   contact: {
     howManyQuotes: number;
     firstName: string;
@@ -287,6 +319,27 @@ type mezzanineFloorForm = {
     details_forkliftBay: string;
     details_additionalNotes: string;
     details_floorImageVideoUpload: string;
+  };
+  contact: {
+    howManyQuotes: number;
+    firstName: string;
+    lastName: string;
+    companyName: string;
+    email: string;
+    phoneNumber: string;
+    address: any;
+  };
+};
+
+type polyTunnelForm = {
+  details: {
+    polytunnel_Width: string;
+    polytunnel_hoopSpacing: string;
+    polytunnel_siteRequiresLevelling: string;
+    polytunnel_quoteForLevelling: string;
+    polytunnel_length: string;
+    polytunnel_guttering: string;
+    polytunnel_covering: string;
   };
   contact: {
     howManyQuotes: number;
