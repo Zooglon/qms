@@ -2,7 +2,7 @@ import { helloThere, getMapCreds } from "./masterPage";
 import wixWindowFrontend from "wix-window-frontend";
 import { openLightbox } from "wix-window-frontend";
 
-let version = "000130";
+let version = "000132";
 let mapCreds;
 let measurementUnits;
 let formName;
@@ -1492,7 +1492,7 @@ const loadForm = (formName) => {
 
   fillableFormFields.forEach((field) => {
     field.onChange((ev) => {
-      DEBUG_MODE && console.log("Field changed", ev.target.label, ev.target.value);
+      DEBUG_MODE && console.log("Field changed", ev.target.label ?? ev.target.id, ev.target.value, ev);
 
       if (field.id.startsWith("measurementUnits-field")) {
         measurementUnits = field.value;
@@ -1779,6 +1779,11 @@ const getAllFields = (fieldsArray, element) => {
 const handleAllOptions = (field) => {
   field.parentElement.element.onChange((ev) => {
     console.log("FIELD", field);
+
+    // Array.isArray(ev.target.value)
+    //     ? lowerFirst(ev.target.value) !== field.parentElement.value
+    //     :
+
     if (lowerFirst(ev.target.value) !== field.parentElement.value) {
       field.optionElements.forEach((oe) => {
         if (oe.element) {
@@ -1791,7 +1796,8 @@ const handleAllOptions = (field) => {
           }
           if (!(oe.option && oe.option.includes(lowerFirst(ev.target.value)))) {
             oe.element.id === "hoopSpacing-field-polytunnel" && console.log("Appeared?");
-            oe.element.collapse();
+            console.log("AHA", oe, oe.element);
+            !oe.element.collapsed && oe.element.collapse();
           }
         } else {
           console.log("Whats this?", oe); // this is child option elements
