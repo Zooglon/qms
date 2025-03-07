@@ -1,3 +1,9 @@
+:root {
+  --mainOrange: #ed6a20;
+  --mainPurple: #562b86;
+  --mainGrey: #6b6b6b;
+}
+
 .flexRow {
   display: flex;
   flex-direction: row;
@@ -23,7 +29,7 @@
 }
 
 .formSelector-active {
-  border-color: #ed6a20;
+  border-color: var(--mainOrange);
   border-width: 0.5rem;
   border-style: solid;
   transform: scale(1.05);
@@ -124,9 +130,9 @@ div[data-hook="product"] fieldset[data-hook="product-quantity"] {
 }
 
 .formSection .formStack > div,
-.formSection .formStack > div[class*=" form__"] {
+.formSection .formStack > div[class*=" form__"]:not(.form__checkboxes) {
   width: 100%;
-  margin-bottom: 2.5rem;
+  margin-bottom: 1.25rem;
 }
 
 .formSection .formStack > div:last-child,
@@ -217,14 +223,45 @@ div[data-hook="product"] fieldset[data-hook="product-quantity"] {
 }
 
 .formSection div[data-testid="groupLabel"],
-div[class*=" form__"] label {
+div[class*=" form__"] label:not(.form__checkboxes label),
+.form__checkboxes div {
   font-weight: bold;
   word-break: keep-all;
+  margin: 0 0 0.75rem;
   font-size: clamp(14px, 1rem, 22px);
 }
 
 div[class*=" form__"] input {
   font-size: clamp(12px, 0.8rem, 22px);
+}
+
+.form__checkboxes > div {
+  justify-content: space-between;
+}
+
+.form__checkboxes > div:nth-child():not(label) {
+  margin: 0 0 0.75rem;
+}
+
+/* label here is boxes not title */
+.form__checkboxes label {
+  border-radius: 8px;
+  text-align: center;
+  font-weight: 400;
+  flex-grow: 1;
+  margin: 0 0.25rem;
+}
+
+.form__checkboxes label:first-of-type {
+  margin-left: 0rem;
+}
+
+.form__checkboxes label:last-of-type {
+  margin-right: 0rem;
+}
+
+.form__checkboxes label:hover {
+  transform: scale(1.1);
 }
 
 .form__radio div[data-testid="label"] {
@@ -261,10 +298,6 @@ div[class*=" form__"] input {
   .formSection h1 {
     font-size: clamp(48px, 1.5rem, 32px);
   }
-}
-
-.testClass {
-  background: blue;
 }
 
 /* Colour swatches */
