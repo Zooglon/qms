@@ -1,8 +1,9 @@
 import { helloThere, getMapCreds } from "./masterPage";
 import wixWindowFrontend from "wix-window-frontend";
 import { openLightbox } from "wix-window-frontend";
+import { captchaAuth } from "backend/captchaModule";
 
-let version = "000132";
+let version = "000183";
 let mapCreds;
 let measurementUnits;
 let formName;
@@ -12,70 +13,75 @@ const DEBUG_MODE = true;
 const formOptions = [
   {
     formName: "concreteSlabForm",
-    fields: [
+    formFields: [
       {
-        parentElement: {
-          element: $w("#concreteThickness-field-concreteSlab"),
-          value: "custom",
-          required: true,
-        },
-        optionElements: [
+        elementID: $w("#concreteThickness-field-concreteSlab"),
+        subFields: [
           {
-            element: $w("#concreteThicknessCustom-field-concreteSlab"),
-          },
-          {
-            element: $w("#concreteThicknessCustom-text-concreteSlab"),
-          },
-        ],
-      },
-      {
-        parentElement: {
-          element: $w("#finishedArea-field-concreteSlab"),
-          value: "other",
-          required: false,
-        },
-        optionElements: [
-          {
-            element: $w("#finishedAreaCustom-field-concreteSlab"),
-          },
-          {
-            element: $w("#finishedAreaCustom-text-concreteSlab"),
-          },
-        ],
-      },
-      {
-        parentElement: {
-          element: $w("#finishOptions-concreteSlab"),
-          value: "patterned",
-          required: false,
-        },
-        optionElements: [
-          {
-            parentElement: {
-              element: $w("#patterned-field-concreteSlab"),
-              value: "custom",
-              required: false,
-            },
-            optionElements: [
+            optionValue: "custom",
+            required: true,
+            subFields: [
               {
-                element: $w("#patternedCustom-field-concreteSlab"),
+                elementID: $w("#concreteThicknessCustom-field-concreteSlab"),
               },
               {
-                element: $w("#patternedCustom-text-concreteSlab"),
+                elementID: $w("#concreteThicknessCustom-text-concreteSlab"),
               },
             ],
           },
         ],
       },
       {
-        parentElement: {
-          element: $w("#finishOptions-concreteSlab"),
-          value: "powerFloat",
-          required: false,
-        },
-        optionElements: [
+        elementID: $w("#finishedArea-field-concreteSlab"),
+        subFields: [
           {
-            element: $w("#powerFloat-field-concreteSlab"),
+            optionValue: "other",
+            required: false,
+            subFields: [
+              {
+                elementID: $w("#finishedAreaCustom-field-concreteSlab"),
+              },
+              {
+                elementID: $w("#finishedAreaCustom-text-concreteSlab"),
+              },
+            ],
+          },
+        ],
+      },
+      {
+        elementID: $w("#finishOptions-concreteSlab"),
+        subFields: [
+          {
+            optionValue: "patterned",
+            required: false,
+            subFields: [
+              {
+                elementID: $w("#patterned-field-concreteSlab"),
+                subFields: [
+                  {
+                    optionValue: "custom",
+                    required: false,
+                    subFields: [
+                      {
+                        elementID: $w("#patternedCustom-field-concreteSlab"),
+                      },
+                      {
+                        elementID: $w("#patternedCustom-text-concreteSlab"),
+                      },
+                    ],
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            optionValue: "powerFloat",
+            required: false,
+            subFields: [
+              {
+                elementID: $w("#powerFloat-field-concreteSlab"),
+              },
+            ],
           },
         ],
       },
@@ -83,491 +89,485 @@ const formOptions = [
   },
   {
     formName: "monoPitchForm",
-    fields: [
+    formFields: [
       {
-        parentElement: {
-          element: $w("#buildingType-field-monoPitch"),
-          value: "extension",
-          required: true,
-        },
-        optionElements: [
+        elementID: $w("#buildingType-field-monoPitch"),
+        subFields: [
           {
-            element: $w("#postDimensionsContainer-monoPitch"),
-          },
-          {
-            element: $w("#postDimensionA-field-monoPitch"),
-          },
-          {
-            element: $w("#postDimensionB-field-monoPitch"),
-          },
-          {
-            element: $w("#postDimensionC-field-monoPitch"),
-          },
-        ],
-      },
-      {
-        parentElement: {
-          element: $w("#usage-field-monoPitch"),
-          value: "horseStable",
-          required: true,
-        },
-        optionElements: [
-          {
-            element: $w("#usageHorseStable-field-monoPitch"),
-          },
-        ],
-      },
-      {
-        parentElement: {
-          element: $w("#usage-field-monoPitch"),
-          value: "horseLooseHousing",
-          required: true,
-        },
-        optionElements: [
-          {
-            element: $w("#usageInternals-field-monoPitch"),
-            option: ["cattleShed"],
-          },
-        ],
-      },
-      {
-        parentElement: {
-          element: $w("#usage-field-monoPitch"),
-          value: "cattleShed",
-          required: true,
-        },
-        optionElements: [
-          {
-            element: $w("#usageInternals-field-monoPitch"),
-            option: ["horseLooseHousing"],
-          },
-        ],
-      },
-      {
-        parentElement: {
-          element: $w("#usage-field-monoPitch"),
-          value: "custom",
-          required: true,
-        },
-        optionElements: [
-          {
-            element: $w("#usageCustom-field-monoPitch"),
-          },
-          {
-            element: $w("#usageCustom-text-monoPitch"),
-          },
-        ],
-      },
-      {
-        parentElement: {
-          element: $w("#walls-field-monoPitch"),
-          value: "yes",
-          required: true,
-        },
-        optionElements: [
-          {
-            element: $w("#wallsSides-field-monoPitch"),
-          },
-          {
-            element: $w("#wallMaterial-field-monoPitch"),
-          },
-          {
-            element: $w("#wallNumberOfPanelHeight-field-monoPitch"),
-          },
-          {
-            parentElement: {
-              element: $w("#wallPanelHeight-field-monoPitch"),
-              value: "custom",
-              required: true,
-            },
-            optionElements: [
+            optionValue: "extension",
+            required: true,
+            subFields: [
               {
-                element: $w("#wallPanelHeightCustom-field-monoPitch"),
+                elementID: $w("#postDimensionsContainer-monoPitch"),
               },
               {
-                element: $w("#wallPanelHeightCustom-text-monoPitch"),
-              },
-            ],
-          },
-          {
-            parentElement: {
-              element: $w("#wallPanelThickness-field-monoPitch"),
-              value: "custom",
-              required: true,
-            },
-            optionElements: [
-              {
-                element: $w("#wallPanelThicknessCustom-field-monoPitch"),
+                elementID: $w("#postDimensionA-field-monoPitch"),
               },
               {
-                element: $w("#wallPanelThicknessCustom-text-monoPitch"),
+                elementID: $w("#postDimensionB-field-monoPitch"),
+              },
+              {
+                elementID: $w("#postDimensionC-field-monoPitch"),
               },
             ],
           },
         ],
       },
       {
-        parentElement: {
-          element: $w("#roofMaterial-field-monoPitch"),
-          value: "composite",
-          required: true,
-        },
-        optionElements: [
+        elementID: $w("#usage-field-monoPitch"),
+        subFields: [
           {
-            element: $w("#roofColour-field-monoPitch"),
-            option: ["boxProfileSheet", "corrugatedSheet"],
-          },
-          {
-            element: $w("#roofColour-image-monoPitch"),
-            option: ["boxProfileSheet", "corrugatedSheet"],
-          },
-          {
-            element: $w("#roofCompositeThickness-field-monoPitch"),
-          },
-        ],
-      },
-      {
-        parentElement: {
-          element: $w("#roofMaterial-field-monoPitch"),
-          value: "boxProfileSheet",
-          required: true,
-        },
-        optionElements: [
-          {
-            element: $w("#roofColour-field-monoPitch"),
-            option: ["composite", "corrugatedSheet"],
-          },
-          {
-            element: $w("#roofColour-image-monoPitch"),
-            option: ["composite", "corrugatedSheet"],
-          },
-          {
-            element: $w("#roofBoxProfile-field-monoPitch"),
-          },
-        ],
-      },
-      {
-        parentElement: {
-          element: $w("#roofMaterial-field-monoPitch"),
-          value: "corrugatedSheet",
-          required: true,
-        },
-        optionElements: [
-          {
-            element: $w("#roofColour-field-monoPitch"),
-            option: ["composite", "boxProfileSheet"],
-          },
-          {
-            element: $w("#roofColour-image-monoPitch"),
-            option: ["composite", "boxProfileSheet"],
-          },
-          {
-            element: $w("#roofCorrugatedSheet-field-monoPitch"),
-          },
-        ],
-      },
-      {
-        parentElement: {
-          element: $w("#roofLights-field-monoPitch"),
-          value: "yes",
-          required: false,
-        },
-        optionElements: [
-          {
-            parentElement: {
-              element: $w("#roofLightsPerBay-field-monoPitch"),
-              value: "other",
-              required: false,
-            },
-            optionElements: [
+            optionValue: "horseStable",
+            required: true,
+            subFields: [
               {
-                element: $w("#roofLightsPerBayCustom-field-monoPitch"),
+                elementID: $w("#usageHorseStable-field-monoPitch"),
+              },
+            ],
+          },
+          {
+            optionValue: "horseLooseHousing",
+            required: true,
+            subFields: [
+              {
+                elementID: $w("#usageInternals-field-monoPitch"),
+              },
+            ],
+          },
+          {
+            optionValue: "cattleShed",
+            required: true,
+            subFields: [
+              {
+                elementID: $w("#usageInternals-field-monoPitch"),
+              },
+            ],
+          },
+          {
+            optionValue: "custom",
+            required: true,
+            subFields: [
+              {
+                elementID: $w("#usageCustom-field-monoPitch"),
+              },
+              {
+                elementID: $w("#usageCustom-text-monoPitch"),
               },
             ],
           },
         ],
       },
       {
-        parentElement: {
-          element: $w("#roofSolarPanels-field-monoPitch"),
-          value: "no",
-          required: true,
-        },
-        optionElements: [
+        elementID: $w("#walls-field-monoPitch"),
+        subFields: [
           {
-            element: $w("#roofSolarPanelsFuture-field-monoPitch"),
-          },
-        ],
-      },
-      {
-        parentElement: {
-          element: $w("#roofSolarPanels-field-monoPitch"),
-          value: "yes",
-          required: true,
-        },
-        optionElements: [
-          {
-            parentElement: {
-              element: $w("#roofSolarPanelsCoverage-field-monoPitch"),
-              value: "custom",
-            },
-            optionElements: [
+            optionValue: "yes",
+            required: true,
+            subFields: [
               {
-                element: $w("#roofSolarPanelsCoverageCustom-field-monoPitch"),
-              },
-            ],
-          },
-          {
-            element: $w("#roofSolarPanelsQuoteFromProvider-field-monoPitch"),
-          },
-        ],
-      },
-      {
-        parentElement: {
-          element: $w("#buildingType-field-monoPitch"),
-          value: "freestanding",
-          required: true,
-        },
-        optionElements: [
-          {
-            element: $w("#roofCantilever-field-monoPitch"),
-          },
-          {
-            element: $w("#roofRidgeCaps-field-monoPitch"),
-          },
-        ],
-      },
-      {
-        parentElement: {
-          element: $w("#cladding-field-monoPitch"),
-          value: "yes",
-          required: true,
-        },
-        optionElements: [
-          {
-            element: $w("#claddingType-field-monoPitch"),
-          },
-        ],
-      },
-      {
-        parentElement: {
-          element: $w("#claddingType-field-monoPitch"),
-          value: "composite",
-          required: true,
-        },
-        optionElements: [
-          {
-            element: $w("#claddingColour-field-monoPitch"),
-            option: ["boxProfileSheet", "corrugatedSheet"],
-          },
-          {
-            element: $w("#claddingColour-image-monoPitch"),
-            option: ["boxProfileSheet", "corrugatedSheet"],
-          },
-          {
-            element: $w("#claddingCompositeThickness-field-monoPitch"),
-          },
-        ],
-      },
-      {
-        parentElement: {
-          element: $w("#claddingType-field-monoPitch"),
-          value: "boxProfileSheet",
-          required: true,
-        },
-        optionElements: [
-          {
-            element: $w("#claddingColour-field-monoPitch"),
-            option: ["composite", "corrugatedSheet"],
-          },
-          {
-            element: $w("#claddingColour-image-monoPitch"),
-            option: ["composite", "corrugatedSheet"],
-          },
-          {
-            element: $w("#claddingBoxProfileType-field-monoPitch"),
-          },
-        ],
-      },
-      {
-        parentElement: {
-          element: $w("#claddingType-field-monoPitch"),
-          value: "corrugatedSheet",
-          required: true,
-        },
-        optionElements: [
-          {
-            element: $w("#claddingColour-field-monoPitch"),
-            option: ["composite", "boxProfileSheet"],
-          },
-          {
-            element: $w("#claddingColour-image-monoPitch"),
-            option: ["composite", "boxProfileSheet"],
-          },
-          {
-            element: $w("#claddingCorrugatedSheetType-field-monoPitch"),
-          },
-        ],
-      },
-      {
-        parentElement: {
-          element: $w("#claddingType-field-monoPitch"),
-          value: "timber",
-          required: true,
-        },
-        optionElements: [
-          {
-            element: $w("#claddingTimberBoardType-field-monoPitch"),
-          },
-        ],
-      },
-      {
-        parentElement: {
-          element: $w("#doorsRollerDoors-field-monoPitch"),
-          value: "yes",
-          required: true,
-        },
-        optionElements: [
-          {
-            element: $w("#doorsRollerDoors-text-monoPitch"),
-          },
-          {
-            element: $w("#doorsDoorLocation-field-monoPitch"),
-          },
-          {
-            parentElement: {
-              element: $w("#doorsRollerNumber-field-monoPitch"),
-              value: "custom",
-              required: true,
-            },
-            optionElements: [
-              {
-                element: $w("#doorsRollerNumberCustom-field-monoPitch"),
+                elementID: $w("#wallsSides-field-monoPitch"),
               },
               {
-                element: $w("#doorsRollerNumberCustom-text-monoPitch"),
+                elementID: $w("#wallMaterial-field-monoPitch"),
               },
-            ],
-          },
-          {
-            element: $w("#doorsRollerWidth-field-monoPitch"),
-          },
-          {
-            element: $w("#doorsRollerHeight-field-monoPitch"),
-          },
-          {
-            element: $w("#doorsRollerBirdBrush-field-monoPitch"),
-          },
-          {
-            element: $w("#doorsRollerRubberSeal-field-monoPitch"),
-          },
-          {
-            element: $w("#doorsRollerPowerFeed-field-monoPitch"),
-          },
-        ],
-      },
-      {
-        parentElement: {
-          element: $w("#doorsPersonnel-field-monoPitch"),
-          value: "yes",
-          required: true,
-        },
-        optionElements: [
-          {
-            element: $w("#doorsPersonnelNumber-field-monoPitch"),
-          },
-          {
-            element: $w("#doorsPersonnelWidth-field-monoPitch"),
-          },
-          {
-            parentElement: {
-              element: $w("#doorsPersonnelFire-field-monoPitch"),
-              value: "yes",
-              required: true,
-            },
-            optionElements: [
               {
-                element: $w("#doorsPersonnelNumberOfFireDoors-field-monoPitch"),
+                elementID: $w("#wallNumberOfPanelHeight-field-monoPitch"),
+              },
+              {
+                elementID: $w("#wallPanelHeight-field-monoPitch"),
+                subFields: [
+                  {
+                    optionValue: "custom",
+                    required: true,
+                    subFields: [
+                      {
+                        elementID: $w("#wallPanelHeightCustom-field-monoPitch"),
+                      },
+                      {
+                        elementID: $w("#wallPanelHeightCustom-text-monoPitch"),
+                      },
+                    ],
+                  },
+                ],
+              },
+              {
+                elementID: $w("#wallPanelThickness-field-monoPitch"),
+                subFields: [
+                  {
+                    optionValue: "custom",
+                    required: true,
+                    subFields: [
+                      {
+                        elementID: $w("#wallPanelThicknessCustom-field-monoPitch"),
+                      },
+                      {
+                        elementID: $w("#wallPanelThicknessCustom-text-monoPitch"),
+                      },
+                    ],
+                  },
+                ],
               },
             ],
           },
         ],
       },
       {
-        parentElement: {
-          element: $w("#concretingFloor-field-monoPitch"),
-          value: "yes",
-          required: true,
-        },
-        optionElements: [
+        elementID: $w("#roofMaterial-field-monoPitch"),
+        subFields: [
           {
-            element: $w("#concretingFloorQuote-field-monoPitch"),
+            optionValue: "composite",
+            required: true,
+            subFields: [
+              {
+                elementID: $w("#roofColour-field-monoPitch"),
+              },
+              {
+                elementID: $w("#roofColour-image-monoPitch"),
+              },
+              {
+                elementID: $w("#roofCompositeThickness-field-monoPitch"),
+              },
+            ],
           },
           {
-            element: $w("#floorAdditionalNotes-field-monoPitch"),
+            optionValue: "boxProfileSheet",
+            required: true,
+            subFields: [
+              {
+                elementID: $w("#roofColour-field-monoPitch"),
+              },
+              {
+                elementID: $w("#roofColour-image-monoPitch"),
+              },
+              {
+                elementID: $w("#roofBoxProfile-field-monoPitch"),
+              },
+            ],
           },
           {
-            element: $w("#floorUpload-field-monoPitch"),
+            optionValue: "corrugatedSheet",
+            required: true,
+            subFields: [
+              {
+                elementID: $w("#roofColour-field-monoPitch"),
+              },
+              {
+                elementID: $w("#roofColour-image-monoPitch"),
+              },
+              {
+                elementID: $w("#roofCorrugatedSheet-field-monoPitch"),
+              },
+            ],
           },
         ],
       },
       {
-        parentElement: {
-          element: $w("#hasMezzanine-field-monoPitch"),
-          value: "yes",
-          required: true,
-        },
-        optionElements: [
+        elementID: $w("#roofLights-field-monoPitch"),
+        subFields: [
           {
-            element: $w("#mezzanineInstallation-field-monoPitch"),
-          },
-          {
-            element: $w("#mezzanineFreestanding-field-monoPitch"),
-          },
-          {
-            element: $w("#mezzanineSteelOptions-field-monoPitch"),
-          },
-          {
-            parentElement: {
-              element: $w("#mezzanineBayWidth-field-monoPitch"),
-              value: "other",
-              required: false,
-            },
-            optionElements: [
+            optionValue: "yes",
+            required: false,
+            subFields: [
               {
-                element: $w("#mezzanineBayWidthOther-field-monoPitch"),
+                elementID: $w("#roofLightsPerBay-field-monoPitch"),
+                subFields: [
+                  {
+                    optionValue: "other",
+                    required: false,
+                    subFields: [
+                      {
+                        elementID: $w("#roofLightsPerBayCustom-field-monoPitch"),
+                      },
+                    ],
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      },
+      {
+        elementID: $w("#roofSolarPanels-field-monoPitch"),
+        subFields: [
+          {
+            optionValue: "no",
+            required: true,
+            subFields: [
+              {
+                elementID: $w("#roofSolarPanelsFuture-field-monoPitch"),
               },
             ],
           },
           {
-            parentElement: {
-              element: $w("#mezzanineSpanOptions-field-monoPitch"),
-              value: "supportPosts",
-              required: true,
-            },
-            optionElements: [
+            optionValue: "yes",
+            required: true,
+            subFields: [
               {
-                element: $w("#mezzanineHeight-field-monoPitch"),
+                elementID: $w("#roofSolarPanelsCoverage-field-monoPitch"),
+                subFields: [
+                  {
+                    optionValue: "custom",
+                    required: true,
+                    subFields: [
+                      {
+                        elementID: $w("#roofSolarPanelsCoverageCustom-field-monoPitch"),
+                      },
+                    ],
+                  },
+                ],
+              },
+              {
+                elementID: $w("#roofSolarPanelsQuoteFromProvider-field-monoPitch"),
               },
             ],
           },
           {
-            element: $w("#mezzaninePurlins-field-monoPitch"),
+            optionValue: "freestanding",
+            required: true,
+            subFields: [
+              {
+                elementID: $w("#roofCantilever-field-monoPitch"),
+              },
+              {
+                elementID: $w("#roofRidgeCaps-field-monoPitch"),
+              },
+            ],
           },
+        ],
+      },
+      {
+        elementID: $w("#cladding-field-monoPitch"),
+        subFields: [
           {
-            element: $w("#mezzanineFloorOptions-field-monoPitch"),
+            optionValue: "yes",
+            required: true,
+            subFields: [
+              {
+                elementID: $w("#claddingType-field-monoPitch"),
+                subFields: [
+                  {
+                    optionValue: "composite",
+                    required: true,
+                    subFields: [
+                      {
+                        elementID: $w("#claddingColour-field-monoPitch"),
+                      },
+                      {
+                        elementID: $w("#claddingColour-image-monoPitch"),
+                      },
+                      {
+                        elementID: $w("#claddingCompositeThickness-field-monoPitch"),
+                      },
+                    ],
+                  },
+                  {
+                    optionValue: "boxProfileSheet",
+                    required: true,
+                    subFields: [
+                      {
+                        elementID: $w("#claddingColour-field-monoPitch"),
+                      },
+                      {
+                        elementID: $w("#claddingColour-image-monoPitch"),
+                      },
+                      {
+                        elementID: $w("#claddingBoxProfileType-field-monoPitch"),
+                      },
+                    ],
+                  },
+                  {
+                    optionValue: "corrugatedSheet",
+                    required: true,
+                    subFields: [
+                      {
+                        elementID: $w("#claddingColour-field-monoPitch"),
+                      },
+                      {
+                        elementID: $w("#claddingColour-image-monoPitch"),
+                      },
+                      {
+                        elementID: $w("#claddingCorrugatedSheetType-field-monoPitch"),
+                      },
+                    ],
+                  },
+                  {
+                    optionValue: "timber",
+                    required: true,
+                    subFields: [
+                      {
+                        elementID: $w("#claddingTimberBoardType-field-monoPitch"),
+                      },
+                    ],
+                  },
+                ],
+              },
+            ],
           },
+        ],
+      },
+      {
+        elementID: $w("#doorsRollerDoors-field-monoPitch"),
+        subFields: [
           {
-            element: $w("#mezzanineHandrails-field-monoPitch"),
+            optionValue: "yes",
+            required: true,
+            subFields: [
+              {
+                elementID: $w("#doorsRollerDoors-text-monoPitch"),
+              },
+              {
+                elementID: $w("#doorsDoorLocation-field-monoPitch"),
+              },
+              {
+                elementID: $w("#doorsRollerNumber-field-monoPitch"),
+                subFields: [
+                  {
+                    optionValue: "custom",
+                    required: true,
+                    subFields: [
+                      {
+                        elementID: $w("#doorsRollerNumberCustom-field-monoPitch"),
+                      },
+                      {
+                        elementID: $w("#doorsRollerNumberCustom-text-monoPitch"),
+                      },
+                    ],
+                  },
+                ],
+              },
+              {
+                elementID: $w("#doorsRollerWidth-field-monoPitch"),
+              },
+              {
+                elementID: $w("#doorsRollerHeight-field-monoPitch"),
+              },
+              {
+                elementID: $w("#doorsRollerBirdBrush-field-monoPitch"),
+              },
+              {
+                elementID: $w("#doorsRollerRubberSeal-field-monoPitch"),
+              },
+              {
+                elementID: $w("#doorsRollerPowerFeed-field-monoPitch"),
+              },
+            ],
           },
+        ],
+      },
+      {
+        elementID: $w("#doorsPersonnel-field-monoPitch"),
+        subFields: [
           {
-            element: $w("#mezzanineFloorAccess-field-monoPitch"),
+            optionValue: "yes",
+            required: true,
+            subFields: [
+              {
+                elementID: $w("#doorsPersonnelNumber-field-monoPitch"),
+              },
+              {
+                elementID: $w("#doorsPersonnelWidth-field-monoPitch"),
+              },
+              {
+                elementID: $w("#doorsPersonnelFire-field-monoPitch"),
+                subFields: [
+                  {
+                    optionValue: "yes",
+                    required: true,
+                    subFields: [
+                      {
+                        elementID: $w("#doorsPersonnelNumberOfFireDoors-field-monoPitch"),
+                      },
+                    ],
+                  },
+                ],
+              },
+            ],
           },
+        ],
+      },
+      {
+        elementID: $w("#concretingFloor-field-monoPitch"),
+        subFields: [
           {
-            element: $w("#mezzanineForkliftBay-field-monoPitch"),
+            optionValue: "yes",
+            required: true,
+            subFields: [
+              {
+                elementID: $w("#concretingFloorQuote-field-monoPitch"),
+              },
+              {
+                elementID: $w("#floorAdditionalNotes-field-monoPitch"),
+              },
+              {
+                elementID: $w("#floorUpload-field-monoPitch"),
+              },
+            ],
           },
+        ],
+      },
+      {
+        elementID: $w("#hasMezzanine-field-monoPitch"),
+        subFields: [
           {
-            element: $w("#mezzanineAdditionalNotes-field-monoPitch"),
+            optionValue: "yes",
+            required: true,
+            subFields: [
+              {
+                elementID: $w("#mezzanineInstallation-field-monoPitch"),
+              },
+              {
+                elementID: $w("#mezzanineFreestanding-field-monoPitch"),
+              },
+              {
+                elementID: $w("#mezzanineSteelOptions-field-monoPitch"),
+              },
+              {
+                elementID: $w("#mezzanineBayWidth-field-monoPitch"),
+                subFields: [
+                  {
+                    optionValue: "other",
+                    required: false,
+                    subFields: [
+                      {
+                        elementID: $w("#mezzanineBayWidthOther-field-monoPitch"),
+                      },
+                    ],
+                  },
+                ],
+              },
+              {
+                elementID: $w("#mezzanineSpanOptions-field-monoPitch"),
+                subFields: [
+                  {
+                    optionValue: "supportPosts",
+                    required: true,
+                    subFields: [
+                      {
+                        elementID: $w("#mezzanineHeight-field-monoPitch"),
+                      },
+                    ],
+                  },
+                ],
+              },
+              {
+                elementID: $w("#mezzaninePurlins-field-monoPitch"),
+              },
+              {
+                elementID: $w("#mezzanineFloorOptions-field-monoPitch"),
+              },
+              {
+                elementID: $w("#mezzanineHandrails-field-monoPitch"),
+              },
+              {
+                elementID: $w("#mezzanineFloorAccess-field-monoPitch"),
+              },
+              {
+                elementID: $w("#mezzanineForkliftBay-field-monoPitch"),
+              },
+              {
+                elementID: $w("#mezzanineAdditionalNotes-field-monoPitch"),
+              },
+            ],
           },
         ],
       },
@@ -575,16 +575,18 @@ const formOptions = [
   },
   {
     formName: "roundHouseForm",
-    fields: [
+    formFields: [
       {
-        parentElement: {
-          element: $w("#siteRequiresLevelling-field-roundHouse"),
-          value: "yes",
-          required: true,
-        },
-        optionElements: [
+        elementID: $w("#siteRequiresLevelling-field-roundHouse"),
+        subFields: [
           {
-            element: $w("#siteRequiresLevellingQuote-field-roundHouse"),
+            optionValue: "yes",
+            required: true,
+            subFields: [
+              {
+                elementID: $w("#siteRequiresLevellingQuote-field-roundHouse"),
+              },
+            ],
           },
         ],
       },
@@ -592,474 +594,454 @@ const formOptions = [
   },
   {
     formName: "portalFrameForm",
-    fields: [
+    formFields: [
       {
-        parentElement: {
-          element: $w("#buildingUsage-field-portalFrame"),
-          value: "other",
-          required: true,
-        },
-        optionElements: [
+        elementID: $w("#buildingUsage-field-portalFrame"),
+        subFields: [
           {
-            element: $w("#buildingUsageOther-field-portalFrame"),
-          },
-        ],
-      },
-      {
-        parentElement: {
-          element: $w("#buildingUsage-field-portalFrame"),
-          value: "horseLooseHousing",
-          option: ["cattleShed", "horseStable"],
-          required: true,
-        },
-        optionElements: [
-          {
-            element: $w("#buildingUsageInternalsHorseCow-field-portalFrame"),
-          },
-        ],
-      },
-      {
-        parentElement: {
-          element: $w("#buildingUsage-field-portalFrame"),
-          value: "cattleShed",
-          option: ["horseLooseHousing", "horseStable"],
-          required: true,
-        },
-        optionElements: [
-          {
-            element: $w("#buildingUsageInternalsHorseCow-field-portalFrame"),
-          },
-        ],
-      },
-      {
-        parentElement: {
-          element: $w("#buildingUsage-field-portalFrame"),
-          value: "horseStable",
-          option: ["cattleShed", "horseLooseHousing"],
-          required: true,
-        },
-        optionElements: [
-          {
-            element: $w("#buildingUsageInternalsStable-field-portalFrame"),
-          },
-        ],
-      },
-      {
-        parentElement: {
-          element: $w("#buildingUsage-field-portalFrame"),
-          value: "cattleShed",
-          required: true,
-        },
-        optionElements: [
-          {
-            element: $w("#postDimensionsContainer-monoPitch"),
-          },
-        ],
-      },
-      {
-        parentElement: {
-          element: $w("#roofPitch-field-portalFrame"),
-          value: "custom",
-          required: true,
-        },
-        optionElements: [
-          {
-            element: $w("#roofPitchCustom-field-portalFrame"),
-          },
-        ],
-      },
-      {
-        parentElement: {
-          element: $w("#buildingHasWalls-field-portalFrame"),
-          value: "yes",
-          required: true,
-        },
-        optionElements: [
-          {
-            element: $w("#howManySidesWalls-field-portalFrame"),
-          },
-          {
-            element: $w("#wallMaterial-field-portalFrame"),
-          },
-          {
-            element: $w("#wallHeightInPanels-field-portalFrame"),
-          },
-          {
-            parentElement: {
-              element: $w("#wallPanelHeight-field-portalFrame"),
-              value: "custom",
-              required: true,
-            },
-            optionElements: [
+            optionValue: "other",
+            required: true,
+            subFields: [
               {
-                element: $w("#wallPanelHeightCustom-field-portalFrame"),
-              },
-              {
-                element: $w("#wallPanelHeightCustom-text-portalFrame"),
+                elementID: $w("#buildingUsageOther-field-portalFrame"),
               },
             ],
           },
           {
-            parentElement: {
-              element: $w("#wallPanelThickness-field-portalFrame"),
-              value: "custom",
-              required: true,
-            },
-            optionElements: [
+            optionValue: "horseLooseHousing",
+            required: true,
+            subFields: [
               {
-                element: $w("#wallPanelThicknessCustom-field-portalFrame"),
+                elementID: $w("#buildingUsageInternalsHorseCow-field-portalFrame"),
               },
+            ],
+          },
+          {
+            optionValue: "cattleShed",
+            required: true,
+            subFields: [
               {
-                element: $w("#wallPanelThicknessCustom-text-portalFrame"),
+                elementID: $w("#buildingUsageInternalsHorseCow-field-portalFrame"),
+              },
+            ],
+          },
+          {
+            optionValue: "horseStable",
+            required: true,
+            subFields: [
+              {
+                elementID: $w("#buildingUsageInternalsStable-field-portalFrame"),
               },
             ],
           },
         ],
       },
       {
-        parentElement: {
-          element: $w("#roofMaterial-field-portalFrame"),
-          value: "fiberCement",
-          required: true,
-        },
-        optionElements: [
+        elementID: $w("#roofPitch-field-portalFrame"),
+        subFields: [
           {
-            element: $w("#fiberCementColour-field-portalFrame"),
-          },
-        ],
-      },
-      {
-        parentElement: {
-          element: $w("#roofMaterial-field-portalFrame"),
-          value: "composite",
-          required: true,
-        },
-        optionElements: [
-          {
-            element: $w("#roofColour-image-portalFrame"),
-            option: ["corrugatedRoofSheets", "boxProfileRoofSheets"],
-          },
-          {
-            element: $w("#roofColour-field-portalFrame"),
-            option: ["corrugatedRoofSheets", "boxProfileRoofSheets"],
-          },
-          {
-            element: $w("#compositeThickness-field-portalFrame"),
-          },
-        ],
-      },
-      {
-        parentElement: {
-          element: $w("#roofMaterial-field-portalFrame"),
-          value: "boxProfileRoofSheets",
-          required: true,
-        },
-        optionElements: [
-          {
-            element: $w("#roofColour-image-portalFrame"),
-            option: ["composite", "corrugatedRoofSheets"],
-          },
-          {
-            element: $w("#roofColour-field-portalFrame"),
-            option: ["composite", "corrugatedRoofSheets"],
-          },
-          {
-            element: $w("#boxProfileFinish-field-portalFrame"),
-          },
-          {
-            element: $w("#boxProfileOption-field-portalFrame"),
-          },
-        ],
-      },
-      {
-        parentElement: {
-          element: $w("#roofMaterial-field-portalFrame"),
-          value: "corrugatedRoofSheets",
-          required: true,
-        },
-        optionElements: [
-          {
-            element: $w("#roofColour-image-portalFrame"),
-            option: ["composite", "boxProfileRoofSheets"],
-          },
-          {
-            element: $w("#roofColour-field-portalFrame"),
-            option: ["composite", "boxProfileRoofSheets"],
-          },
-          {
-            element: $w("#corrugatedSheetFinish-field-portalFrame"),
-          },
-          {
-            element: $w("#corrugatedSheetOption-field-portalFrame"),
-          },
-        ],
-      },
-      {
-        parentElement: {
-          element: $w("#roofLights-field-portalFrame"),
-          value: "yes",
-          required: true,
-        },
-        optionElements: [
-          {
-            parentElement: {
-              element: $w("#roofLightsPerBay-field-portalFrame"),
-              value: "custom",
-              required: true,
-            },
-            optionElements: [
+            optionValue: "custom",
+            required: true,
+            subFields: [
               {
-                element: $w("#roofLightsPerBayCustom-field-portalFrame"),
+                elementID: $w("#roofPitchCustom-field-portalFrame"),
               },
             ],
           },
         ],
       },
       {
-        parentElement: {
-          element: $w("#solarPanels-field-portalFrame"),
-          value: "yes",
-          required: true,
-        },
-        optionElements: [
+        elementID: $w("#buildingHasWalls-field-portalFrame"),
+        subFields: [
           {
-            element: $w("#solarPanelQuoteFromProvider-field-portalFrame"),
-          },
-          {
-            parentElement: {
-              element: $w("#solarPanelCoverage-field-portalFrame"),
-              value: "custom",
-            },
-            optionElements: [
+            optionValue: "yes",
+            required: true,
+            subFields: [
               {
-                element: $w("#solarPanelCoverageCustom-field-portalFrame"),
+                elementID: $w("#howManySidesWalls-field-portalFrame"),
+              },
+              {
+                elementID: $w("#wallMaterial-field-portalFrame"),
+              },
+              {
+                elementID: $w("#wallHeightInPanels-field-portalFrame"),
+              },
+              {
+                elementID: $w("#wallPanelHeight-field-portalFrame"),
+                subFields: [
+                  {
+                    optionValue: "custom",
+                    required: true,
+                    subFields: [
+                      {
+                        elementID: $w("#wallPanelHeightCustom-field-portalFrame"),
+                      },
+                      {
+                        elementID: $w("#wallPanelHeightCustom-text-portalFrame"),
+                      },
+                    ],
+                  },
+                ],
+              },
+              {
+                elementID: $w("#wallPanelThickness-field-portalFrame"),
+                subFields: [
+                  {
+                    optionValue: "custom",
+                    required: true,
+                    subFields: [
+                      {
+                        elementID: $w("#wallPanelThicknessCustom-field-portalFrame"),
+                      },
+                      {
+                        elementID: $w("#wallPanelThicknessCustom-text-portalFrame"),
+                      },
+                    ],
+                  },
+                ],
               },
             ],
           },
         ],
       },
       {
-        parentElement: {
-          element: $w("#solarPanels-field-portalFrame"),
-          value: "no",
-          required: true,
-        },
-        optionElements: [
+        elementID: $w("#roofMaterial-field-portalFrame"),
+        subFields: [
           {
-            element: $w("#solarPanelsInTheFuture-field-portalFrame"),
-          },
-        ],
-      },
-      {
-        parentElement: {
-          element: $w("#rollerDoors-field-portalFrame"),
-          value: "yes",
-          required: true,
-        },
-        optionElements: [
-          {
-            element: $w("#rollerDoors-text-portalFrame"),
-          },
-          {
-            element: $w("#rollerDoorLocation-field-portalFrame"),
-          },
-          {
-            parentElement: {
-              element: $w("#numberOfRollerDoors-field-portalFrame"),
-              value: "custom",
-              required: true,
-            },
-            optionElements: [
+            optionValue: "fibreCement",
+            required: true,
+            subFields: [
               {
-                element: $w("#numberOfRollerDoorsCustom-field-portalFrame"),
+                elementID: $w("#fibreCementColour-field-portalFrame"),
               },
             ],
           },
           {
-            element: $w("#rollerDoorwayWidth-field-portalFrame"),
-          },
-          {
-            element: $w("#rollerDoorwayHeight-field-portalFrame"),
-          },
-          {
-            element: $w("#rollerDoorBirdBrush-field-portalFrame"),
-          },
-          {
-            element: $w("#rollerDoorRubberSeal-field-portalFrame"),
-          },
-          {
-            element: $w("#rollerDoorPowerFeed-field-portalFrame"),
-          },
-        ],
-      },
-      {
-        parentElement: {
-          element: $w("#personnelDoors-field-portalFrame"),
-          value: "yes",
-          required: true,
-        },
-        optionElements: [
-          {
-            element: $w("#numberOfPersonnelDoors-field-portalFrame"),
-          },
-          {
-            element: $w("#personnelDoorWidth-field-portalFrame"),
-          },
-          {
-            element: $w("#fireDoors-field-portalFrame"),
-          },
-          {
-            element: $w("#numberOfFireDoors-field-portalFrame"),
-          },
-        ],
-      },
-      {
-        parentElement: {
-          element: $w("#cladding-field-portalFrame"),
-          value: "composite",
-          required: true,
-        },
-        optionElements: [
-          {
-            element: $w("#claddingColour-text-portalFrame"),
-            option: ["boxProfileSheet", "corrugatedSheet"],
-          },
-          {
-            element: $w("#claddingColour-field-portalFrame"),
-            option: ["boxProfileSheet", "corrugatedSheet"],
-          },
-          {
-            element: $w("#claddingCompositeThickness-field-portalFrame"),
-          },
-        ],
-      },
-      {
-        parentElement: {
-          element: $w("#cladding-field-portalFrame"),
-          value: "timber",
-          required: true,
-        },
-        optionElements: [
-          {
-            element: $w("#claddingTimberBoardType-field-portalFrame"),
-          },
-        ],
-      },
-      {
-        parentElement: {
-          element: $w("#cladding-field-portalFrame"),
-          value: "boxProfileSheet",
-          required: true,
-        },
-        optionElements: [
-          {
-            element: $w("#claddingBoxProfileType-field-portalFrame"),
-          },
-          {
-            element: $w("#claddingColour-text-portalFrame"),
-            option: ["composite", "corrugatedSheet"],
-          },
-          {
-            element: $w("#claddingColour-field-portalFrame"),
-            option: ["composite", "corrugatedSheet"],
-          },
-        ],
-      },
-      {
-        parentElement: {
-          element: $w("#cladding-field-portalFrame"),
-          value: "corrugatedSheet",
-          required: true,
-        },
-        optionElements: [
-          {
-            element: $w("#claddingCorrugatedSheetFinish-field-portalFrame"),
-          },
-          {
-            element: $w("#claddingColour-text-portalFrame"),
-            option: ["composite", "boxProfileSheet"],
-          },
-          {
-            element: $w("#claddingColour-field-portalFrame"),
-            option: ["composite", "boxProfileSheet"],
-          },
-        ],
-      },
-      {
-        parentElement: {
-          element: $w("#concreteFloor-field-portalFrame"),
-          value: "yes",
-          required: true,
-        },
-        optionElements: [
-          {
-            element: $w("#concreteFloorQuote-field-portalFrame"),
-          },
-          {
-            element: $w("#concreteFloorAdditionalNotes-field-portalFrame"),
-          },
-        ],
-      },
-      {
-        parentElement: {
-          element: $w("#hasMezzanine-field-portalFrame"),
-          value: "yes",
-          required: true,
-        },
-        optionElements: [
-          {
-            element: $w("#mezzanineInstallation-field-portalFrame"),
-          },
-          {
-            element: $w("#mezzanineFreestanding-field-portalFrame"),
-          },
-          {
-            parentElement: {
-              element: $w("#mezzanineBayWidth-field-portalFrame"),
-              value: "other",
-              required: false,
-            },
-            optionElements: [
+            optionValue: "composite",
+            required: true,
+            subFields: [
               {
-                element: $w("#mezzanineBayWidthOther-field-portalFrame"),
+                elementID: $w("#roofColour-image-portalFrame"),
+              },
+              {
+                elementID: $w("#roofColour-field-portalFrame"),
+              },
+              {
+                elementID: $w("#compositeThickness-field-portalFrame"),
               },
             ],
           },
           {
-            parentElement: {
-              element: $w("#mezzanineSpanOptions-field-portalFrame"),
-              value: "supportPosts",
-              required: true,
-            },
-            optionElements: [
+            optionValue: "boxProfileRoofSheets",
+            required: true,
+            subFields: [
               {
-                element: $w("#mezzanineOptionsSpanHeight-box-portalFrame"),
+                elementID: $w("#roofColour-image-portalFrame"),
               },
               {
-                element: $w("#mezzanineHeight-field-portalFrame"),
+                elementID: $w("#roofColour-field-portalFrame"),
+              },
+              {
+                elementID: $w("#boxProfileFinish-field-portalFrame"),
+              },
+              {
+                elementID: $w("#boxProfileOption-field-portalFrame"),
               },
             ],
           },
           {
-            element: $w("#mezzanineSteelOptions-field-portalFrame"),
+            optionValue: "corrugatedRoofSheets",
+            required: true,
+            subFields: [
+              {
+                elementID: $w("#roofColour-image-portalFrame"),
+              },
+              {
+                elementID: $w("#roofColour-field-portalFrame"),
+              },
+              {
+                elementID: $w("#corrugatedSheetFinish-field-portalFrame"),
+              },
+              {
+                elementID: $w("#corrugatedSheetOption-field-portalFrame"),
+              },
+            ],
+          },
+        ],
+      },
+      {
+        elementID: $w("#roofLights-field-portalFrame"),
+        subFields: [
+          {
+            optionValue: "yes",
+            required: true,
+            subFields: [
+              {
+                elementID: $w("#roofLightsPerBay-field-portalFrame"),
+                subFields: [
+                  {
+                    optionValue: "custom",
+                    required: true,
+                    subFields: [
+                      {
+                        elementID: $w("#roofLightsPerBayCustom-field-portalFrame"),
+                      },
+                    ],
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      },
+      {
+        elementID: $w("#solarPanels-field-portalFrame"),
+        subFields: [
+          {
+            optionValue: "yes",
+            required: true,
+            subFields: [
+              {
+                elementID: $w("#solarPanelQuoteFromProvider-field-portalFrame"),
+              },
+              {
+                elementID: $w("#solarPanelCoverage-field-portalFrame"),
+                subFields: [
+                  {
+                    optionValue: "custom",
+                    required: true,
+                    subFields: [
+                      {
+                        elementID: $w("#solarPanelCoverageCustom-field-portalFrame"),
+                      },
+                    ],
+                  },
+                ],
+              },
+            ],
           },
           {
-            element: $w("#mezzaninePurlins-field-portalFrame"),
+            optionValue: "no",
+            required: true,
+            subFields: [
+              {
+                elementID: $w("#solarPanelsInTheFuture-field-portalFrame"),
+              },
+            ],
+          },
+        ],
+      },
+      {
+        elementID: $w("#rollerDoors-field-portalFrame"),
+        subFields: [
+          {
+            optionValue: "yes",
+            required: true,
+            subFields: [
+              {
+                elementID: $w("#rollerDoors-text-portalFrame"),
+              },
+              {
+                elementID: $w("#rollerDoorLocation-field-portalFrame"),
+              },
+              {
+                elementID: $w("#numberOfRollerDoors-field-portalFrame"),
+                subFields: [
+                  {
+                    optionValue: "custom",
+                    required: true,
+                    subFields: [
+                      {
+                        elementID: $w("#numberOfRollerDoorsCustom-field-portalFrame"),
+                      },
+                    ],
+                  },
+                ],
+              },
+              {
+                elementID: $w("#rollerDoorwayWidth-field-portalFrame"),
+              },
+              {
+                elementID: $w("#rollerDoorwayHeight-field-portalFrame"),
+              },
+              {
+                elementID: $w("#rollerDoorBirdBrush-field-portalFrame"),
+              },
+              {
+                elementID: $w("#rollerDoorRubberSeal-field-portalFrame"),
+              },
+              {
+                elementID: $w("#rollerDoorPowerFeed-field-portalFrame"),
+              },
+            ],
+          },
+        ],
+      },
+      {
+        elementID: $w("#personnelDoors-field-portalFrame"),
+        subFields: [
+          {
+            optionValue: "yes",
+            required: true,
+            subFields: [
+              {
+                elementID: $w("#numberOfPersonnelDoors-field-portalFrame"),
+              },
+              {
+                elementID: $w("#personnelDoorWidth-field-portalFrame"),
+              },
+              {
+                elementID: $w("#fireDoors-field-portalFrame"),
+              },
+              {
+                elementID: $w("#numberOfFireDoors-field-portalFrame"),
+              },
+            ],
+          },
+        ],
+      },
+      {
+        elementID: $w("#cladding-field-portalFrame"),
+        subFields: [
+          {
+            optionValue: "composite",
+            required: true,
+            subFields: [
+              {
+                elementID: $w("#claddingColour-text-portalFrame"),
+              },
+              {
+                elementID: $w("#claddingColour-field-portalFrame"),
+              },
+              {
+                elementID: $w("#claddingCompositeThickness-field-portalFrame"),
+              },
+            ],
           },
           {
-            element: $w("#mezzanineFloorOptions-field-portalFrame"),
+            optionValue: "timber",
+            required: true,
+            subFields: [
+              {
+                elementID: $w("#claddingTimberBoardType-field-portalFrame"),
+              },
+            ],
           },
           {
-            element: $w("#mezzanineHandrails-field-portalFrame"),
+            optionValue: "boxProfileSheet",
+            required: true,
+            subFields: [
+              {
+                elementID: $w("#claddingBoxProfileType-field-portalFrame"),
+              },
+              {
+                elementID: $w("#claddingColour-text-portalFrame"),
+              },
+              {
+                elementID: $w("#claddingColour-field-portalFrame"),
+              },
+            ],
           },
           {
-            element: $w("#mezzanineFloorAccess-field-portalFrame"),
+            optionValue: "corrugatedSheet",
+            required: true,
+            subFields: [
+              {
+                elementID: $w("#claddingCorrugatedSheetFinish-field-portalFrame"),
+              },
+              {
+                elementID: $w("#claddingColour-text-portalFrame"),
+              },
+              {
+                elementID: $w("#claddingColour-field-portalFrame"),
+              },
+            ],
           },
+        ],
+      },
+      {
+        elementID: $w("#concreteFloor-field-portalFrame"),
+        subFields: [
           {
-            element: $w("#mezzanineForkliftBay-field-portalFrame"),
+            optionValue: "yes",
+            required: true,
+            subFields: [
+              {
+                elementID: $w("#concreteFloorQuote-field-portalFrame"),
+              },
+              {
+                elementID: $w("#concreteFloorAdditionalNotes-field-portalFrame"),
+              },
+            ],
           },
+        ],
+      },
+      {
+        elementID: $w("#hasMezzanine-field-portalFrame"),
+        subFields: [
           {
-            element: $w("#mezzanineAdditionalNotes-field-portalFrame"),
+            optionValue: "yes",
+            required: true,
+            subFields: [
+              {
+                elementID: $w("#mezzanineInstallation-field-portalFrame"),
+              },
+              {
+                elementID: $w("#mezzanineFreestanding-field-portalFrame"),
+              },
+              {
+                elementID: $w("#mezzanineBayWidth-field-portalFrame"),
+                subFields: [
+                  {
+                    optionValue: "other",
+                    required: false,
+                    subFields: [
+                      {
+                        elementID: $w("#mezzanineBayWidthOther-field-portalFrame"),
+                      },
+                    ],
+                  },
+                ],
+              },
+              {
+                elementID: $w("#mezzanineSpanOptions-field-portalFrame"),
+                subFields: [
+                  {
+                    optionValue: "supportPosts",
+                    required: true,
+                    subFields: [
+                      {
+                        elementID: $w("#mezzanineOptionsSpanHeight-box-portalFrame"),
+                      },
+                      {
+                        elementID: $w("#mezzanineHeight-field-portalFrame"),
+                      },
+                    ],
+                  },
+                ],
+              },
+              {
+                elementID: $w("#mezzanineSteelOptions-field-portalFrame"),
+              },
+              {
+                elementID: $w("#mezzaninePurlins-field-portalFrame"),
+              },
+              {
+                elementID: $w("#mezzanineFloorOptions-field-portalFrame"),
+              },
+              {
+                elementID: $w("#mezzanineHandrails-field-portalFrame"),
+              },
+              {
+                elementID: $w("#mezzanineFloorAccess-field-portalFrame"),
+              },
+              {
+                elementID: $w("#mezzanineForkliftBay-field-portalFrame"),
+              },
+              {
+                elementID: $w("#mezzanineAdditionalNotes-field-portalFrame"),
+              },
+            ],
           },
         ],
       },
@@ -1067,70 +1049,78 @@ const formOptions = [
   },
   {
     formName: "mezzanineFloorForm",
-    fields: [
+    formFields: [
       {
-        parentElement: {
-          element: $w("#mezzanineOptions-field-mezzanineFloor"),
-          value: "betweenExistingPosts",
-          required: true,
-        },
-        optionElements: [
+        elementID: $w("#mezzanineOptions-field-mezzanineFloor"),
+        subFields: [
           {
-            element: $w("#postDimensionsMainContainer-mezzanineFloor"),
-          },
-          {
-            element: $w("#mainPostDimensionsA-field-mezzanineFloor"),
-          },
-          {
-            element: $w("#mainPostDimensionsB-field-mezzanineFloor"),
-          },
-          {
-            element: $w("#mainPostDimensionsC-field-mezzanineFloor"),
-          },
-          {
-            parentElement: {
-              element: $w("#gablePosts-field-mezzanineFloor"),
-              value: "yes",
-              required: false,
-            },
-            optionElements: [
+            optionValue: "betweenExistingPosts",
+            required: true,
+            subFields: [
               {
-                element: $w("#postDimensionsGableContainer-mezzanineFloor"),
+                elementID: $w("#postDimensionsMainContainer-mezzanineFloor"),
               },
               {
-                element: $w("#gablePostDimensionsA-field-mezzanineFloor"),
+                elementID: $w("#mainPostDimensionsA-field-mezzanineFloor"),
               },
               {
-                element: $w("#gablePostDimensionsB-field-mezzanineFloor"),
+                elementID: $w("#mainPostDimensionsB-field-mezzanineFloor"),
               },
               {
-                element: $w("#gablePostDimensionsC-field-mezzanineFloor"),
+                elementID: $w("#mainPostDimensionsC-field-mezzanineFloor"),
+              },
+              {
+                elementID: $w("#gablePosts-field-mezzanineFloor"),
+                subFields: [
+                  {
+                    optionValue: "yes",
+                    required: false,
+                    subFields: [
+                      {
+                        elementID: $w("#postDimensionsGableContainer-mezzanineFloor"),
+                      },
+                      {
+                        elementID: $w("#gablePostDimensionsA-field-mezzanineFloor"),
+                      },
+                      {
+                        elementID: $w("#gablePostDimensionsB-field-mezzanineFloor"),
+                      },
+                      {
+                        elementID: $w("#gablePostDimensionsC-field-mezzanineFloor"),
+                      },
+                    ],
+                  },
+                ],
               },
             ],
           },
         ],
       },
       {
-        parentElement: {
-          element: $w("#bayWidth-field-mezzanineFloor"),
-          value: "other",
-          required: false,
-        },
-        optionElements: [
+        elementID: $w("#bayWidth-field-mezzanineFloor"),
+        subFields: [
           {
-            element: $w("#bayWidthOther-field-mezzanineFloor"),
+            optionValue: "other",
+            required: false,
+            subFields: [
+              {
+                elementID: $w("#bayWidthOther-field-mezzanineFloor"),
+              },
+            ],
           },
         ],
       },
       {
-        parentElement: {
-          element: $w("#mezzanineOptionsSpan-field-mezzanineFloor"),
-          value: "supportPosts",
-          required: true,
-        },
-        optionElements: [
+        elementID: $w("#mezzanineOptionsSpan-field-mezzanineFloor"),
+        subFields: [
           {
-            element: $w("#mezzanineOptionsSpanHeight-box-mezzanineFloor"),
+            optionValue: "supportPosts",
+            required: true,
+            subFields: [
+              {
+                elementID: $w("#mezzanineOptionsSpanHeight-box-mezzanineFloor"),
+              },
+            ],
           },
         ],
       },
@@ -1138,223 +1128,177 @@ const formOptions = [
   },
   {
     formName: "polyTunnelForm",
-    fields: [
+    formFields: [
       {
-        parentElement: {
-          element: $w("#polytunnelSiteLevel-field-polytunnel"),
-          value: "yes",
-          required: true,
-        },
-        optionElements: [
+        elementID: $w("#polytunnelSiteLevel-field-polytunnel"),
+        subFields: [
           {
-            element: $w("#polytunnelSiteLevelQuote-field-polytunnel"),
-          },
-        ],
-      },
-      {
-        parentElement: {
-          element: $w("#polytunnelWidth-field-polytunnel"),
-          value: "1.83m",
-          required: true,
-          // option: ["2.44m", "3.05m", "3.66m", "4.27m", "4.88m", "5.49m", "6.4m", "7.32m", "8.23m", "9.15m"],
-        },
-        optionElements: [
-          { element: $w("#polytunnelLength6ft-field-polytunnel") },
-          {
-            element: $w("#polytunnelLengthCoveringSmall-field-polytunnel"),
-            // option: ["8ft", "10ft", "12ft", "14ft"]
-            option: ["2.44m", "3.05m", "3.66m", "4.27m"],
-          },
-        ],
-      },
-      {
-        parentElement: {
-          element: $w("#polytunnelWidth-field-polytunnel"),
-          value: "2.44m",
-          required: true,
-          // option: ["1.83m", "3.05m", "3.66m", "4.27m", "4.88m", "5.49m", "6.4m", "7.32m", "8.23m", "9.15m"],
-        },
-        optionElements: [
-          { element: $w("#polytunnelLength8ft-field-polytunnel") },
-          {
-            element: $w("#polytunnelLengthCoveringSmall-field-polytunnel"),
-            // option: ["6ft", "10ft", "12ft", "14ft"]
-            option: ["1.83m", "3.05m", "3.66m", "4.27m"],
-          },
-        ],
-      },
-      {
-        parentElement: {
-          element: $w("#polytunnelWidth-field-polytunnel"),
-          value: "3.05m",
-          required: true,
-          // option: ["1.83m", "2.44m", "3.66m", "4.27m", "4.88m", "5.49m", "6.4m", "7.32m", "8.23m", "9.15m"],
-        },
-        optionElements: [
-          { element: $w("#polytunnelLength10ft-field-polytunnel") },
-          {
-            element: $w("#polytunnelLengthCoveringSmall-field-polytunnel"),
-            // option: ["6ft", "8ft", "12ft", "14ft"]
-            option: ["1.83m", "2.44m", "3.66m", "4.27m"],
-          },
-        ],
-      },
-      {
-        parentElement: {
-          element: $w("#polytunnelWidth-field-polytunnel"),
-          value: "3.66m",
-          required: true,
-          // option: ["1.83m", "2.44m", "3.05m", "4.27m", "4.88m", "5.49m", "6.4m", "7.32m", "8.23m", "9.15m"],
-        },
-        optionElements: [
-          { element: $w("#polytunnelLength12ft14fts-field-polytunnel") },
-          {
-            element: $w("#polytunnelLengthCoveringSmall-field-polytunnel"),
-            // option: ["6ft", "8ft", "12ft", "14ft"]
-            option: ["1.83m", "2.44m", "3.05m", "4.27m"],
-          },
-        ],
-      },
-      {
-        parentElement: {
-          element: $w("#polytunnelWidth-field-polytunnel"),
-          value: "4.27m",
-          required: true,
-          // option: ["1.83m", "2.44m", "3.05m", "3.66m", "4.88m", "5.49m", "6.4m", "7.32m", "8.23m", "9.15m"],
-        },
-        optionElements: [
-          {
-            parentElement: { element: $w("#hoopSpacing-field-polytunnel"), value: "5ft" },
-            optionElements: [
+            optionValue: "yes",
+            required: true,
+            subFields: [
               {
-                element: $w("#polytunnelLength12ft14fts-field-polytunnel"),
+                elementID: $w("#polytunnelSiteLevelQuote-field-polytunnel"),
+              },
+            ],
+          },
+        ],
+      },
+      {
+        elementID: $w("#polytunnelWidth-field-polytunnel"),
+        subFields: [
+          {
+            optionValue: "1.83m",
+            required: true,
+            subFields: [
+              {
+                elementID: $w("#polytunnelLength6ft-field-polytunnel"),
+              },
+              {
+                elementID: $w("#polytunnelLengthCoveringSmall-field-polytunnel"),
               },
             ],
           },
           {
-            parentElement: { element: $w("#hoopSpacing-field-polytunnel"), value: "6ft" },
-            optionElements: [
+            optionValue: "2.44m",
+            required: true,
+            subFields: [
               {
-                element: $w("#polytunnelLength14ft-field-polytunnel"),
+                elementID: $w("#polytunnelLength8ft-field-polytunnel"),
+              },
+              {
+                elementID: $w("#polytunnelLengthCoveringSmall-field-polytunnel"),
               },
             ],
           },
           {
-            element: $w("#polytunnelLengthCoveringSmall-field-polytunnel"),
-            // option: ["6ft", "8ft", "12ft", "14ft"]
-            option: ["1.83m", "2.44m", "3.05m", "3.66m"],
-          },
-        ],
-      },
-      {
-        parentElement: {
-          element: $w("#polytunnelWidth-field-polytunnel"),
-          value: "4.88m",
-          required: true,
-          // option: ["1.83m", "2.44m", "3.05m", "3.66m", "4.27m", "5.49m", "6.4m", "7.32m", "8.23m", "9.15m"],
-        },
-        optionElements: [
-          { element: $w("#polytunnelLengthLarge-field-polytunnel"), option: ["5.49m"] },
-          {
-            element: $w("#polytunnelLengthCoveringLarge-field-polytunnel"),
-            // option: ["18ft", "21ft", "24ft", "27ft", "30ft"],
-            option: ["5.49m", "6.4m", "7.32m", "8.23m", "9.15m"],
-          },
-        ],
-      },
-      {
-        parentElement: {
-          element: $w("#polytunnelWidth-field-polytunnel"),
-          value: "5.49m",
-          required: true,
-          // option: ["1.83m", "2.44m", "3.05m", "3.66m", "4.27m", "4.88m", "6.4m", "7.32m", "8.23m", "9.15m"],
-        },
-        optionElements: [
-          { element: $w("#polytunnelLengthLarge-field-polytunnel"), option: ["4.88m"] },
-          {
-            element: $w("#polytunnelLengthCoveringLarge-field-polytunnel"),
-            // option: ["16ft", "21ft", "24ft", "27ft", "30ft"],
-            option: ["4.88m", "6.4m", "7.32m", "8.23m", "9.15m"],
-          },
-        ],
-      },
-      {
-        parentElement: {
-          element: $w("#polytunnelWidth-field-polytunnel"),
-          value: "6.4m",
-          required: true,
-          // option: ["1.83m", "2.44m", "3.05m", "3.66m", "4.27m", "4.88m", "5.49m", "7.32m", "8.23m", "9.15m"],
-        },
-        optionElements: [
-          {
-            element: $w("#polytunnelLengthXtraLarge-field-polytunnel"),
-            // option: ["24ft", "27ft", "30ft"]
-            option: ["7.32m", "8.23m", "9.15m"],
+            optionValue: "3.05m",
+            required: true,
+            subFields: [
+              {
+                elementID: $w("#polytunnelLength10ft-field-polytunnel"),
+              },
+              {
+                elementID: $w("#polytunnelLengthCoveringSmall-field-polytunnel"),
+              },
+            ],
           },
           {
-            element: $w("#polytunnelLengthCoveringLarge-field-polytunnel"),
-            // option: ["16ft", "18ft", "24ft", "27ft", "30ft"],
-            option: ["4.88m", "5.49m", "7.32m", "8.23m", "9.15m"],
-          },
-        ],
-      },
-      {
-        parentElement: {
-          element: $w("#polytunnelWidth-field-polytunnel"),
-          value: "7.32m",
-          required: true,
-          // option: ["1.83m", "2.44m", "3.05m", "3.66m", "4.27m", "4.88m", "5.49m", "6.4m", "8.23m", "9.15m"],
-        },
-        optionElements: [
-          {
-            element: $w("#polytunnelLengthXtraLarge-field-polytunnel"),
-            // option: ["21ft", "27ft", "30ft"]
-            option: ["6.4m", "8.23m", "9.15m"],
+            optionValue: "3.66m",
+            required: true,
+            subFields: [
+              {
+                elementID: $w("#polytunnelLength12ft14fts-field-polytunnel"),
+              },
+              {
+                elementID: $w("#polytunnelLengthCoveringSmall-field-polytunnel"),
+              },
+            ],
           },
           {
-            element: $w("#polytunnelLengthCoveringLarge-field-polytunnel"),
-            // option: ["16ft", "18ft", "21ft", "27ft", "30ft"],
-            option: ["4.88m", "5.49m", "6.4m", "8.23m", "9.15m"],
-          },
-        ],
-      },
-      {
-        parentElement: {
-          element: $w("#polytunnelWidth-field-polytunnel"),
-          value: "8.23m",
-          required: true,
-          // option: ["1.83m", "2.44m", "3.05m", "3.66m", "4.27m", "4.88m", "5.49m", "6.4m", "7.32m", "9.15m"],
-        },
-        optionElements: [
-          {
-            element: $w("#polytunnelLengthXtraLarge-field-polytunnel"),
-            // option: ["21ft", "24ft", "30ft"]
-            option: ["6.4m", "7.32m", "9.15m"],
-          },
-          {
-            element: $w("#polytunnelLengthCoveringLarge-field-polytunnel"),
-            // option: ["16ft", "18ft", "21ft", "24ft", "30ft"],
-            option: ["4.88m", "5.49m", "6.4m", "7.32m", "9.15m"],
-          },
-        ],
-      },
-      {
-        parentElement: {
-          element: $w("#polytunnelWidth-field-polytunnel"),
-          value: "9.15m",
-          required: true,
-          // option: ["1.83m", "2.44m", "3.05m", "3.66m", "4.27m", "4.88m", "5.49m", "6.4m", "7.32m", "8.23m"],
-        },
-        optionElements: [
-          {
-            element: $w("#polytunnelLengthXtraLarge-field-polytunnel"),
-            // option: ["21ft", "24ft", "27ft"]
-            option: ["6.4m", "7.32m", "8.23m"],
+            optionValue: "4.27m",
+            required: true,
+            subFields: [
+              {
+                elementID: $w("#hoopSpacing-field-polytunnel"),
+                subFields: [
+                  {
+                    optionValue: "5ft",
+                    required: true,
+                    subFields: [
+                      {
+                        elementID: $w("#polytunnelLength12ft14fts-field-polytunnel"),
+                      },
+                    ],
+                  },
+                  {
+                    optionValue: "6ft",
+                    required: true,
+                    subFields: [
+                      {
+                        elementID: $w("#polytunnelLength14ft-field-polytunnel"),
+                      },
+                    ],
+                  },
+                ],
+              },
+              {
+                elementID: $w("#polytunnelLengthCoveringSmall-field-polytunnel"),
+              },
+            ],
           },
           {
-            element: $w("#polytunnelLengthCoveringLarge-field-polytunnel"),
-            // option: ["16ft", "18ft", "21ft", "24ft", "27ft"],
-            option: ["4.88m", "5.49m", "6.4m", "7.32m", "8.23m"],
+            optionValue: "4.88m",
+            required: true,
+            subFields: [
+              {
+                elementID: $w("#polytunnelLengthLarge-field-polytunnel"),
+                option: ["5.49m"],
+              },
+              {
+                elementID: $w("#polytunnelLengthCoveringLarge-field-polytunnel"),
+              },
+            ],
+          },
+          {
+            optionValue: "5.49m",
+            required: true,
+            subFields: [
+              {
+                elementID: $w("#polytunnelLengthLarge-field-polytunnel"),
+                option: ["4.88m"],
+              },
+              {
+                elementID: $w("#polytunnelLengthCoveringLarge-field-polytunnel"),
+              },
+            ],
+          },
+          {
+            optionValue: "6.4m",
+            required: true,
+            subFields: [
+              {
+                elementID: $w("#polytunnelLengthXtraLarge-field-polytunnel"),
+              },
+              {
+                elementID: $w("#polytunnelLengthCoveringLarge-field-polytunnel"),
+              },
+            ],
+          },
+          {
+            optionValue: "7.32m",
+            required: true,
+            subFields: [
+              {
+                elementID: $w("#polytunnelLengthXtraLarge-field-polytunnel"),
+              },
+              {
+                elementID: $w("#polytunnelLengthCoveringLarge-field-polytunnel"),
+              },
+            ],
+          },
+          {
+            optionValue: "8.23m",
+            required: true,
+            subFields: [
+              {
+                elementID: $w("#polytunnelLengthXtraLarge-field-polytunnel"),
+              },
+              {
+                elementID: $w("#polytunnelLengthCoveringLarge-field-polytunnel"),
+              },
+            ],
+          },
+          {
+            optionValue: "9.15m",
+            required: true,
+            subFields: [
+              {
+                elementID: $w("#polytunnelLengthXtraLarge-field-polytunnel"),
+              },
+              {
+                elementID: $w("#polytunnelLengthCoveringLarge-field-polytunnel"),
+              },
+            ],
           },
         ],
       },
@@ -1376,53 +1320,55 @@ const buildingTypeRepeaterChild = $w("#buildingTypeRepeaterChild");
 const quoteStateContainer = $w("#quoteStateContainer");
 const mainFormImage = $w("#mainFormImage");
 const formTitle = $w("#formTitle");
-// const calcStateContainer = $w("#calcStateContainer");
-// const pitchSwitches = [$w("#pitchCalcTriggerBtn"), $w("#closePitch")];
-// const areaSwitches = [$w("#areaCalcTriggerBtn"), $w("#closeArea")];
-// const forms = [
-//   $w("#monoPitchForm-content"),
-//   $w("#portalFrameForm-content"),
-//   $w("#mezzanineFloorForm-content"),
-//   $w("#roundHouseForm-content"),
-//   $w("#concreteSlabForm-content"),
-// ];
 
 const formFields = [
   {
     formContainer: $w("#mezzanineFloorForm"),
     errorMsg: $w("#submitFailed-mezzanineFloor"),
+    submitBtn: $w("#submitButton-mezzanineFloor"),
     guidField: $w("#formGUID-field-mezzanineFloor"),
-    // areaField: $w("#areaDetail-field-mezzanineFloor"),
+    loadingElement: $w("#submitLoading-mezzanineFloor"),
+    captcha: $w("#captcha-mezzanineFloor"),
   },
   {
     formContainer: $w("#monoPitchForm"),
     errorMsg: $w("#submitFailed-monoPitch"),
+    submitBtn: $w("#submitButton-monoPitch"),
     guidField: $w("#formGUID-field-monoPitch"),
-    // areaField: $w("#areaDetail-field-monoPitch"),
+    loadingElement: $w("#submitLoading-monoPitch"),
+    captcha: $w("#captcha-monoPitch"),
   },
   {
     formContainer: $w("#portalFrameForm"),
     errorMsg: $w("#submitFailed-portalFrame"),
+    submitBtn: $w("#submitButton-portalFrame"),
     guidField: $w("#formGUID-field-portalFrame"),
-    // areaField: $w("#areaDetail-field-portalFrame"),
+    loadingElement: $w("#submitLoading-portalFrame"),
+    captcha: $w("#captcha-portalFrame"),
   },
   {
     formContainer: $w("#concreteSlabForm"),
     errorMsg: $w("#submitFailed-concreteSlab"),
+    submitBtn: $w("#submitButton-concreteSlab"),
     guidField: $w("#formGUID-field-concreteSlab"),
-    // areaField: $w("#areaDetail-field-concreteSlab"),
+    loadingElement: $w("#submitLoading-concreteSlab"),
+    captcha: $w("#captcha-concreteSlab"),
   },
   {
     formContainer: $w("#roundHouseForm"),
     errorMsg: $w("#submitFailed-roundHouse"),
+    submitBtn: $w("#submitButton-roundHouse"),
     guidField: $w("#formGUID-field-roundHouse"),
-    // areaField: $w("#areaDetail-field-roundHouse"),
+    loadingElement: $w("#submitLoading-roundHouse"),
+    captcha: $w("#captcha-roundHouse"),
   },
   {
     formContainer: $w("#polyTunnelForm"),
     errorMsg: $w("#submitFailed-polytunnel"),
+    submitBtn: $w("#submitButton-polytunnel"),
     guidField: $w("#formGUID-field-polytunnel"),
-    // areaField: $w("#areaDetail-field-roundHouse"),
+    loadingElement: $w("#submitLoading-polytunnel"),
+    captcha: $w("#captcha-polytunnel"),
   },
 ];
 
@@ -1492,7 +1438,8 @@ const loadForm = (formName) => {
 
   fillableFormFields.forEach((field) => {
     field.onChange((ev) => {
-      DEBUG_MODE && console.log("Field changed", ev.target.label ?? ev.target.id, ev.target.value, ev);
+      // DEBUG_MODE && console.log("Field changed", ev.target.label ?? ev.target.id);
+      DEBUG_MODE && console.log("Field Changed:", ev.target.label ?? ev.target.id, "\n", "Field Details:", field);
 
       if (field.id.startsWith("measurementUnits-field")) {
         measurementUnits = field.value;
@@ -1526,7 +1473,7 @@ const loadForm = (formName) => {
 
   // for each form add additional option show
   if (!!formOptions.find((o) => o.formName === formName)) {
-    formOptions.find((o) => o.formName === formName).fields.forEach((field) => handleAllOptions(field));
+    formOptions.find((o) => o.formName === formName).formFields.forEach((field) => handleFormSubFields(field));
   } else {
     console.log("Form options not found for", formName);
   }
@@ -1553,6 +1500,25 @@ const loadForm = (formName) => {
 
   $w("#pitchCalcBtn").onClick(async () => await openLightbox("pitch-calculator"));
   $w("#convertCalcBtn").onClick(async () => await openLightbox("conversion-calculator"));
+};
+
+const setCaptcha = (selectedForm) => {
+  if (selectedForm) {
+    selectedForm.captcha.onTimeout(() => {
+      selectedForm.submitBtn.disable();
+    });
+
+    selectedForm.captcha.onError(() => {
+      showError("Something went wrong. Please redo the captcha challenge.");
+      selectedForm.captcha.reset();
+
+      selectedForm.submitBtn.disable();
+    });
+
+    selectedForm.captcha.onVerified(() => {
+      selectedForm.submitBtn.enable();
+    });
+  }
 };
 
 const datasetSet = (dataset) => {
@@ -1606,18 +1572,27 @@ const datasetSet = (dataset) => {
 
   const guidField = selectedFormFields.guidField;
   guidField.value = formGuid;
-  // const areaField = selectedFormFields.areaField
-  // areaField.value = areaDetails
-
-  // console.log("activeDataset", activeDataset, dataset);
 
   activeDataset.element.onBeforeSave(() => {
-    const errorMessageBox = selectedFormFields.errorMsg;
+    selectedFormFields.submitBtn.disable();
+    selectedFormFields.loadingElement.expand();
 
-    activeDataset.element.setFieldValue("formGuid", formGuid);
-    activeDataset.element.setFieldValue("details_areaMapDetails", areaDetails);
-    // activeDataset.element.setFieldValue("formOrder", "");
+    const showError = (msg) => {
+      selectedFormFields.errorMsg.text = msg;
+      selectedFormFields.loadingElement.collapse();
+      selectedFormFields.errorMsg.expand();
+    };
+    const hideError = () => selectedFormFields.errorMsg.collapse();
 
+    // Handle reCaptcha
+    let captchaToken = selectedFormFields.captcha.token;
+
+    if (!captchaToken) {
+      showError("Please complete the reCaptcha.");
+      return false;
+    }
+
+    // Handle validation errors
     const fieldsFailedValidation = fieldsWithValidationErrors();
     DEBUG_MODE && console.log("Validation Field - ", fieldsFailedValidation);
     if (fieldsFailedValidation) {
@@ -1625,6 +1600,7 @@ const datasetSet = (dataset) => {
 
       fieldsFailedValidation.forEach((ffv) => {
         if (!ffv.value || ffv.value === "") {
+          console.log("FAILED FIELD - ", ffv.id);
           validationMessage.push(
             `"${ffv.label.endsWith("?") ? ffv.label.slice(0, ffv.label.length - 1) : ffv.label}" is a required field`
           );
@@ -1633,14 +1609,35 @@ const datasetSet = (dataset) => {
         }
       });
 
-      errorMessageBox.text = validationMessage.join(",\n");
-      errorMessageBox.expand();
-    } else errorMessageBox.collapse();
+      showError(validationMessage.join(",\n"));
+    } else hideError();
+
+    captchaAuth(captchaToken)
+      .then(() => {
+        // Save form data for backend reference
+        activeDataset.element.setFieldValue("formGuid", formGuid);
+        activeDataset.element.setFieldValue("details_areaMapDetails", areaDetails);
+        // If everything is in order and the item is submitted, we show a success message and reset the captcha.
+        // Submit form
+        console.log("Auth check passed");
+        selectedFormFields.captcha.reset();
+        selectedFormFields.submitBtn.enable();
+
+        selectedFormFields.loadingElement.collapse();
+      })
+      .catch(() => {
+        console.log("Auth check failed");
+        selectedFormFields.captcha.reset();
+        showError("Something went wrong. Please check the captcha.");
+        return false;
+      });
+    // });
   });
 };
 
 const fieldsWithValidationErrors = () => {
   const fields = getForm(false);
+  console.log("Test form", fields);
   const nonValidFields = fields.filter((field) => !field.valid);
   if (nonValidFields.length >= 1) {
     return nonValidFields;
@@ -1663,25 +1660,6 @@ const updateFormState = (dataset) => {
     console.log("Error forming state, please contact us");
   }
 };
-
-// const prepareMap = (msg) => {
-//   acc.postMessage(msg);
-//   acc.onMessage((event) => {
-//     let receivedMessage = event.data;
-//     if (formState.quoteFormId === "concreteSlabForm-content") {
-//       let selectedForm = forms.find((form) => form.id === formState.quoteFormId);
-//       formAdditionalFiels = receivedMessage;
-//       selectedForm.setFieldValues({
-//         building_area_mono: Number(Number(formAdditionalFiels.area).toFixed(2)),
-//         site_satellite_area: `${Number(formAdditionalFiels.area).toFixed(2)}m2`,
-//         site_maps_link: `https://www.google.com/maps/place/${formAdditionalFiels.centerLat},${formAdditionalFiels.centerLng}`,
-//         line_lengths: `${formAdditionalFiels.lens.join(",\n")}`,
-//         site_satellite_view_image: `${formAdditionalFiels.url}`,
-//       });
-//       selectedForm.save;
-//     }
-//   });
-// };
 
 // OnClicks
 formStartBtn.onClick(() => formStateContainer.changeState("newQuoteState"));
@@ -1735,6 +1713,7 @@ const capitaliseFirst = (s) => (s && String(s[0]).toUpperCase() + String(s).slic
 const getForm = (isAllFields) => {
   let form = [];
   selectedFormFields = formFields.find((fc) => fc.formContainer.id === formName);
+  setCaptcha(selectedFormFields);
   const getForm = selectedFormFields.formContainer;
   const getFormStack = getForm.children.find((s) => s.id === `formStack-${formName.replace("-content", "")}`);
   getFormStack.children.map((field) => {
@@ -1763,6 +1742,7 @@ const filterOutNonInputFields = (array) =>
       f.type !== "$w.Text" &&
       f.type !== "$w.Box" &&
       f.type !== "$w.Image" &&
+      f.type !== "$w.VectorImage" &&
       f.type !== "$w.FiveGridLine" &&
       f.type !== "$w.UploadButton" &&
       f.type !== "$w.Captcha"
@@ -1776,78 +1756,69 @@ const getAllFields = (fieldsArray, element) => {
   }
 };
 
-const handleAllOptions = (field) => {
-  field.parentElement.element.onChange((ev) => {
-    console.log("FIELD", field);
+const handleFormSubFields = (fieldWithSubField) => {
+  const resetField = (inputField, recurse) => {
+    if (recurse && inputField.subFields) {
+      inputField.subFields.forEach((sf) => resetField(sf.subFields ?? ssf, recurse));
+    }
+    inputField.elementID.value = "";
+    inputField.elementID.required = false;
+    !inputField.elementID.collapsed && inputField.elementID.collapse();
+  };
 
-    // Array.isArray(ev.target.value)
-    //     ? lowerFirst(ev.target.value) !== field.parentElement.value
-    //     :
+  fieldWithSubField.elementID.onChange((ev) => {
+    const selected = ev.target.value;
+    const options = fieldWithSubField.subFields;
 
-    if (lowerFirst(ev.target.value) !== field.parentElement.value) {
-      field.optionElements.forEach((oe) => {
-        if (oe.element) {
-          oe.element.id === "hoopSpacing-field-polytunnel" && console.log("Appeared?");
-          if (oe.element.value) {
-            oe.element.value = "";
+    if (fieldWithSubField.elementID.type === "$w.RadioButtonGroup") {
+      const [expandedOption, collapsedOptions] = options.reduce(
+        (acc, option) => {
+          if (option.optionValue === selected) {
+            acc[0].push(option);
+          } else {
+            acc[1].push(option);
           }
-          if (oe.element.required) {
-            oe.element.required = false;
+          return acc;
+        },
+        [[], []]
+      );
+
+      collapsedOptions.forEach((co) => co.subFields.forEach((subField) => resetField(subField, true)));
+      expandedOption.forEach((eo) =>
+        eo.subFields.forEach((sf) => {
+          if ("required" in sf.elementID) {
+            sf.elementID.required = eo.required;
+            sf.elementID.resetValidityIndication();
           }
-          if (!(oe.option && oe.option.includes(lowerFirst(ev.target.value)))) {
-            oe.element.id === "hoopSpacing-field-polytunnel" && console.log("Appeared?");
-            console.log("AHA", oe, oe.element);
-            !oe.element.collapsed && oe.element.collapse();
+          sf.elementID.collapsed && sf.elementID.expand();
+        })
+      );
+    } else if (fieldWithSubField.elementID.type === "$w.SelectionTags") {
+      const [expandedOptions, collapsedOptions] = selected.reduce(
+        (acc, optionValue) => {
+          const option = options.find((o) => o.optionValue === optionValue);
+          if (option) {
+            acc[0].push(option);
+          } else {
+            acc[1].push(options.find((o) => o.optionValue !== optionValue));
           }
-        } else {
-          console.log("Whats this?", oe); // this is child option elements
-          const collapseElem = (f) => {
-            if (f.element) {
-              f.element.id === "hoopSpacing-field-polytunnel" && console.log("Appeared in collapse 1?");
-              f.element.collapse();
-            } else {
-              f.optionElements.forEach((opte) => {
-                opte.element.id === "hoopSpacing-field-polytunnel" && console.log("Appeared in collapse 2?");
-                collapseElem(opte);
-                if (opte.element.value) {
-                  opte.element.value = "";
-                }
-              });
-              f.parentElement.element.collapse();
-              if (f.parentElement.element.value) {
-                f.parentElement.element.value = "";
-              }
-            }
-          };
-          if (!(oe.option && oe.option.includes(lowerFirst(ev.target.value)))) {
-            console.log("Appeared at base", oe.option);
-            collapseElem(oe);
+          return acc;
+        },
+        [[], []]
+      );
+
+      collapsedOptions.forEach((s) => s.subFields.forEach((subSubField) => resetField(subSubField, true)));
+      expandedOptions.forEach((s) =>
+        s.subFields.forEach((subField) => {
+          if ("required" in subField.elementID) {
+            subField.elementID.required = s.required;
+            subField.elementID.resetValidityIndication();
           }
-        }
-      });
+          subField.elementID.collapsed && subField.elementID.expand();
+        })
+      );
     } else {
-      console.log("Step One", field, "click target val", ev.target.value, "field parent value", ev.target.value);
-      field.optionElements.forEach((oe) => {
-        if (oe.element) {
-          oe.element.expand();
-          if (field.parentElement.required) {
-            if (oe.element.required == true || oe.element.required == false) {
-              oe.element.required = field.parentElement.required;
-              oe.element.resetValidityIndication();
-            }
-          }
-        } else {
-          oe.parentElement.element.expand();
-          if (field.parentElement.required) {
-            if (oe.parentElement.element.required == true || oe.parentElement.element.required == false) {
-              oe.parentElement.element.required = field.parentElement.required;
-              oe.parentElement.element.resetValidityIndication();
-            }
-          }
-
-          handleAllOptions(oe);
-        }
-      });
+      console.log("Unhandled field type", fieldWithSubField.field.type);
     }
   });
 };
