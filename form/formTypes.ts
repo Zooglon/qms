@@ -333,6 +333,30 @@ type mezzanineFloorForm = {
 
 type polyTunnelForm = {
   details: {
+    details_siteNeedsLevelling: string;
+    details_quoteForLevelling: string;
+    details_polytunnelWidth: string;
+    details_polytunnelLength: string;
+    details_polytunnelCovering: string;
+    details_doors: string;
+    details_doorPlacement: string;
+    details_guttering: string;
+    details_gutteringBothSides: string;
+    details_anchoring: string;
+  };
+  contact: {
+    howManyQuotes: number;
+    firstName: string;
+    lastName: string;
+    companyName: string;
+    email: string;
+    phoneNumber: string;
+    address: any;
+  };
+};
+
+type rainwaterRepairForm = {
+  details: {
     polytunnel_Width: string;
     polytunnel_hoopSpacing: string;
     polytunnel_siteRequiresLevelling: string;
@@ -352,17 +376,190 @@ type polyTunnelForm = {
   };
 };
 
-// is datatype in wix email accesbile?
-//${formDetails}
+type wallsRepairForm = {
+  details: {
+    details_howManyBays: string;
+    details_mainPostDimensionA: string;
+    details_mainPostDimensionB: string;
+    details_mainPostDimensionC: string;
+    details_gablePosts: string;
+    details_gablePostDimensionA: string;
+    details_gablePostDimensionB: string;
+    details_gablePostDimensionC: string;
+    details_concretePanelHeight: string;
+    details_wallHeightMassConcrete: string;
+    details_massConcreteWallThickness: string;
+    details_concreteLegoBlockSize: string;
+  };
+  contact: {
+    howManyQuotes: number;
+    firstName: string;
+    lastName: string;
+    companyName: string;
+    email: string;
+    phoneNumber: string;
+    address: any;
+  };
+};
 
-// ${formWalls}
+type gutteringRepairForm = {
+  details: {
+    details_gutteringType: string;
+    details_existingOutlets: string;
+    details_gutteringTypeShape: string;
+    details_sizeOfDownpipe: string;
+    details_gutteringColour: string;
+    details_rainwaterCatchment: string;
+    details_rainwaterCatchmentTank: string;
+    details_measurementUnits: string;
+    details_buildingLength: string;
+    details_buildingWidth: string;
+    details_buildingHeight: string;
+  };
+  contact: {
+    howManyQuotes: number;
+    firstName: string;
+    lastName: string;
+    companyName: string;
+    email: string;
+    phoneNumber: string;
+    address: any;
+  };
+};
 
-// ${formRoof}
+type solarPanelsRepairForm = {
+  details: {
+    details_roofArea: string;
+    details_measurementUnits: string;
+    details_buildingLength: string;
+    details_buildingWidth: string;
+    details_buildingHeight: string;
+    details_coverage: string;
+    details_roofMaterial: string;
+    details_roofMaterialOther: string;
+    details_roofContainsAsbestos: string;
+    details_roofImagesVideos: string;
+    details_roofPitch: string;
+  };
+  contact: {
+    howManyQuotes: number;
+    firstName: string;
+    lastName: string;
+    companyName: string;
+    email: string;
+    phoneNumber: string;
+    address: any;
+  };
+};
 
-// ${formCladding}
+type dismantleRepairForm = {
+  details: {
+    details_measurementUnits: string;
+    details_buildingLength: string;
+    details_buildingWidth: string;
+    details_buildingHeight: string;
+    details_cladding: string;
+    details_claddingType: string;
+    details_claddingTypeOther: string;
+    details_roofMaterial: string;
+    details_roofMaterialOther: string;
+    details_accessAllAround: string;
+    details_additionalNotes: string;
+    details_shedImageVideoUploads: string;
+  };
+  contact: {
+    howManyQuotes: number;
+    firstName: string;
+    lastName: string;
+    companyName: string;
+    email: string;
+    phoneNumber: string;
+    address: any;
+  };
+};
 
-// ${formDoors}
+type doorsRepairForm = {
+  details: {
+    details_removeOldDoor: string;
+    details_doorType: string[];
+    details_rollerShutterDoorLocation: string;
+    details_numberOfRollerShutterDoors: string;
+    details_numberOfRollerShutterDoorsCustom: string;
+    details_rollerShutterDoorWidthM: string;
+    details_rollerShutterDoorHeightM: string;
+    details_rollerShutterDoorBirdBrush: string;
+    details_rollerShutterDoorRubberBirdSeal: string;
+    details_rollerShutterDoorPowerFeed: string;
+    details_numberOfPersonnelDoors: string;
+    details_personnelDoorWidth: string;
+    details_arePersonnelDoorsFireDoors: string;
+    details_numberOfPersonnelFireDoors: string;
 
-// ${formFloor}
+    details_doorImageVideoUploads: any;
+  };
+  contact: {
+    howManyQuotes: number;
+    firstName: string;
+    lastName: string;
+    companyName: string;
+    email: string;
+    phoneNumber: string;
+    address: any;
+  };
+};
 
-// ${formContact}
+type reRoofRepairForm = {
+  details: {
+    details_measurementUnits: string;
+    details_buildingLength: string;
+    details_buildingWidth: string;
+    details_buildingHeight: string;
+    details_roofPitch: string;
+    details_isTheOldRoofStillInPlace: string;
+    details_oldRoofMaterial: string;
+    details_oldRoofMaterialOther: string;
+    details_existingPurlins: string;
+    details_newRoofMaterial: string;
+    details_fibreCementColour: string;
+    details_roofColour: string;
+    details_compositeRoofColour: string;
+    details_compositeThickness: string;
+    details_boxProfileRoofColour: string;
+    details_boxProfileOption: string;
+    details_boxProfileFinish: string;
+    details_corrugatedSheetColour: string;
+    details_corrugatedSheetOption: string;
+    details_corrugatedSheetFinish: string;
+    details_roofSheetLengths: string;
+    details_152mLengths: string;
+    details_1670mLengths: string;
+    details_1820mLengths: string;
+    details_1980mmLengths: string;
+    details_2280mmLengths: string;
+    details_2130mmLengths: string;
+    details_2430mmLengths: string;
+    details_2590mmLengths: string;
+    details_2740mmLengths: string;
+    details_2890mmLengths: string;
+    details_3040mmLengths: string;
+    details_3650mmLengths: string;
+    details_newGuttering: string;
+    details_gutteringType: string;
+    details_existingGutteringOutlets: string;
+    details_gutteringTypeShape: string;
+    details_gutteringColour: string;
+    details_gutteringDownpipeSize: string;
+    details_rainwaterCatchment: string;
+    details_rainwaterCatchmentTank: string;
+    details_gutteringMeasurementUnits: string;
+  };
+  contact: {
+    howManyQuotes: number;
+    firstName: string;
+    lastName: string;
+    companyName: string;
+    email: string;
+    phoneNumber: string;
+    address: any;
+  };
+};
