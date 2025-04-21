@@ -2,1326 +2,25 @@ import { helloThere, getMapCreds } from "./masterPage";
 import wixWindowFrontend from "wix-window-frontend";
 import { openLightbox } from "wix-window-frontend";
 import { captchaAuth } from "backend/captchaModule";
+import { getFormOptions } from "public/formFunctions";
 
-let version = "000183";
+// recursive remove not working 100%
+// capcha auth needs to be awaited - i think?
+
+let version = "000296";
 let mapCreds;
 let measurementUnits;
 let formName;
 let areaCalcObj = {};
 const DEBUG_MODE = true;
 
-const formOptions = [
-  {
-    formName: "concreteSlabForm",
-    formFields: [
-      {
-        elementID: $w("#concreteThickness-field-concreteSlab"),
-        subFields: [
-          {
-            optionValue: "custom",
-            required: true,
-            subFields: [
-              {
-                elementID: $w("#concreteThicknessCustom-field-concreteSlab"),
-              },
-              {
-                elementID: $w("#concreteThicknessCustom-text-concreteSlab"),
-              },
-            ],
-          },
-        ],
-      },
-      {
-        elementID: $w("#finishedArea-field-concreteSlab"),
-        subFields: [
-          {
-            optionValue: "other",
-            required: false,
-            subFields: [
-              {
-                elementID: $w("#finishedAreaCustom-field-concreteSlab"),
-              },
-              {
-                elementID: $w("#finishedAreaCustom-text-concreteSlab"),
-              },
-            ],
-          },
-        ],
-      },
-      {
-        elementID: $w("#finishOptions-concreteSlab"),
-        subFields: [
-          {
-            optionValue: "patterned",
-            required: false,
-            subFields: [
-              {
-                elementID: $w("#patterned-field-concreteSlab"),
-                subFields: [
-                  {
-                    optionValue: "custom",
-                    required: false,
-                    subFields: [
-                      {
-                        elementID: $w("#patternedCustom-field-concreteSlab"),
-                      },
-                      {
-                        elementID: $w("#patternedCustom-text-concreteSlab"),
-                      },
-                    ],
-                  },
-                ],
-              },
-            ],
-          },
-          {
-            optionValue: "powerFloat",
-            required: false,
-            subFields: [
-              {
-                elementID: $w("#powerFloat-field-concreteSlab"),
-              },
-            ],
-          },
-        ],
-      },
-    ],
-  },
-  {
-    formName: "monoPitchForm",
-    formFields: [
-      {
-        elementID: $w("#buildingType-field-monoPitch"),
-        subFields: [
-          {
-            optionValue: "extension",
-            required: true,
-            subFields: [
-              {
-                elementID: $w("#postDimensionsContainer-monoPitch"),
-              },
-              {
-                elementID: $w("#postDimensionA-field-monoPitch"),
-              },
-              {
-                elementID: $w("#postDimensionB-field-monoPitch"),
-              },
-              {
-                elementID: $w("#postDimensionC-field-monoPitch"),
-              },
-            ],
-          },
-        ],
-      },
-      {
-        elementID: $w("#usage-field-monoPitch"),
-        subFields: [
-          {
-            optionValue: "horseStable",
-            required: true,
-            subFields: [
-              {
-                elementID: $w("#usageHorseStable-field-monoPitch"),
-              },
-            ],
-          },
-          {
-            optionValue: "horseLooseHousing",
-            required: true,
-            subFields: [
-              {
-                elementID: $w("#usageInternals-field-monoPitch"),
-              },
-            ],
-          },
-          {
-            optionValue: "cattleShed",
-            required: true,
-            subFields: [
-              {
-                elementID: $w("#usageInternals-field-monoPitch"),
-              },
-            ],
-          },
-          {
-            optionValue: "custom",
-            required: true,
-            subFields: [
-              {
-                elementID: $w("#usageCustom-field-monoPitch"),
-              },
-              {
-                elementID: $w("#usageCustom-text-monoPitch"),
-              },
-            ],
-          },
-        ],
-      },
-      {
-        elementID: $w("#walls-field-monoPitch"),
-        subFields: [
-          {
-            optionValue: "yes",
-            required: true,
-            subFields: [
-              {
-                elementID: $w("#wallsSides-field-monoPitch"),
-              },
-              {
-                elementID: $w("#wallMaterial-field-monoPitch"),
-              },
-              {
-                elementID: $w("#wallNumberOfPanelHeight-field-monoPitch"),
-              },
-              {
-                elementID: $w("#wallPanelHeight-field-monoPitch"),
-                subFields: [
-                  {
-                    optionValue: "custom",
-                    required: true,
-                    subFields: [
-                      {
-                        elementID: $w("#wallPanelHeightCustom-field-monoPitch"),
-                      },
-                      {
-                        elementID: $w("#wallPanelHeightCustom-text-monoPitch"),
-                      },
-                    ],
-                  },
-                ],
-              },
-              {
-                elementID: $w("#wallPanelThickness-field-monoPitch"),
-                subFields: [
-                  {
-                    optionValue: "custom",
-                    required: true,
-                    subFields: [
-                      {
-                        elementID: $w("#wallPanelThicknessCustom-field-monoPitch"),
-                      },
-                      {
-                        elementID: $w("#wallPanelThicknessCustom-text-monoPitch"),
-                      },
-                    ],
-                  },
-                ],
-              },
-            ],
-          },
-        ],
-      },
-      {
-        elementID: $w("#roofMaterial-field-monoPitch"),
-        subFields: [
-          {
-            optionValue: "composite",
-            required: true,
-            subFields: [
-              {
-                elementID: $w("#roofColour-field-monoPitch"),
-              },
-              {
-                elementID: $w("#roofColour-image-monoPitch"),
-              },
-              {
-                elementID: $w("#roofCompositeThickness-field-monoPitch"),
-              },
-            ],
-          },
-          {
-            optionValue: "boxProfileSheet",
-            required: true,
-            subFields: [
-              {
-                elementID: $w("#roofColour-field-monoPitch"),
-              },
-              {
-                elementID: $w("#roofColour-image-monoPitch"),
-              },
-              {
-                elementID: $w("#roofBoxProfile-field-monoPitch"),
-              },
-            ],
-          },
-          {
-            optionValue: "corrugatedSheet",
-            required: true,
-            subFields: [
-              {
-                elementID: $w("#roofColour-field-monoPitch"),
-              },
-              {
-                elementID: $w("#roofColour-image-monoPitch"),
-              },
-              {
-                elementID: $w("#roofCorrugatedSheet-field-monoPitch"),
-              },
-            ],
-          },
-        ],
-      },
-      {
-        elementID: $w("#roofLights-field-monoPitch"),
-        subFields: [
-          {
-            optionValue: "yes",
-            required: false,
-            subFields: [
-              {
-                elementID: $w("#roofLightsPerBay-field-monoPitch"),
-                subFields: [
-                  {
-                    optionValue: "other",
-                    required: false,
-                    subFields: [
-                      {
-                        elementID: $w("#roofLightsPerBayCustom-field-monoPitch"),
-                      },
-                    ],
-                  },
-                ],
-              },
-            ],
-          },
-        ],
-      },
-      {
-        elementID: $w("#roofSolarPanels-field-monoPitch"),
-        subFields: [
-          {
-            optionValue: "no",
-            required: true,
-            subFields: [
-              {
-                elementID: $w("#roofSolarPanelsFuture-field-monoPitch"),
-              },
-            ],
-          },
-          {
-            optionValue: "yes",
-            required: true,
-            subFields: [
-              {
-                elementID: $w("#roofSolarPanelsCoverage-field-monoPitch"),
-                subFields: [
-                  {
-                    optionValue: "custom",
-                    required: true,
-                    subFields: [
-                      {
-                        elementID: $w("#roofSolarPanelsCoverageCustom-field-monoPitch"),
-                      },
-                    ],
-                  },
-                ],
-              },
-              {
-                elementID: $w("#roofSolarPanelsQuoteFromProvider-field-monoPitch"),
-              },
-            ],
-          },
-          {
-            optionValue: "freestanding",
-            required: true,
-            subFields: [
-              {
-                elementID: $w("#roofCantilever-field-monoPitch"),
-              },
-              {
-                elementID: $w("#roofRidgeCaps-field-monoPitch"),
-              },
-            ],
-          },
-        ],
-      },
-      {
-        elementID: $w("#cladding-field-monoPitch"),
-        subFields: [
-          {
-            optionValue: "yes",
-            required: true,
-            subFields: [
-              {
-                elementID: $w("#claddingType-field-monoPitch"),
-                subFields: [
-                  {
-                    optionValue: "composite",
-                    required: true,
-                    subFields: [
-                      {
-                        elementID: $w("#claddingColour-field-monoPitch"),
-                      },
-                      {
-                        elementID: $w("#claddingColour-image-monoPitch"),
-                      },
-                      {
-                        elementID: $w("#claddingCompositeThickness-field-monoPitch"),
-                      },
-                    ],
-                  },
-                  {
-                    optionValue: "boxProfileSheet",
-                    required: true,
-                    subFields: [
-                      {
-                        elementID: $w("#claddingColour-field-monoPitch"),
-                      },
-                      {
-                        elementID: $w("#claddingColour-image-monoPitch"),
-                      },
-                      {
-                        elementID: $w("#claddingBoxProfileType-field-monoPitch"),
-                      },
-                    ],
-                  },
-                  {
-                    optionValue: "corrugatedSheet",
-                    required: true,
-                    subFields: [
-                      {
-                        elementID: $w("#claddingColour-field-monoPitch"),
-                      },
-                      {
-                        elementID: $w("#claddingColour-image-monoPitch"),
-                      },
-                      {
-                        elementID: $w("#claddingCorrugatedSheetType-field-monoPitch"),
-                      },
-                    ],
-                  },
-                  {
-                    optionValue: "timber",
-                    required: true,
-                    subFields: [
-                      {
-                        elementID: $w("#claddingTimberBoardType-field-monoPitch"),
-                      },
-                    ],
-                  },
-                ],
-              },
-            ],
-          },
-        ],
-      },
-      {
-        elementID: $w("#doorsRollerDoors-field-monoPitch"),
-        subFields: [
-          {
-            optionValue: "yes",
-            required: true,
-            subFields: [
-              {
-                elementID: $w("#doorsRollerDoors-text-monoPitch"),
-              },
-              {
-                elementID: $w("#doorsDoorLocation-field-monoPitch"),
-              },
-              {
-                elementID: $w("#doorsRollerNumber-field-monoPitch"),
-                subFields: [
-                  {
-                    optionValue: "custom",
-                    required: true,
-                    subFields: [
-                      {
-                        elementID: $w("#doorsRollerNumberCustom-field-monoPitch"),
-                      },
-                      {
-                        elementID: $w("#doorsRollerNumberCustom-text-monoPitch"),
-                      },
-                    ],
-                  },
-                ],
-              },
-              {
-                elementID: $w("#doorsRollerWidth-field-monoPitch"),
-              },
-              {
-                elementID: $w("#doorsRollerHeight-field-monoPitch"),
-              },
-              {
-                elementID: $w("#doorsRollerBirdBrush-field-monoPitch"),
-              },
-              {
-                elementID: $w("#doorsRollerRubberSeal-field-monoPitch"),
-              },
-              {
-                elementID: $w("#doorsRollerPowerFeed-field-monoPitch"),
-              },
-            ],
-          },
-        ],
-      },
-      {
-        elementID: $w("#doorsPersonnel-field-monoPitch"),
-        subFields: [
-          {
-            optionValue: "yes",
-            required: true,
-            subFields: [
-              {
-                elementID: $w("#doorsPersonnelNumber-field-monoPitch"),
-              },
-              {
-                elementID: $w("#doorsPersonnelWidth-field-monoPitch"),
-              },
-              {
-                elementID: $w("#doorsPersonnelFire-field-monoPitch"),
-                subFields: [
-                  {
-                    optionValue: "yes",
-                    required: true,
-                    subFields: [
-                      {
-                        elementID: $w("#doorsPersonnelNumberOfFireDoors-field-monoPitch"),
-                      },
-                    ],
-                  },
-                ],
-              },
-            ],
-          },
-        ],
-      },
-      {
-        elementID: $w("#concretingFloor-field-monoPitch"),
-        subFields: [
-          {
-            optionValue: "yes",
-            required: true,
-            subFields: [
-              {
-                elementID: $w("#concretingFloorQuote-field-monoPitch"),
-              },
-              {
-                elementID: $w("#floorAdditionalNotes-field-monoPitch"),
-              },
-              {
-                elementID: $w("#floorUpload-field-monoPitch"),
-              },
-            ],
-          },
-        ],
-      },
-      {
-        elementID: $w("#hasMezzanine-field-monoPitch"),
-        subFields: [
-          {
-            optionValue: "yes",
-            required: true,
-            subFields: [
-              {
-                elementID: $w("#mezzanineInstallation-field-monoPitch"),
-              },
-              {
-                elementID: $w("#mezzanineFreestanding-field-monoPitch"),
-              },
-              {
-                elementID: $w("#mezzanineSteelOptions-field-monoPitch"),
-              },
-              {
-                elementID: $w("#mezzanineBayWidth-field-monoPitch"),
-                subFields: [
-                  {
-                    optionValue: "other",
-                    required: false,
-                    subFields: [
-                      {
-                        elementID: $w("#mezzanineBayWidthOther-field-monoPitch"),
-                      },
-                    ],
-                  },
-                ],
-              },
-              {
-                elementID: $w("#mezzanineSpanOptions-field-monoPitch"),
-                subFields: [
-                  {
-                    optionValue: "supportPosts",
-                    required: true,
-                    subFields: [
-                      {
-                        elementID: $w("#mezzanineHeight-field-monoPitch"),
-                      },
-                    ],
-                  },
-                ],
-              },
-              {
-                elementID: $w("#mezzaninePurlins-field-monoPitch"),
-              },
-              {
-                elementID: $w("#mezzanineFloorOptions-field-monoPitch"),
-              },
-              {
-                elementID: $w("#mezzanineHandrails-field-monoPitch"),
-              },
-              {
-                elementID: $w("#mezzanineFloorAccess-field-monoPitch"),
-              },
-              {
-                elementID: $w("#mezzanineForkliftBay-field-monoPitch"),
-              },
-              {
-                elementID: $w("#mezzanineAdditionalNotes-field-monoPitch"),
-              },
-            ],
-          },
-        ],
-      },
-    ],
-  },
-  {
-    formName: "roundHouseForm",
-    formFields: [
-      {
-        elementID: $w("#siteRequiresLevelling-field-roundHouse"),
-        subFields: [
-          {
-            optionValue: "yes",
-            required: true,
-            subFields: [
-              {
-                elementID: $w("#siteRequiresLevellingQuote-field-roundHouse"),
-              },
-            ],
-          },
-        ],
-      },
-    ],
-  },
-  {
-    formName: "portalFrameForm",
-    formFields: [
-      {
-        elementID: $w("#buildingUsage-field-portalFrame"),
-        subFields: [
-          {
-            optionValue: "other",
-            required: true,
-            subFields: [
-              {
-                elementID: $w("#buildingUsageOther-field-portalFrame"),
-              },
-            ],
-          },
-          {
-            optionValue: "horseLooseHousing",
-            required: true,
-            subFields: [
-              {
-                elementID: $w("#buildingUsageInternalsHorseCow-field-portalFrame"),
-              },
-            ],
-          },
-          {
-            optionValue: "cattleShed",
-            required: true,
-            subFields: [
-              {
-                elementID: $w("#buildingUsageInternalsHorseCow-field-portalFrame"),
-              },
-            ],
-          },
-          {
-            optionValue: "horseStable",
-            required: true,
-            subFields: [
-              {
-                elementID: $w("#buildingUsageInternalsStable-field-portalFrame"),
-              },
-            ],
-          },
-        ],
-      },
-      {
-        elementID: $w("#roofPitch-field-portalFrame"),
-        subFields: [
-          {
-            optionValue: "custom",
-            required: true,
-            subFields: [
-              {
-                elementID: $w("#roofPitchCustom-field-portalFrame"),
-              },
-            ],
-          },
-        ],
-      },
-      {
-        elementID: $w("#buildingHasWalls-field-portalFrame"),
-        subFields: [
-          {
-            optionValue: "yes",
-            required: true,
-            subFields: [
-              {
-                elementID: $w("#howManySidesWalls-field-portalFrame"),
-              },
-              {
-                elementID: $w("#wallMaterial-field-portalFrame"),
-              },
-              {
-                elementID: $w("#wallHeightInPanels-field-portalFrame"),
-              },
-              {
-                elementID: $w("#wallPanelHeight-field-portalFrame"),
-                subFields: [
-                  {
-                    optionValue: "custom",
-                    required: true,
-                    subFields: [
-                      {
-                        elementID: $w("#wallPanelHeightCustom-field-portalFrame"),
-                      },
-                      {
-                        elementID: $w("#wallPanelHeightCustom-text-portalFrame"),
-                      },
-                    ],
-                  },
-                ],
-              },
-              {
-                elementID: $w("#wallPanelThickness-field-portalFrame"),
-                subFields: [
-                  {
-                    optionValue: "custom",
-                    required: true,
-                    subFields: [
-                      {
-                        elementID: $w("#wallPanelThicknessCustom-field-portalFrame"),
-                      },
-                      {
-                        elementID: $w("#wallPanelThicknessCustom-text-portalFrame"),
-                      },
-                    ],
-                  },
-                ],
-              },
-            ],
-          },
-        ],
-      },
-      {
-        elementID: $w("#roofMaterial-field-portalFrame"),
-        subFields: [
-          {
-            optionValue: "fibreCement",
-            required: true,
-            subFields: [
-              {
-                elementID: $w("#fibreCementColour-field-portalFrame"),
-              },
-            ],
-          },
-          {
-            optionValue: "composite",
-            required: true,
-            subFields: [
-              {
-                elementID: $w("#roofColour-image-portalFrame"),
-              },
-              {
-                elementID: $w("#roofColour-field-portalFrame"),
-              },
-              {
-                elementID: $w("#compositeThickness-field-portalFrame"),
-              },
-            ],
-          },
-          {
-            optionValue: "boxProfileRoofSheets",
-            required: true,
-            subFields: [
-              {
-                elementID: $w("#roofColour-image-portalFrame"),
-              },
-              {
-                elementID: $w("#roofColour-field-portalFrame"),
-              },
-              {
-                elementID: $w("#boxProfileFinish-field-portalFrame"),
-              },
-              {
-                elementID: $w("#boxProfileOption-field-portalFrame"),
-              },
-            ],
-          },
-          {
-            optionValue: "corrugatedRoofSheets",
-            required: true,
-            subFields: [
-              {
-                elementID: $w("#roofColour-image-portalFrame"),
-              },
-              {
-                elementID: $w("#roofColour-field-portalFrame"),
-              },
-              {
-                elementID: $w("#corrugatedSheetFinish-field-portalFrame"),
-              },
-              {
-                elementID: $w("#corrugatedSheetOption-field-portalFrame"),
-              },
-            ],
-          },
-        ],
-      },
-      {
-        elementID: $w("#roofLights-field-portalFrame"),
-        subFields: [
-          {
-            optionValue: "yes",
-            required: true,
-            subFields: [
-              {
-                elementID: $w("#roofLightsPerBay-field-portalFrame"),
-                subFields: [
-                  {
-                    optionValue: "custom",
-                    required: true,
-                    subFields: [
-                      {
-                        elementID: $w("#roofLightsPerBayCustom-field-portalFrame"),
-                      },
-                    ],
-                  },
-                ],
-              },
-            ],
-          },
-        ],
-      },
-      {
-        elementID: $w("#solarPanels-field-portalFrame"),
-        subFields: [
-          {
-            optionValue: "yes",
-            required: true,
-            subFields: [
-              {
-                elementID: $w("#solarPanelQuoteFromProvider-field-portalFrame"),
-              },
-              {
-                elementID: $w("#solarPanelCoverage-field-portalFrame"),
-                subFields: [
-                  {
-                    optionValue: "custom",
-                    required: true,
-                    subFields: [
-                      {
-                        elementID: $w("#solarPanelCoverageCustom-field-portalFrame"),
-                      },
-                    ],
-                  },
-                ],
-              },
-            ],
-          },
-          {
-            optionValue: "no",
-            required: true,
-            subFields: [
-              {
-                elementID: $w("#solarPanelsInTheFuture-field-portalFrame"),
-              },
-            ],
-          },
-        ],
-      },
-      {
-        elementID: $w("#rollerDoors-field-portalFrame"),
-        subFields: [
-          {
-            optionValue: "yes",
-            required: true,
-            subFields: [
-              {
-                elementID: $w("#rollerDoors-text-portalFrame"),
-              },
-              {
-                elementID: $w("#rollerDoorLocation-field-portalFrame"),
-              },
-              {
-                elementID: $w("#numberOfRollerDoors-field-portalFrame"),
-                subFields: [
-                  {
-                    optionValue: "custom",
-                    required: true,
-                    subFields: [
-                      {
-                        elementID: $w("#numberOfRollerDoorsCustom-field-portalFrame"),
-                      },
-                    ],
-                  },
-                ],
-              },
-              {
-                elementID: $w("#rollerDoorwayWidth-field-portalFrame"),
-              },
-              {
-                elementID: $w("#rollerDoorwayHeight-field-portalFrame"),
-              },
-              {
-                elementID: $w("#rollerDoorBirdBrush-field-portalFrame"),
-              },
-              {
-                elementID: $w("#rollerDoorRubberSeal-field-portalFrame"),
-              },
-              {
-                elementID: $w("#rollerDoorPowerFeed-field-portalFrame"),
-              },
-            ],
-          },
-        ],
-      },
-      {
-        elementID: $w("#personnelDoors-field-portalFrame"),
-        subFields: [
-          {
-            optionValue: "yes",
-            required: true,
-            subFields: [
-              {
-                elementID: $w("#numberOfPersonnelDoors-field-portalFrame"),
-              },
-              {
-                elementID: $w("#personnelDoorWidth-field-portalFrame"),
-              },
-              {
-                elementID: $w("#fireDoors-field-portalFrame"),
-              },
-              {
-                elementID: $w("#numberOfFireDoors-field-portalFrame"),
-              },
-            ],
-          },
-        ],
-      },
-      {
-        elementID: $w("#cladding-field-portalFrame"),
-        subFields: [
-          {
-            optionValue: "composite",
-            required: true,
-            subFields: [
-              {
-                elementID: $w("#claddingColour-text-portalFrame"),
-              },
-              {
-                elementID: $w("#claddingColour-field-portalFrame"),
-              },
-              {
-                elementID: $w("#claddingCompositeThickness-field-portalFrame"),
-              },
-            ],
-          },
-          {
-            optionValue: "timber",
-            required: true,
-            subFields: [
-              {
-                elementID: $w("#claddingTimberBoardType-field-portalFrame"),
-              },
-            ],
-          },
-          {
-            optionValue: "boxProfileSheet",
-            required: true,
-            subFields: [
-              {
-                elementID: $w("#claddingBoxProfileType-field-portalFrame"),
-              },
-              {
-                elementID: $w("#claddingColour-text-portalFrame"),
-              },
-              {
-                elementID: $w("#claddingColour-field-portalFrame"),
-              },
-            ],
-          },
-          {
-            optionValue: "corrugatedSheet",
-            required: true,
-            subFields: [
-              {
-                elementID: $w("#claddingCorrugatedSheetFinish-field-portalFrame"),
-              },
-              {
-                elementID: $w("#claddingColour-text-portalFrame"),
-              },
-              {
-                elementID: $w("#claddingColour-field-portalFrame"),
-              },
-            ],
-          },
-        ],
-      },
-      {
-        elementID: $w("#concreteFloor-field-portalFrame"),
-        subFields: [
-          {
-            optionValue: "yes",
-            required: true,
-            subFields: [
-              {
-                elementID: $w("#concreteFloorQuote-field-portalFrame"),
-              },
-              {
-                elementID: $w("#concreteFloorAdditionalNotes-field-portalFrame"),
-              },
-            ],
-          },
-        ],
-      },
-      {
-        elementID: $w("#hasMezzanine-field-portalFrame"),
-        subFields: [
-          {
-            optionValue: "yes",
-            required: true,
-            subFields: [
-              {
-                elementID: $w("#mezzanineInstallation-field-portalFrame"),
-              },
-              {
-                elementID: $w("#mezzanineFreestanding-field-portalFrame"),
-              },
-              {
-                elementID: $w("#mezzanineBayWidth-field-portalFrame"),
-                subFields: [
-                  {
-                    optionValue: "other",
-                    required: false,
-                    subFields: [
-                      {
-                        elementID: $w("#mezzanineBayWidthOther-field-portalFrame"),
-                      },
-                    ],
-                  },
-                ],
-              },
-              {
-                elementID: $w("#mezzanineSpanOptions-field-portalFrame"),
-                subFields: [
-                  {
-                    optionValue: "supportPosts",
-                    required: true,
-                    subFields: [
-                      {
-                        elementID: $w("#mezzanineOptionsSpanHeight-box-portalFrame"),
-                      },
-                      {
-                        elementID: $w("#mezzanineHeight-field-portalFrame"),
-                      },
-                    ],
-                  },
-                ],
-              },
-              {
-                elementID: $w("#mezzanineSteelOptions-field-portalFrame"),
-              },
-              {
-                elementID: $w("#mezzaninePurlins-field-portalFrame"),
-              },
-              {
-                elementID: $w("#mezzanineFloorOptions-field-portalFrame"),
-              },
-              {
-                elementID: $w("#mezzanineHandrails-field-portalFrame"),
-              },
-              {
-                elementID: $w("#mezzanineFloorAccess-field-portalFrame"),
-              },
-              {
-                elementID: $w("#mezzanineForkliftBay-field-portalFrame"),
-              },
-              {
-                elementID: $w("#mezzanineAdditionalNotes-field-portalFrame"),
-              },
-            ],
-          },
-        ],
-      },
-    ],
-  },
-  {
-    formName: "mezzanineFloorForm",
-    formFields: [
-      {
-        elementID: $w("#mezzanineOptions-field-mezzanineFloor"),
-        subFields: [
-          {
-            optionValue: "betweenExistingPosts",
-            required: true,
-            subFields: [
-              {
-                elementID: $w("#postDimensionsMainContainer-mezzanineFloor"),
-              },
-              {
-                elementID: $w("#mainPostDimensionsA-field-mezzanineFloor"),
-              },
-              {
-                elementID: $w("#mainPostDimensionsB-field-mezzanineFloor"),
-              },
-              {
-                elementID: $w("#mainPostDimensionsC-field-mezzanineFloor"),
-              },
-              {
-                elementID: $w("#gablePosts-field-mezzanineFloor"),
-                subFields: [
-                  {
-                    optionValue: "yes",
-                    required: false,
-                    subFields: [
-                      {
-                        elementID: $w("#postDimensionsGableContainer-mezzanineFloor"),
-                      },
-                      {
-                        elementID: $w("#gablePostDimensionsA-field-mezzanineFloor"),
-                      },
-                      {
-                        elementID: $w("#gablePostDimensionsB-field-mezzanineFloor"),
-                      },
-                      {
-                        elementID: $w("#gablePostDimensionsC-field-mezzanineFloor"),
-                      },
-                    ],
-                  },
-                ],
-              },
-            ],
-          },
-        ],
-      },
-      {
-        elementID: $w("#bayWidth-field-mezzanineFloor"),
-        subFields: [
-          {
-            optionValue: "other",
-            required: false,
-            subFields: [
-              {
-                elementID: $w("#bayWidthOther-field-mezzanineFloor"),
-              },
-            ],
-          },
-        ],
-      },
-      {
-        elementID: $w("#mezzanineOptionsSpan-field-mezzanineFloor"),
-        subFields: [
-          {
-            optionValue: "supportPosts",
-            required: true,
-            subFields: [
-              {
-                elementID: $w("#mezzanineOptionsSpanHeight-box-mezzanineFloor"),
-              },
-            ],
-          },
-        ],
-      },
-    ],
-  },
-  {
-    formName: "polyTunnelForm",
-    formFields: [
-      {
-        elementID: $w("#polytunnelSiteLevel-field-polytunnel"),
-        subFields: [
-          {
-            optionValue: "yes",
-            required: true,
-            subFields: [
-              {
-                elementID: $w("#polytunnelSiteLevelQuote-field-polytunnel"),
-              },
-            ],
-          },
-        ],
-      },
-      {
-        elementID: $w("#polytunnelWidth-field-polytunnel"),
-        subFields: [
-          {
-            optionValue: "1.83m",
-            required: true,
-            subFields: [
-              {
-                elementID: $w("#polytunnelLength6ft-field-polytunnel"),
-              },
-              {
-                elementID: $w("#polytunnelLengthCoveringSmall-field-polytunnel"),
-              },
-            ],
-          },
-          {
-            optionValue: "2.44m",
-            required: true,
-            subFields: [
-              {
-                elementID: $w("#polytunnelLength8ft-field-polytunnel"),
-              },
-              {
-                elementID: $w("#polytunnelLengthCoveringSmall-field-polytunnel"),
-              },
-            ],
-          },
-          {
-            optionValue: "3.05m",
-            required: true,
-            subFields: [
-              {
-                elementID: $w("#polytunnelLength10ft-field-polytunnel"),
-              },
-              {
-                elementID: $w("#polytunnelLengthCoveringSmall-field-polytunnel"),
-              },
-            ],
-          },
-          {
-            optionValue: "3.66m",
-            required: true,
-            subFields: [
-              {
-                elementID: $w("#polytunnelLength12ft14fts-field-polytunnel"),
-              },
-              {
-                elementID: $w("#polytunnelLengthCoveringSmall-field-polytunnel"),
-              },
-            ],
-          },
-          {
-            optionValue: "4.27m",
-            required: true,
-            subFields: [
-              {
-                elementID: $w("#hoopSpacing-field-polytunnel"),
-                subFields: [
-                  {
-                    optionValue: "5ft",
-                    required: true,
-                    subFields: [
-                      {
-                        elementID: $w("#polytunnelLength12ft14fts-field-polytunnel"),
-                      },
-                    ],
-                  },
-                  {
-                    optionValue: "6ft",
-                    required: true,
-                    subFields: [
-                      {
-                        elementID: $w("#polytunnelLength14ft-field-polytunnel"),
-                      },
-                    ],
-                  },
-                ],
-              },
-              {
-                elementID: $w("#polytunnelLengthCoveringSmall-field-polytunnel"),
-              },
-            ],
-          },
-          {
-            optionValue: "4.88m",
-            required: true,
-            subFields: [
-              {
-                elementID: $w("#polytunnelLengthLarge-field-polytunnel"),
-                option: ["5.49m"],
-              },
-              {
-                elementID: $w("#polytunnelLengthCoveringLarge-field-polytunnel"),
-              },
-            ],
-          },
-          {
-            optionValue: "5.49m",
-            required: true,
-            subFields: [
-              {
-                elementID: $w("#polytunnelLengthLarge-field-polytunnel"),
-                option: ["4.88m"],
-              },
-              {
-                elementID: $w("#polytunnelLengthCoveringLarge-field-polytunnel"),
-              },
-            ],
-          },
-          {
-            optionValue: "6.4m",
-            required: true,
-            subFields: [
-              {
-                elementID: $w("#polytunnelLengthXtraLarge-field-polytunnel"),
-              },
-              {
-                elementID: $w("#polytunnelLengthCoveringLarge-field-polytunnel"),
-              },
-            ],
-          },
-          {
-            optionValue: "7.32m",
-            required: true,
-            subFields: [
-              {
-                elementID: $w("#polytunnelLengthXtraLarge-field-polytunnel"),
-              },
-              {
-                elementID: $w("#polytunnelLengthCoveringLarge-field-polytunnel"),
-              },
-            ],
-          },
-          {
-            optionValue: "8.23m",
-            required: true,
-            subFields: [
-              {
-                elementID: $w("#polytunnelLengthXtraLarge-field-polytunnel"),
-              },
-              {
-                elementID: $w("#polytunnelLengthCoveringLarge-field-polytunnel"),
-              },
-            ],
-          },
-          {
-            optionValue: "9.15m",
-            required: true,
-            subFields: [
-              {
-                elementID: $w("#polytunnelLengthXtraLarge-field-polytunnel"),
-              },
-              {
-                elementID: $w("#polytunnelLengthCoveringLarge-field-polytunnel"),
-              },
-            ],
-          },
-        ],
-      },
-    ],
-  },
-];
-
 // Variables Start
-const formStateContainer = $w("#formStateContainer");
+let formOptions = [];
 const formStartBtn = $w("#formStartBtn");
 const supplierSignUp = $w("#supplierSignUp");
-const newOrRepairStateContainer = $w("#newOrRepairStateContainer");
-const quoteTypeRepeater = $w("#quoteTypeRepeater");
-const quoteTypeRepeaterChild = $w("#newOrRepairStateBtn");
-const repairReplaceRepeater = $w("#repairReplaceRepeater");
-const repairReplaceRepeaterChild = $w("#repairReplaceRepeaterChild");
-const buildingTypeRepeater = $w("#buildingTypeRepeater");
-const buildingTypeRepeaterChild = $w("#buildingTypeRepeaterChild");
-const quoteStateContainer = $w("#quoteStateContainer");
-const mainFormImage = $w("#mainFormImage");
-const formTitle = $w("#formTitle");
 
 const formFields = [
+  // New building
   {
     formContainer: $w("#mezzanineFloorForm"),
     errorMsg: $w("#submitFailed-mezzanineFloor"),
@@ -1329,6 +28,7 @@ const formFields = [
     guidField: $w("#formGUID-field-mezzanineFloor"),
     loadingElement: $w("#submitLoading-mezzanineFloor"),
     captcha: $w("#captcha-mezzanineFloor"),
+    imageElement: $w("#mainImage-mezzanineFloor"),
   },
   {
     formContainer: $w("#monoPitchForm"),
@@ -1337,6 +37,7 @@ const formFields = [
     guidField: $w("#formGUID-field-monoPitch"),
     loadingElement: $w("#submitLoading-monoPitch"),
     captcha: $w("#captcha-monoPitch"),
+    imageElement: $w("#mainImage-monoPitch"),
   },
   {
     formContainer: $w("#portalFrameForm"),
@@ -1345,6 +46,7 @@ const formFields = [
     guidField: $w("#formGUID-field-portalFrame"),
     loadingElement: $w("#submitLoading-portalFrame"),
     captcha: $w("#captcha-portalFrame"),
+    imageElement: $w("#mainImage-portalFrame"),
   },
   {
     formContainer: $w("#concreteSlabForm"),
@@ -1353,6 +55,7 @@ const formFields = [
     guidField: $w("#formGUID-field-concreteSlab"),
     loadingElement: $w("#submitLoading-concreteSlab"),
     captcha: $w("#captcha-concreteSlab"),
+    imageElement: $w("#mainImage-concreteSlab"),
   },
   {
     formContainer: $w("#roundHouseForm"),
@@ -1361,6 +64,7 @@ const formFields = [
     guidField: $w("#formGUID-field-roundHouse"),
     loadingElement: $w("#submitLoading-roundHouse"),
     captcha: $w("#captcha-roundHouse"),
+    imageElement: $w("#mainImage-roundHouse"),
   },
   {
     formContainer: $w("#polyTunnelForm"),
@@ -1369,10 +73,83 @@ const formFields = [
     guidField: $w("#formGUID-field-polytunnel"),
     loadingElement: $w("#submitLoading-polytunnel"),
     captcha: $w("#captcha-polytunnel"),
+    imageElement: $w("#mainImage-polytunnel"),
+  },
+  // Repair/Replace
+  {
+    formContainer: $w("#wallsRepairForm"),
+    errorMsg: $w("#submitFailed-wallsRepair"),
+    submitBtn: $w("#submitButton-wallsRepair"),
+    guidField: $w("#formGUID-field-wallsRepair"),
+    loadingElement: $w("#submitLoading-wallsRepair"),
+    captcha: $w("#captcha-wallsRepair"),
+    imageElement: $w("#mainImage-wallsRepair"),
+  },
+  {
+    formContainer: $w("#gutteringRepairForm"),
+    errorMsg: $w("#submitFailed-gutteringRepair"),
+    submitBtn: $w("#submitButton-gutteringRepair"),
+    guidField: $w("#formGUID-field-gutteringRepair"),
+    loadingElement: $w("#submitLoading-gutteringRepair"),
+    captcha: $w("#captcha-gutteringRepair"),
+    imageElement: $w("#mainImage-gutteringRepair"),
+  },
+  {
+    formContainer: $w("#solarRepairForm"),
+    errorMsg: $w("#submitFailed-solarRepair"),
+    submitBtn: $w("#submitButton-solarRepair"),
+    guidField: $w("#formGUID-field-solarRepair"),
+    loadingElement: $w("#submitLoading-solarRepair"),
+    captcha: $w("#captcha-solarRepair"),
+    imageElement: $w("#mainImage-solarRepair"),
+  },
+  {
+    formContainer: $w("#dismantleRepairForm"),
+    errorMsg: $w("#submitFailed-dismantleRepair"),
+    submitBtn: $w("#submitButton-dismantleRepair"),
+    guidField: $w("#formGUID-field-dismantleRepair"),
+    loadingElement: $w("#submitLoading-dismantleRepair"),
+    captcha: $w("#captcha-dismantleRepair"),
+    imageElement: $w("#mainImage-dismantleRepair"),
+  },
+  {
+    formContainer: $w("#rainwaterRepairForm"),
+    errorMsg: $w("#submitFailed-rainwaterRepair"),
+    submitBtn: $w("#submitButton-rainwaterRepair"),
+    guidField: $w("#formGUID-field-rainwaterRepair"),
+    loadingElement: $w("#submitLoading-rainwaterRepair"),
+    captcha: $w("#captcha-rainwaterRepair"),
+    imageElement: $w("#mainImage-rainwaterRepair"),
+  },
+  {
+    formContainer: $w("#doorsRepairForm"),
+    errorMsg: $w("#submitFailed-doorsRepair"),
+    submitBtn: $w("#submitButton-doorsRepair"),
+    guidField: $w("#formGUID-field-doorsRepair"),
+    loadingElement: $w("#submitLoading-doorsRepair"),
+    captcha: $w("#captcha-doorsRepair"),
+    imageElement: $w("#mainImage-doorsRepair"),
+  },
+  {
+    formContainer: $w("#reroofRepairForm"),
+    errorMsg: $w("#submitFailed-reroofRepair"),
+    submitBtn: $w("#submitButton-reroofRepair"),
+    guidField: $w("#formGUID-field-reroofRepair"),
+    loadingElement: $w("#submitLoading-reroofRepair"),
+    captcha: $w("#captcha-reroofRepair"),
+    imageElement: $w("#mainImage-reroofRepair"),
+  },
+  {
+    formContainer: $w("#claddingRepairForm"),
+    errorMsg: $w("#submitFailed-claddingRepair"),
+    submitBtn: $w("#submitButton-claddingRepair"),
+    guidField: $w("#formGUID-field-claddingRepair"),
+    loadingElement: $w("#submitLoading-claddingRepair"),
+    captcha: $w("#captcha-claddingRepair"),
+    imageElement: $w("#mainImage-claddingRepair"),
   },
 ];
 
-// const calculatePitchBtn = $w("#calcPitch");
 const buildQuoteHeaderBtn = $w("#buildQuoteHeaderBtn");
 const buildQuoteFooterBtn = $w("#buildQuoteFooterBtn");
 const resetBtns = [
@@ -1381,33 +158,18 @@ const resetBtns = [
   $w("#quoteFormResetBtn"),
   $w("#quoteFormResetText"),
 ];
-const formStartBtnContainer = $w("#formStartBtnContainer");
 const progressBar = $w("#progressBar");
 
 // State Elements
-
-let formAdditionalFiels = {
-  url: undefined,
-  centerLat: undefined,
-  centerLng: undefined,
-  area: undefined,
-  markers: undefined,
-  lens: undefined,
-};
-
-let areaDetails = {};
-
 let formState;
 let activeDataset;
 let selectedFormFields;
-
-// Area Calc Element
-const acc = $w("#mapComponent");
 
 // Variables End
 
 $w.onReady(async function () {
   helloThere();
+  formOptions = getFormOptions;
   console.log(`Site loaded - ${version}`);
 
   formStartBtn.expand();
@@ -1418,7 +180,7 @@ $w.onReady(async function () {
 
 // Functions
 const loadForm = (formName) => {
-  console.log("Load form fired,", formName, formState);
+  DEBUG_MODE && console.log("Loading form...", formName);
   let completedFields = [];
 
   const fillableFormFields = getForm(false);
@@ -1438,8 +200,11 @@ const loadForm = (formName) => {
 
   fillableFormFields.forEach((field) => {
     field.onChange((ev) => {
-      // DEBUG_MODE && console.log("Field changed", ev.target.label ?? ev.target.id);
       DEBUG_MODE && console.log("Field Changed:", ev.target.label ?? ev.target.id, "\n", "Field Details:", field);
+
+      let fieldVal = ev.target.value;
+      // POSSBILY CHANGE FIELD TO THIS?
+      let fieldId = ev.target.id;
 
       if (field.id.startsWith("measurementUnits-field")) {
         measurementUnits = field.value;
@@ -1462,41 +227,177 @@ const loadForm = (formName) => {
         }
       }
 
+      if (field.id.startsWith("polytunnelWidth-field-polytunnel")) {
+        let polytunnelHeightElement = $w("#polytunnelHeight-text-polytunnel");
+        let polytunnelHoopDistance = $w("#polytunnelHoopDistance-text-polytunnel");
+        if (fieldVal === "4.88m") {
+          polytunnelHeightElement.text = "8ft 6in";
+          polytunnelHoopDistance.text = "27ft 10in";
+        } else if (fieldVal === "5.49m") {
+          polytunnelHeightElement.text = "8ft 6in";
+          polytunnelHoopDistance.text = "29ft 6in";
+        } else if (fieldVal === "6.4m") {
+          polytunnelHeightElement.text = "9ft 9in";
+          polytunnelHoopDistance.text = "34ft 9in";
+        } else if (fieldVal === "7.32m") {
+          polytunnelHeightElement.text = "10ft";
+          polytunnelHoopDistance.text = "37ft 11in";
+        } else if (fieldVal === "8.23m") {
+          polytunnelHeightElement.text = "10ft 5in";
+          polytunnelHoopDistance.text = "39ft 4in";
+        } else if (fieldVal === "9.15m") {
+          polytunnelHeightElement.text = "11ft";
+          polytunnelHoopDistance.text = "43ft 6in";
+        }
+        polytunnelHeightElement.collapsed && polytunnelHeightElement.expand();
+        polytunnelHoopDistance.collapsed && polytunnelHoopDistance.expand();
+      }
+
       if (field.value !== "" && !completedFields.includes(field.id)) {
         updateBar(getForm(false), progressBar);
       }
 
-      completedFields;
       completedFields.push(field.id);
+
+      if (!!formOptions.find((o) => o.formName === formName)) {
+        const selectedForm = formOptions.find((o) => o.formName === formName);
+
+        const findMatch = (id, obj) => {
+          let matches = [];
+
+          const findMatchedId = (id, obj) => {
+            if (obj.elementID === id) {
+              matches.push(obj);
+            }
+
+            const checkArray = (array) => {
+              for (const item of array) {
+                if (typeof item === "object") {
+                  findMatchedId(id, item);
+                }
+              }
+            };
+
+            if (obj.formFields) {
+              checkArray(obj.formFields);
+            }
+
+            if (obj.showOptions) {
+              checkArray(obj.showOptions);
+            }
+          };
+
+          findMatchedId(id, obj);
+          return matches;
+        };
+
+        const idToSearch = fieldId;
+        const foundObject = findMatch(idToSearch, selectedForm);
+
+        const hideField = (input) => {
+          if (!input.elementID) {
+            DEBUG_MODE && console.log("(Remove)", "Error, no elementID found in ", input);
+            return;
+          }
+          // @ts-ignore
+          const wixElementRef = $w(`#${input.elementID}`);
+          if (wixElementRef.collapsed) return;
+
+          DEBUG_MODE && console.log("removing...", wixElementRef, input);
+
+          if (wixElementRef.required) {
+            wixElementRef.required = false;
+          }
+
+          // reset field and if subfields reset recursively
+          if (input.showOptions) {
+            input.showOptions.map((option) => {
+              DEBUG_MODE && console.log("Hiding subsub...", option);
+              hideField(option);
+
+              // if (option.showOptions) {
+              //   option.showOptions.map((subSubField) => {
+              //     console.log("Hiding subsub...", subSubField);
+              //     hideField(subSubField);
+              //   });
+              // }
+            });
+          }
+
+          if (wixElementRef.type && wixElementRef.type.toLowerCase().includes("input")) {
+            wixElementRef.value = "";
+            wixElementRef.resetValidityIndication();
+          }
+          wixElementRef.collapse();
+        };
+
+        const showField = (input) => {
+          DEBUG_MODE && console.log("Adding to view...", input);
+          // @ts-ignore
+          const wixElementRef = $w(`#${input.elementID}`);
+          wixElementRef.type &&
+            wixElementRef.type.toLowerCase().includes("input") &&
+            wixElementRef.resetValidityIndication();
+          wixElementRef.collapsed && wixElementRef.expand();
+        };
+
+        const handleFormOptionFields = (formOptionObj, selectedValue) => {
+          let fieldValue = selectedValue.map((v) => lowerFirst(v));
+          DEBUG_MODE &&
+            console.log("handler fired...", [
+              { "Options to render": formOptionObj.showOptions.map((f) => f.elementID ?? "No elementID") },
+              { "element ID": formOptionObj.elementID },
+              { "input value": fieldValue },
+            ]);
+          if (formOptionObj.showOptions && formOptionObj.elementID) {
+            // is a top level?
+            // show subFields that match option
+            let showFieldsArray = formOptionObj.showOptions;
+
+            let showList = [];
+            let hideList = [];
+
+            showFieldsArray.forEach((showOption) => {
+              fieldValue.includes(showOption.optionValue) ? showList.push(showOption) : hideList.push(showOption);
+            });
+            // add fields to page that match option
+            showList.forEach((hf) => showField(hf));
+            // if elementID matches a shown field, filter out of hide list
+            hideList = hideList.filter((hf) => !showList.find((h) => h.elementID === hf.elementID));
+            // Hide non matching fields from page
+            hideList.forEach((hf) => hideField(hf));
+          }
+        };
+
+        foundObject.forEach((foundObj) => {
+          if (!foundObj) console.log("Error, no object found in ", foundObj);
+          foundObj.showOptions && handleFormOptionFields(foundObj, [fieldVal].flat());
+        });
+      } else {
+        console.log("Form options not found for", formName);
+      }
     });
   });
 
-  // for each form add additional option show
-  if (!!formOptions.find((o) => o.formName === formName)) {
-    formOptions.find((o) => o.formName === formName).formFields.forEach((field) => handleFormSubFields(field));
-  } else {
-    console.log("Form options not found for", formName);
-  }
+  // $w("#areaCalcBtn-concreteSlab").onClick(async () => {
+  //   const dataToSend = mapCreds;
 
-  $w("#areaCalcBtn-concreteSlab").onClick(async () => {
-    const dataToSend = mapCreds;
+  //   const retObj = await openLightbox("area-calculator", dataToSend);
+  //   const areaField = $w("#concreteArea-field-concreteSlab");
+  //   const areaDetailsField = $w("#areaDetails-field-concreteSlab");
 
-    const retObj = await openLightbox("area-calculator", dataToSend);
-    const areaField = $w("#concreteArea-field-concreteSlab");
-    const areaDetailsField = $w("#areaDetails-field-concreteSlab");
+  //   console.log("RETOBJ", retObj);
 
-    console.log("RETOBJ", retObj);
-
-    for (let [key, value] of Object.entries(retObj)) {
-      let formatKey = capitaliseFirst(key).replace(/_/g, " ");
-      areaCalcObj[`${formatKey}`] = value;
-    }
-    console.log("Inputting - ", `${Number(retObj.building_area_mono)}`);
-    if (areaField && areaDetailsField && retObj) {
-      areaField.value = `${Number(retObj.building_area_mono)}`;
-      areaDetailsField.value = JSON.stringify(areaCalcObj);
-    }
-  });
+  //   for (let [key, value] of Object.entries(retObj)) {
+  //     let formatKey = capitaliseFirst(key).replace(/_/g, " ");
+  //     areaCalcObj[`${formatKey}`] = value;
+  //   }
+  //   console.log("Inputting - ", `${Number(retObj.building_area_mono)}`);
+  //   if (areaField && areaDetailsField && retObj) {
+  //     areaField.value = `${Number(retObj.building_area_mono)}`;
+  //     areaDetailsField.value = JSON.stringify(areaCalcObj);
+  //   }
+  // });
 
   $w("#pitchCalcBtn").onClick(async () => await openLightbox("pitch-calculator"));
   $w("#convertCalcBtn").onClick(async () => await openLightbox("conversion-calculator"));
@@ -1509,7 +410,10 @@ const setCaptcha = (selectedForm) => {
     });
 
     selectedForm.captcha.onError(() => {
-      showError("Something went wrong. Please redo the captcha challenge.");
+      const msg = "Something went wrong. Please redo the captcha challenge.";
+      selectedFormFields.errorMsg.text = msg;
+      selectedFormFields.loadingElement.collapse();
+      selectedFormFields.errorMsg.expand();
       selectedForm.captcha.reset();
 
       selectedForm.submitBtn.disable();
@@ -1523,49 +427,10 @@ const setCaptcha = (selectedForm) => {
 
 const datasetSet = (dataset) => {
   // Add dataset in
-  console.log("DATASET", dataset);
-  switch (dataset) {
-    case "monoPitchQuotesDataset": {
-      console.log("MATCH Pt 1, monoPitchQuotesDataset");
-      activeDataset = { id: "monoPitchQuotesDataset", element: $w("#monoPitchQuotesDataset") };
-      console.log("MATCH ", "monoPitchQuotesDataset", dataset, "||", JSON.stringify(activeDataset));
-      break;
-    }
-    case "concreteSlabDataset": {
-      console.log("MATCH Pt 1, concreteSlabDataset");
-      activeDataset = { id: "concreteSlabDataset", element: $w("#concreteSlabDataset") };
-      console.log("MATCH ", "concreteSlabDataset", dataset, "||", JSON.stringify(activeDataset));
-      break;
-    }
-    case "portalFrameQuotesDataset": {
-      console.log("MATCH Pt 1, portalFrameQuotesDataset");
-      activeDataset = { id: "portalFrameQuotesDataset", element: $w("#portalFrameQuotesDataset") };
-      console.log("MATCH ", "portalFrameQuotesDataset", dataset, "||", JSON.stringify(activeDataset));
-      break;
-    }
-    case "roundHouseQuotesDataset": {
-      console.log("MATCH Pt 1, roundHouseQuotesDataset");
-      activeDataset = { id: "roundHouseQuotesDataset", element: $w("#roundHouseQuotesDataset") };
-      console.log("MATCH ", "roundHouseQuotesDataset", dataset, "||", JSON.stringify(activeDataset));
-      break;
-    }
-    case "mezzanineFloorQuotesDataset": {
-      console.log("MATCH Pt 1, mezzanineFloorQuotesDataset");
-      activeDataset = { id: "mezzanineFloorQuotesDataset", element: $w("#mezzanineFloorQuotesDataset") };
-      console.log("MATCH ", "mezzanineFloorQuotesDataset", dataset, "||", JSON.stringify(activeDataset));
-      break;
-    }
-    case "polyTunnelQuotesDataset": {
-      console.log("MATCH Pt 1, polyTunnelQuotesDataset");
-      activeDataset = { id: "polyTunnelQuotesDataset", element: $w("#polyTunnelQuotesDataset") };
-      console.log("MATCH ", "polyTunnelQuotesDataset", dataset, "||", JSON.stringify(activeDataset));
-      break;
-    }
-    default: {
-      console.log("DEFAULT", dataset);
-      break;
-    }
-  }
+  DEBUG_MODE && console.log(`Setting dataset '${dataset}'...`);
+  // @ts-ignore
+  activeDataset = { id: dataset, element: $w(`#${dataset}`) };
+  DEBUG_MODE && console.log("Set active dataset", dataset);
 
   const formGuid = crypto.randomUUID();
   const areaDetails = "";
@@ -1600,7 +465,7 @@ const datasetSet = (dataset) => {
 
       fieldsFailedValidation.forEach((ffv) => {
         if (!ffv.value || ffv.value === "") {
-          console.log("FAILED FIELD - ", ffv.id);
+          DEBUG_MODE && console.log("FAILED FIELD - ", ffv.id);
           validationMessage.push(
             `"${ffv.label.endsWith("?") ? ffv.label.slice(0, ffv.label.length - 1) : ffv.label}" is a required field`
           );
@@ -1619,14 +484,14 @@ const datasetSet = (dataset) => {
         activeDataset.element.setFieldValue("details_areaMapDetails", areaDetails);
         // If everything is in order and the item is submitted, we show a success message and reset the captcha.
         // Submit form
-        console.log("Auth check passed");
+        DEBUG_MODE && console.log("Auth check passed");
         selectedFormFields.captcha.reset();
         selectedFormFields.submitBtn.enable();
 
         selectedFormFields.loadingElement.collapse();
       })
       .catch(() => {
-        console.log("Auth check failed");
+        DEBUG_MODE && console.log("Auth check failed");
         selectedFormFields.captcha.reset();
         showError("Something went wrong. Please check the captcha.");
         return false;
@@ -1637,7 +502,7 @@ const datasetSet = (dataset) => {
 
 const fieldsWithValidationErrors = () => {
   const fields = getForm(false);
-  console.log("Test form", fields);
+  DEBUG_MODE && console.log("Test form", fields);
   const nonValidFields = fields.filter((field) => !field.valid);
   if (nonValidFields.length >= 1) {
     return nonValidFields;
@@ -1646,9 +511,12 @@ const fieldsWithValidationErrors = () => {
 
 const updateFormState = (dataset) => {
   if (dataset) {
+    let formTitle = $w("#formTitle");
     formName = formState.quoteFormId.replace("-content", "");
-    mainFormImage.src = `${dataset.image}`;
-    mainFormImage.alt = `${dataset.quoteTitle} image`;
+    console.log("FORMNAME", formName);
+    selectedFormFields = formFields.find((fc) => fc.formContainer.id === formName);
+    selectedFormFields.imageElement.src = formState.image;
+    selectedFormFields.imageElement.alt = formState.quoteTitle;
     formTitle.text = `New ${dataset.quoteTitle} quote`;
     loadForm(formName);
     if (mapCreds) {
@@ -1661,37 +529,65 @@ const updateFormState = (dataset) => {
   }
 };
 
-// OnClicks
+// onClick variables
+const formStateContainer = $w("#formStateContainer");
+const quoteStateContainer = $w("#quoteStateContainer");
+const newOrRepairStateContainer = $w("#newOrRepairStateContainer");
+const buildingTypeRepeater = $w("#buildingTypeRepeater");
+const buildingTypeRepeaterChild = $w("#buildingTypeRepeaterChild");
+const repairReplaceRepeater = $w("#repairReplaceRepeater");
+const repairReplaceRepeaterChild = $w("#repairReplaceRepeaterChild");
+const quoteTypeRepeater = $w("#quoteTypeRepeater");
+const quoteTypeRepeaterChild = $w("#newOrRepairStateBtn");
+// onClick variables end
+
+// onClick funtions
+
 formStartBtn.onClick(() => formStateContainer.changeState("newQuoteState"));
 buildQuoteHeaderBtn.onClick(() => formStateContainer.changeState("newQuoteState"));
 buildQuoteFooterBtn.onClick(() => formStateContainer.changeState("newQuoteState"));
 
-buildingTypeRepeaterChild.onClick((event) => {
-  formState = buildingTypeRepeater.data.find((item) => item._id === event.context.itemId);
-  console.log("buildingTypeState", formState);
+buildingTypeRepeaterChild.onClick((ev) => {
+  formState = buildingTypeRepeater.data.find((item) => item._id === ev.context.itemId);
+  DEBUG_MODE && console.log("buildingTypeState", formState);
   formStateContainer.changeState("formState");
   quoteStateContainer.changeState(formState.quoteFormId.replace("-content", ""));
   updateFormState(formState);
 });
 
-repairReplaceRepeaterChild.onClick((event) => {
-  formState = repairReplaceRepeater.data.find((item) => item._id === event.context.itemId);
-  console.log("repairReplace", formState);
+repairReplaceRepeaterChild.onClick((ev) => {
+  formState = repairReplaceRepeater.data.find((item) => item._id === ev.context.itemId);
+  DEBUG_MODE && console.log("repairReplace", formState);
   formStateContainer.changeState("formState");
   quoteStateContainer.changeState(formState.quoteFormId.replace("-content", ""));
   updateFormState(formState);
 });
 
 // When selecting New building or repair/replace...
-quoteTypeRepeaterChild.onClick((event) => {
-  console.log("quoteType", event);
-  let id = quoteTypeRepeater.data.find((item) => item._id === event.context.itemId);
+quoteTypeRepeaterChild.onClick((ev) => {
+  DEBUG_MODE && console.log("quoteType", ev);
+  let id = quoteTypeRepeater.data.find((item) => item._id === ev.context.itemId);
   if (id.title === "New Building") {
     newOrRepairStateContainer.changeState("newBuildingState");
   } else {
     newOrRepairStateContainer.changeState("repairReplaceState");
   }
 });
+
+$w("#gutteringShapeChild-field-guttering").onClick((ev) => {
+  DEBUG_MODE && console.log("GutteringType", ev);
+  let selectedField = $w("#gutteringShape-field-guttering").data.find((item) => item._id === ev.context.itemId);
+  DEBUG_MODE && console.log("guttering ID", selectedField);
+  DEBUG_MODE && console.log("guttering Target", ev.target);
+  let gutteringOptions = [$w("#gutteringShapeColoured-field-guttering"), $w("#gutteringShapePlain-field-guttering")];
+
+  ev.target.id.style.borderColor = "red";
+  ev.target.id.style.borderWidth = "5px";
+  gutteringOptions.filter((i) => !i.collapsed).map((i) => (i.value = selectedField.gutteringReference));
+});
+// onClick funtions end
+
+// Functions
 
 resetBtns.forEach((rb) =>
   rb.onClick(() => {
@@ -1712,7 +608,7 @@ const capitaliseFirst = (s) => (s && String(s[0]).toUpperCase() + String(s).slic
 
 const getForm = (isAllFields) => {
   let form = [];
-  selectedFormFields = formFields.find((fc) => fc.formContainer.id === formName);
+  // selectedFormFields = formFields.find((fc) => fc.formContainer.id === formName);
   setCaptcha(selectedFormFields);
   const getForm = selectedFormFields.formContainer;
   const getFormStack = getForm.children.find((s) => s.id === `formStack-${formName.replace("-content", "")}`);
@@ -1735,18 +631,18 @@ const getForm = (isAllFields) => {
   }
 };
 
-const filterOutNonInputFields = (array) =>
-  array.filter(
-    (f) =>
-      f.type !== "$w.Button" &&
-      f.type !== "$w.Text" &&
-      f.type !== "$w.Box" &&
-      f.type !== "$w.Image" &&
-      f.type !== "$w.VectorImage" &&
-      f.type !== "$w.FiveGridLine" &&
-      f.type !== "$w.UploadButton" &&
-      f.type !== "$w.Captcha"
-  );
+const nonInputFields = [
+  "$w.Button",
+  "$w.Text",
+  "$w.Box",
+  "$w.Image",
+  "$w.VectorImage",
+  "$w.FiveGridLine",
+  "$w.UploadButton",
+  "$w.Captcha",
+  "$w.Repeater",
+];
+const filterOutNonInputFields = (array) => array.filter((f) => !nonInputFields.includes(f.type));
 
 const getAllFields = (fieldsArray, element) => {
   if (element.type === "$w.Box") {
@@ -1754,71 +650,4 @@ const getAllFields = (fieldsArray, element) => {
   } else {
     fieldsArray.push(element);
   }
-};
-
-const handleFormSubFields = (fieldWithSubField) => {
-  const resetField = (inputField, recurse) => {
-    if (recurse && inputField.subFields) {
-      inputField.subFields.forEach((sf) => resetField(sf.subFields ?? ssf, recurse));
-    }
-    inputField.elementID.value = "";
-    inputField.elementID.required = false;
-    !inputField.elementID.collapsed && inputField.elementID.collapse();
-  };
-
-  fieldWithSubField.elementID.onChange((ev) => {
-    const selected = ev.target.value;
-    const options = fieldWithSubField.subFields;
-
-    if (fieldWithSubField.elementID.type === "$w.RadioButtonGroup") {
-      const [expandedOption, collapsedOptions] = options.reduce(
-        (acc, option) => {
-          if (option.optionValue === selected) {
-            acc[0].push(option);
-          } else {
-            acc[1].push(option);
-          }
-          return acc;
-        },
-        [[], []]
-      );
-
-      collapsedOptions.forEach((co) => co.subFields.forEach((subField) => resetField(subField, true)));
-      expandedOption.forEach((eo) =>
-        eo.subFields.forEach((sf) => {
-          if ("required" in sf.elementID) {
-            sf.elementID.required = eo.required;
-            sf.elementID.resetValidityIndication();
-          }
-          sf.elementID.collapsed && sf.elementID.expand();
-        })
-      );
-    } else if (fieldWithSubField.elementID.type === "$w.SelectionTags") {
-      const [expandedOptions, collapsedOptions] = selected.reduce(
-        (acc, optionValue) => {
-          const option = options.find((o) => o.optionValue === optionValue);
-          if (option) {
-            acc[0].push(option);
-          } else {
-            acc[1].push(options.find((o) => o.optionValue !== optionValue));
-          }
-          return acc;
-        },
-        [[], []]
-      );
-
-      collapsedOptions.forEach((s) => s.subFields.forEach((subSubField) => resetField(subSubField, true)));
-      expandedOptions.forEach((s) =>
-        s.subFields.forEach((subField) => {
-          if ("required" in subField.elementID) {
-            subField.elementID.required = s.required;
-            subField.elementID.resetValidityIndication();
-          }
-          subField.elementID.collapsed && subField.elementID.expand();
-        })
-      );
-    } else {
-      console.log("Unhandled field type", fieldWithSubField.field.type);
-    }
-  });
 };
