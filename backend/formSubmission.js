@@ -377,7 +377,7 @@ const stringifyForm = (form, name) => {
   const formTypeObj =
     name === "Mono Pitch"
       ? monoPitchFormFields
-      : name === "Concrete Slab"
+      : name === "Concrete"
       ? concreteSlabFormFields
       : name === "Mezzanine Floor"
       ? mezzanineFloorFormFields
