@@ -1,13 +1,13 @@
 import { helloThere, getMapCreds } from "./masterPage";
-import wixWindowFrontend from "wix-window-frontend";
 import { openLightbox } from "wix-window-frontend";
 import { captchaAuth } from "backend/captchaModule";
 import { getFormOptions } from "public/formFunctions";
 
 // recursive remove not working 100%
+// Add input__required class to fields where input is required - it should add the '*'
 // capcha auth needs to be awaited - i think?
 
-let version = "000296";
+let version = "000299";
 let mapCreds;
 let measurementUnits;
 let formName;
@@ -150,14 +150,6 @@ const formFields = [
   },
 ];
 
-const buildQuoteHeaderBtn = $w("#buildQuoteHeaderBtn");
-const buildQuoteFooterBtn = $w("#buildQuoteFooterBtn");
-const resetBtns = [
-  $w("#quoteTypeResetBtn"),
-  $w("#quoteTypeResetText"),
-  $w("#quoteFormResetBtn"),
-  $w("#quoteFormResetText"),
-];
 const progressBar = $w("#progressBar");
 
 // State Elements
@@ -258,7 +250,6 @@ const loadForm = (formName) => {
       }
 
       completedFields.push(field.id);
-
       if (!!formOptions.find((o) => o.formName === formName)) {
         const selectedForm = formOptions.find((o) => o.formName === formName);
 
@@ -438,7 +429,7 @@ const datasetSet = (dataset) => {
   const guidField = selectedFormFields.guidField;
   guidField.value = formGuid;
 
-  activeDataset.element.onBeforeSave(() => {
+  activeDataset.element.onBeforeSave(async () => {
     selectedFormFields.submitBtn.disable();
     selectedFormFields.loadingElement.expand();
 
@@ -459,7 +450,7 @@ const datasetSet = (dataset) => {
 
     // Handle validation errors
     const fieldsFailedValidation = fieldsWithValidationErrors();
-    DEBUG_MODE && console.log("Validation Field - ", fieldsFailedValidation);
+    DEBUG_MODE && fieldsFailedValidation && console.log("Validation Failed - ", fieldsFailedValidation);
     if (fieldsFailedValidation) {
       let validationMessage = [];
 
@@ -477,7 +468,7 @@ const datasetSet = (dataset) => {
       showError(validationMessage.join(",\n"));
     } else hideError();
 
-    captchaAuth(captchaToken)
+    await captchaAuth(captchaToken)
       .then(() => {
         // Save form data for backend reference
         activeDataset.element.setFieldValue("formGuid", formGuid);
@@ -539,14 +530,21 @@ const repairReplaceRepeater = $w("#repairReplaceRepeater");
 const repairReplaceRepeaterChild = $w("#repairReplaceRepeaterChild");
 const quoteTypeRepeater = $w("#quoteTypeRepeater");
 const quoteTypeRepeaterChild = $w("#newOrRepairStateBtn");
+const resetBtns = [
+  $w("#quoteTypeResetBtn"),
+  $w("#quoteTypeResetText"),
+  $w("#quoteFormResetBtn"),
+  $w("#quoteFormResetText"),
+  $w("#buildQuoteHeaderBtn"),
+  $w("#buildQuoteFooterBtn"),
+];
 // onClick variables end
 
 // onClick funtions
 
 formStartBtn.onClick(() => formStateContainer.changeState("newQuoteState"));
-buildQuoteHeaderBtn.onClick(() => formStateContainer.changeState("newQuoteState"));
-buildQuoteFooterBtn.onClick(() => formStateContainer.changeState("newQuoteState"));
 
+// When selecting New Building form...
 buildingTypeRepeaterChild.onClick((ev) => {
   formState = buildingTypeRepeater.data.find((item) => item._id === ev.context.itemId);
   DEBUG_MODE && console.log("buildingTypeState", formState);
@@ -555,6 +553,7 @@ buildingTypeRepeaterChild.onClick((ev) => {
   updateFormState(formState);
 });
 
+// When selecting Repair/replace form...
 repairReplaceRepeaterChild.onClick((ev) => {
   formState = repairReplaceRepeater.data.find((item) => item._id === ev.context.itemId);
   DEBUG_MODE && console.log("repairReplace", formState);
@@ -574,6 +573,7 @@ quoteTypeRepeaterChild.onClick((ev) => {
   }
 });
 
+// When guttering type is selected add the value to open question
 $w("#gutteringShapeChild-field-guttering").onClick((ev) => {
   DEBUG_MODE && console.log("GutteringType", ev);
   let selectedField = $w("#gutteringShape-field-guttering").data.find((item) => item._id === ev.context.itemId);
@@ -581,21 +581,22 @@ $w("#gutteringShapeChild-field-guttering").onClick((ev) => {
   DEBUG_MODE && console.log("guttering Target", ev.target);
   let gutteringOptions = [$w("#gutteringShapeColoured-field-guttering"), $w("#gutteringShapePlain-field-guttering")];
 
-  ev.target.id.style.borderColor = "red";
-  ev.target.id.style.borderWidth = "5px";
+  ev.target.style.borderColor = "red";
+  ev.target.style.borderWidth = "5px";
   gutteringOptions.filter((i) => !i.collapsed).map((i) => (i.value = selectedField.gutteringReference));
 });
+
+// Resets form and form state
+const resetForm = () => {
+  newOrRepairStateContainer.changeState("newOrRepairState");
+  formStateContainer.changeState("initialState");
+  $w("#homepageForm").scrollTo();
+};
+
+resetBtns.forEach((rb) => rb.onClick(() => resetForm()));
 // onClick funtions end
 
 // Functions
-
-resetBtns.forEach((rb) =>
-  rb.onClick(() => {
-    newOrRepairStateContainer.changeState("newOrRepairState");
-    formStateContainer.changeState("initialState");
-    wixWindowFrontend.scrollTo(0, 0);
-  })
-);
 
 const updateBar = (f, b) => {
   const needCompleting = f.filter((f) => f.required && f.isVisible).length;
