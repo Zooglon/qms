@@ -131,6 +131,7 @@ type concreteSlabForm = {
     details_areaMapDetails: string;
   };
   contacts: {
+    details_quoteRadiusKm: number;
     howManyQuotes;
     firstName: string;
     lastName: string;
@@ -170,6 +171,7 @@ type concreteSlabForm = {
 type portalFrameForm = {
   details: {
     details_quoteForLevellingSite: string;
+    details_siteImagesVideos: string;
     details_quoteForInstallation: string;
     details_shedUsage: string;
     details_shedUsageInternals: string;
@@ -264,6 +266,7 @@ type portalFrameForm = {
     mezzanineFloor_AdditionalNotes: string;
   };
   contact: {
+    details_quoteRadiusKm: number;
     howManyQuotes: number;
     firstName: string;
     lastName: string;
@@ -295,6 +298,7 @@ type roundHouseForm = {
 type mezzanineFloorForm = {
   details: {
     details_quoteForInstallation: string;
+    details_quoteForLevellingSite: string;
     details_mezzanineOption: string;
     details_mainPostDimensionA: string;
     details_mainPostDimensionB: string;
@@ -379,6 +383,17 @@ type rainwaterRepairForm = {
 type wallsRepairForm = {
   details: {
     details_howManyBays: string;
+    details_baySize: string;
+    details_wallMaterial: string;
+    details_wallHeightMassConcrete: string;
+    details_massConcreteWallThickness: string;
+    details_massConcreteWallThicknessCustom: string;
+    details_concretePanelHeight: string;
+    details_concretePanelHeightCustom: string;
+    details_wallHeightInConcretePanels: string;
+    details_concretePanelThickness: string;
+    details_concretePanelThicknessCustom: string;
+    details_concreteLegoBlockSize: string;
     details_mainPostDimensionA: string;
     details_mainPostDimensionB: string;
     details_mainPostDimensionC: string;
@@ -386,10 +401,6 @@ type wallsRepairForm = {
     details_gablePostDimensionA: string;
     details_gablePostDimensionB: string;
     details_gablePostDimensionC: string;
-    details_concretePanelHeight: string;
-    details_wallHeightMassConcrete: string;
-    details_massConcreteWallThickness: string;
-    details_concreteLegoBlockSize: string;
   };
   contact: {
     howManyQuotes: number;
@@ -408,6 +419,7 @@ type gutteringRepairForm = {
     details_existingOutlets: string;
     details_gutteringTypeShape: string;
     details_sizeOfDownpipe: string;
+    details_downpipeSize: string;
     details_gutteringColour: string;
     details_rainwaterCatchment: string;
     details_rainwaterCatchmentTank: string;
@@ -552,6 +564,30 @@ type reRoofRepairForm = {
     details_rainwaterCatchment: string;
     details_rainwaterCatchmentTank: string;
     details_gutteringMeasurementUnits: string;
+  };
+  contact: {
+    howManyQuotes: number;
+    firstName: string;
+    lastName: string;
+    companyName: string;
+    email: string;
+    phoneNumber: string;
+    address: any;
+  };
+};
+
+type claddingRepairForm = {
+  details: {
+    details_claddingHeight: string;
+    details_claddingType: string;
+    details_claddingTypesSelected: string[];
+    details_claddingColourComposite: string;
+    details_claddingColourBoxProfile: string;
+    details_claddingColourCorrugatedSheet: string;
+    details_compositeThickness: string;
+    details_timberBoardType: string;
+    details_boxProfileType: string;
+    details_corrugatedSheetType: string;
   };
   contact: {
     howManyQuotes: number;
