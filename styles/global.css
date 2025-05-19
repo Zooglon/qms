@@ -159,7 +159,7 @@ div[data-hook="product"] fieldset[data-hook="product-quantity"] {
 .formStack input[type="tel"] {
   /* background: green; */
   padding: 0.5rem;
-  border-radius: 1rem;
+  border-radius: 8px;
 }
 
 .formStack .form__units span {
@@ -360,15 +360,12 @@ div[class*=" form__"] input {
   font-size: clamp(12px, 0.8rem, 22px);
 }
 
-.form__contact {
-  background-color: green;
-}
-
+.form__contact--ab div:has(> input[type*="search"])::after,
 .form__contact::after {
   content: "✓";
   position: absolute;
   display: block;
-  font-size: 2.5rem;
+  font-size: 1.8rem;
   color: var(--greenColour);
   left: calc(100% + 1rem);
   bottom: 0px;
