@@ -7,7 +7,7 @@ import { getFormOptions } from "public/formFunctions";
 // Add input__required class to fields where input is required - it should add the '*'
 // capcha auth needs to be awaited - i think?
 
-let version = "000299";
+let version = "000338";
 let mapCreds;
 let measurementUnits;
 let formName;
@@ -28,6 +28,8 @@ const formFields = [
     guidField: $w("#formGUID-field-mezzanineFloor"),
     loadingElement: $w("#submitLoading-mezzanineFloor"),
     captcha: $w("#captcha-mezzanineFloor"),
+    toggle: $w("#toggle-mezzanineFloor"),
+    rangeSlider: $w("#quoteDistance-field-mezzanineFloor"),
     imageElement: $w("#mainImage-mezzanineFloor"),
   },
   {
@@ -37,6 +39,8 @@ const formFields = [
     guidField: $w("#formGUID-field-monoPitch"),
     loadingElement: $w("#submitLoading-monoPitch"),
     captcha: $w("#captcha-monoPitch"),
+    toggle: $w("#toggle-monoPitch"),
+    rangeSlider: $w("#quoteDistance-field-monoPitch"),
     imageElement: $w("#mainImage-monoPitch"),
   },
   {
@@ -46,6 +50,8 @@ const formFields = [
     guidField: $w("#formGUID-field-portalFrame"),
     loadingElement: $w("#submitLoading-portalFrame"),
     captcha: $w("#captcha-portalFrame"),
+    toggle: $w("#toggle-portalFrame"),
+    rangeSlider: $w("#quoteDistance-field-portalFrame"),
     imageElement: $w("#mainImage-portalFrame"),
   },
   {
@@ -55,6 +61,8 @@ const formFields = [
     guidField: $w("#formGUID-field-concreteSlab"),
     loadingElement: $w("#submitLoading-concreteSlab"),
     captcha: $w("#captcha-concreteSlab"),
+    toggle: $w("#toggle-concreteSlab"),
+    rangeSlider: $w("#quoteDistance-field-concreteSlab"),
     imageElement: $w("#mainImage-concreteSlab"),
   },
   {
@@ -64,6 +72,8 @@ const formFields = [
     guidField: $w("#formGUID-field-roundHouse"),
     loadingElement: $w("#submitLoading-roundHouse"),
     captcha: $w("#captcha-roundHouse"),
+    toggle: $w("#toggle-roundHouse"),
+    rangeSlider: $w("#quoteDistance-field-roundHouse"),
     imageElement: $w("#mainImage-roundHouse"),
   },
   {
@@ -73,6 +83,8 @@ const formFields = [
     guidField: $w("#formGUID-field-polytunnel"),
     loadingElement: $w("#submitLoading-polytunnel"),
     captcha: $w("#captcha-polytunnel"),
+    toggle: $w("#toggle-polytunnel"),
+    rangeSlider: $w("#quoteDistance-field-polytunnel"),
     imageElement: $w("#mainImage-polytunnel"),
   },
   // Repair/Replace
@@ -83,6 +95,8 @@ const formFields = [
     guidField: $w("#formGUID-field-wallsRepair"),
     loadingElement: $w("#submitLoading-wallsRepair"),
     captcha: $w("#captcha-wallsRepair"),
+    toggle: $w("#toggle-wallsRepair"),
+    rangeSlider: $w("#quoteDistance-field-wallsRepair"),
     imageElement: $w("#mainImage-wallsRepair"),
   },
   {
@@ -92,6 +106,8 @@ const formFields = [
     guidField: $w("#formGUID-field-gutteringRepair"),
     loadingElement: $w("#submitLoading-gutteringRepair"),
     captcha: $w("#captcha-gutteringRepair"),
+    toggle: $w("#toggle-gutteringRepair"),
+    rangeSlider: $w("#quoteDistance-field-gutteringRepair"),
     imageElement: $w("#mainImage-gutteringRepair"),
   },
   {
@@ -101,6 +117,8 @@ const formFields = [
     guidField: $w("#formGUID-field-solarRepair"),
     loadingElement: $w("#submitLoading-solarRepair"),
     captcha: $w("#captcha-solarRepair"),
+    toggle: $w("#toggle-solarRepair"),
+    rangeSlider: $w("#quoteDistance-field-solarRepair"),
     imageElement: $w("#mainImage-solarRepair"),
   },
   {
@@ -110,6 +128,8 @@ const formFields = [
     guidField: $w("#formGUID-field-dismantleRepair"),
     loadingElement: $w("#submitLoading-dismantleRepair"),
     captcha: $w("#captcha-dismantleRepair"),
+    toggle: $w("#toggle-dismantleRepair"),
+    rangeSlider: $w("#quoteDistance-field-dismantleRepair"),
     imageElement: $w("#mainImage-dismantleRepair"),
   },
   {
@@ -119,6 +139,8 @@ const formFields = [
     guidField: $w("#formGUID-field-rainwaterRepair"),
     loadingElement: $w("#submitLoading-rainwaterRepair"),
     captcha: $w("#captcha-rainwaterRepair"),
+    toggle: $w("#toggle-rainwaterRepair"),
+    rangeSlider: $w("#quoteDistance-field-rainwaterRepair"),
     imageElement: $w("#mainImage-rainwaterRepair"),
   },
   {
@@ -128,6 +150,8 @@ const formFields = [
     guidField: $w("#formGUID-field-doorsRepair"),
     loadingElement: $w("#submitLoading-doorsRepair"),
     captcha: $w("#captcha-doorsRepair"),
+    toggle: $w("#toggle-doorsRepair"),
+    rangeSlider: $w("#quoteDistance-field-doorsRepair"),
     imageElement: $w("#mainImage-doorsRepair"),
   },
   {
@@ -137,6 +161,8 @@ const formFields = [
     guidField: $w("#formGUID-field-reroofRepair"),
     loadingElement: $w("#submitLoading-reroofRepair"),
     captcha: $w("#captcha-reroofRepair"),
+    toggle: $w("#toggle-reroofRepair"),
+    rangeSlider: $w("#quoteDistance-field-reroofRepair"),
     imageElement: $w("#mainImage-reroofRepair"),
   },
   {
@@ -146,6 +172,8 @@ const formFields = [
     guidField: $w("#formGUID-field-claddingRepair"),
     loadingElement: $w("#submitLoading-claddingRepair"),
     captcha: $w("#captcha-claddingRepair"),
+    toggle: $w("#toggle-claddingRepair"),
+    rangeSlider: $w("#quoteDistance-field-claddingRepair"),
     imageElement: $w("#mainImage-claddingRepair"),
   },
 ];
@@ -192,14 +220,47 @@ const loadForm = (formName) => {
 
   fillableFormFields.forEach((field) => {
     field.onChange((ev) => {
-      DEBUG_MODE && console.log("Field Changed:", ev.target.label ?? ev.target.id, "\n", "Field Details:", field);
+      DEBUG_MODE &&
+        console.log(
+          "Field Changed:",
+          ev.target.label ?? ev.target.id,
+          "\n",
+          "Field Details:",
+          field,
+          "\n",
+          "Field Valid:",
+          field.validity && field.validity.valid
+        );
+
+      console.log("Has subfields - ", !!formOptions.find((o) => o.formName === formName));
 
       let fieldVal = ev.target.value;
-      // POSSBILY CHANGE FIELD TO THIS?
       let fieldId = ev.target.id;
+      console.log("Field parent parent", field.parent.parent.id);
+      if (field.parent.parent.id.includes("contactDetails")) {
+        try {
+          console.log("Adding tick to...", field.parent.id, "parent of", field.id, "type", field.type);
+
+          if (field.type !== "$w.AddressInput") {
+            console.log("non address input");
+            field.valid && field.customClassList.add("form__contact");
+            !field.valid &&
+              field.customClassList.contains("form__contact") &&
+              field.customClassList.remove("form__contact");
+          } else if (field.type === "$w.AddressInput") {
+            console.log("Address input adding class to", field.parent.id);
+            field.valid && field.parent.customClassList.add("form__contact--ab");
+            !field.valid &&
+              field.parent.customClassList.contains("form__contact--ab") &&
+              field.parent.customClassList.remove("form__contact--ab");
+          }
+        } catch (error) {
+          console.log("Tick error:", error);
+        }
+      }
 
       if (field.id.startsWith("measurementUnits-field")) {
-        measurementUnits = field.value;
+        measurementUnits = field.value === "metric" ? "m" : "ft";
 
         const formFields = getForm(true);
         if (formFields.find((f) => f.text && f.text === "units")) {
@@ -207,14 +268,14 @@ const loadForm = (formName) => {
             .filter((ff) => ff.text && ff.text === "units")
             .forEach((ff) => {
               ff.customClassList.add("form__units");
-              ff.text = measurementUnits === "metric" ? "mm" : "ft";
+              ff.text = measurementUnits;
               ff.expand();
             });
         } else if (formFields.find((f) => f.customClassList.contains("form__units"))) {
           formFields
             .filter((ff) => ff.customClassList.contains("form__units"))
             .forEach((ff) => {
-              ff.text = measurementUnits === "metric" ? "mm" : "ft";
+              ff.text = measurementUnits;
             });
         }
       }
@@ -250,6 +311,7 @@ const loadForm = (formName) => {
       }
 
       completedFields.push(field.id);
+
       if (!!formOptions.find((o) => o.formName === formName)) {
         const selectedForm = formOptions.find((o) => o.formName === formName);
 
@@ -284,6 +346,7 @@ const loadForm = (formName) => {
 
         const idToSearch = fieldId;
         const foundObject = findMatch(idToSearch, selectedForm);
+        console.log(`Found ${idToSearch} in ${selectedForm.formName}... ${foundObject}`);
 
         const hideField = (input) => {
           if (!input.elementID) {
@@ -316,7 +379,8 @@ const loadForm = (formName) => {
           }
 
           if (wixElementRef.type && wixElementRef.type.toLowerCase().includes("input")) {
-            wixElementRef.value = "";
+            // wixElementRef.value = "";
+            wixElementRef.value = undefined;
             wixElementRef.resetValidityIndication();
           }
           wixElementRef.collapse();
@@ -362,6 +426,7 @@ const loadForm = (formName) => {
 
         foundObject.forEach((foundObj) => {
           if (!foundObj) console.log("Error, no object found in ", foundObj);
+          console.log("Processing...", foundObj);
           foundObj.showOptions && handleFormOptionFields(foundObj, [fieldVal].flat());
         });
       } else {
@@ -394,8 +459,8 @@ const loadForm = (formName) => {
   $w("#convertCalcBtn").onClick(async () => await openLightbox("conversion-calculator"));
 };
 
-const setCaptcha = (selectedForm) => {
-  if (selectedForm) {
+const setupUserCheck = (selectedForm) => {
+  if (selectedForm && !selectedForm.captcha.collapsed) {
     selectedForm.captcha.onTimeout(() => {
       selectedForm.submitBtn.disable();
     });
@@ -412,6 +477,18 @@ const setCaptcha = (selectedForm) => {
 
     selectedForm.captcha.onVerified(() => {
       selectedForm.submitBtn.enable();
+    });
+  } else {
+    selectedForm.toggle.onClick((e) => {
+      if (e.target.checked) {
+        // selectedForm.loadingElement.expand();
+        setTimeout(() => {
+          // selectedForm.loadingElement.collapse();
+          selectedForm.submitBtn.enable();
+        }, 1000);
+      } else {
+        selectedForm.submitBtn.disable();
+      }
     });
   }
 };
@@ -440,16 +517,19 @@ const datasetSet = (dataset) => {
     };
     const hideError = () => selectedFormFields.errorMsg.collapse();
 
-    // Handle reCaptcha
-    let captchaToken = selectedFormFields.captcha.token;
+    // // Handle reCaptcha - using tick box for now
+    // let captchaToken = selectedFormFields.captcha.token;
 
-    if (!captchaToken) {
-      showError("Please complete the reCaptcha.");
-      return false;
-    }
+    // if (!captchaToken) {
+    //   showError("Please complete the reCaptcha.");
+    //   return false;
+    // }
+
+    const datasetFormFields = getForm(false);
+    datasetFormFields.map((field) => console.log("field validity", field.validity));
 
     // Handle validation errors
-    const fieldsFailedValidation = fieldsWithValidationErrors();
+    const fieldsFailedValidation = fieldsWithValidationErrors(datasetFormFields);
     DEBUG_MODE && fieldsFailedValidation && console.log("Validation Failed - ", fieldsFailedValidation);
     if (fieldsFailedValidation) {
       let validationMessage = [];
@@ -468,31 +548,35 @@ const datasetSet = (dataset) => {
       showError(validationMessage.join(",\n"));
     } else hideError();
 
-    await captchaAuth(captchaToken)
-      .then(() => {
-        // Save form data for backend reference
-        activeDataset.element.setFieldValue("formGuid", formGuid);
-        activeDataset.element.setFieldValue("details_areaMapDetails", areaDetails);
-        // If everything is in order and the item is submitted, we show a success message and reset the captcha.
-        // Submit form
-        DEBUG_MODE && console.log("Auth check passed");
-        selectedFormFields.captcha.reset();
-        selectedFormFields.submitBtn.enable();
-
-        selectedFormFields.loadingElement.collapse();
-      })
-      .catch(() => {
-        DEBUG_MODE && console.log("Auth check failed");
-        selectedFormFields.captcha.reset();
-        showError("Something went wrong. Please check the captcha.");
-        return false;
-      });
-    // });
+    if (!selectedFormFields.captcha.collapsed) {
+      // await captchaAuth(captchaToken)
+      //   .then(() => {
+      //     // Save form data for backend reference
+      //     activeDataset.element.setFieldValue("formGuid", formGuid);
+      //     activeDataset.element.setFieldValue("details_areaMapDetails", areaDetails);
+      //     // If everything is in order and the item is submitted, we show a success message and reset the captcha.
+      //     // Submit form
+      //     DEBUG_MODE && console.log("Auth check passed");
+      //     selectedFormFields.captcha.reset();
+      //     selectedFormFields.submitBtn.enable();
+      //     selectedFormFields.loadingElement.collapse();
+      //   })
+      //   .catch(() => {
+      //     DEBUG_MODE && console.log("Auth check failed");
+      //     selectedFormFields.captcha.reset();
+      //     showError("Something went wrong. Please check the captcha.");
+      //     return false;
+      //   });
+    } else if (!selectedFormFields.rangeSlider.collapsed) {
+      selectedFormFields.submitBtn.enable();
+    } else {
+      DEBUG_MODE && console.log("No captcha or range slider present");
+      selectedFormFields.submitBtn.enable();
+    }
   });
 };
 
-const fieldsWithValidationErrors = () => {
-  const fields = getForm(false);
+const fieldsWithValidationErrors = (fields) => {
   DEBUG_MODE && console.log("Test form", fields);
   const nonValidFields = fields.filter((field) => !field.valid);
   if (nonValidFields.length >= 1) {
@@ -509,6 +593,7 @@ const updateFormState = (dataset) => {
     selectedFormFields.imageElement.src = formState.image;
     selectedFormFields.imageElement.alt = formState.quoteTitle;
     formTitle.text = `New ${dataset.quoteTitle} quote`;
+    setSlider(selectedFormFields);
     loadForm(formName);
     if (mapCreds) {
       // prepareMap(mapCreds);
@@ -538,6 +623,9 @@ const resetBtns = [
   $w("#buildQuoteHeaderBtn"),
   $w("#buildQuoteFooterBtn"),
 ];
+const formBackBtns = [$w("#quoteFormBackBtn"), $w("#quoteFormBackText")];
+const quoteTypeBackBtns = [$w("#quoteTypeBackBtn"), $w("#quoteTypeBackText")];
+
 // onClick variables end
 
 // onClick funtions
@@ -577,11 +665,17 @@ quoteTypeRepeaterChild.onClick((ev) => {
 $w("#gutteringShapeChild-field-guttering").onClick((ev) => {
   DEBUG_MODE && console.log("GutteringType", ev);
   let selectedField = $w("#gutteringShape-field-guttering").data.find((item) => item._id === ev.context.itemId);
-  DEBUG_MODE && console.log("guttering ID", selectedField);
+  DEBUG_MODE && console.log("guttering ID", selectedField), $w("#gutteringShape-field-guttering");
   DEBUG_MODE && console.log("guttering Target", ev.target);
   let gutteringOptions = [$w("#gutteringShapeColoured-field-guttering"), $w("#gutteringShapePlain-field-guttering")];
 
-  ev.target.style.borderColor = "red";
+  $w("#gutteringShape-field-guttering").forEachItem(($item, itemData, i) => {
+    console.log("Item - ", $item);
+    console.log("ItemData - ", itemData);
+    $item("#gutteringShapeChild-field-guttering").style.borderWidth = "2px";
+    console.log("End of loop, index -", i);
+  });
+
   ev.target.style.borderWidth = "5px";
   gutteringOptions.filter((i) => !i.collapsed).map((i) => (i.value = selectedField.gutteringReference));
 });
@@ -593,7 +687,31 @@ const resetForm = () => {
   $w("#homepageForm").scrollTo();
 };
 
+const goBack = (area) => {
+  if (area === "quoteBuilding") {
+    if (newOrRepairStateContainer.currentState.id === "newOrRepairState") {
+      newOrRepairStateContainer.changeState("newOrRepairState");
+      formStateContainer.changeState("initialState");
+    } else {
+      newOrRepairStateContainer.changeState("newOrRepairState");
+    }
+  }
+  if (area === "quoteForm") {
+    if (formState && formState.type === "New Shed") {
+      formStateContainer.changeState("newQuoteState");
+      newOrRepairStateContainer.changeState("newBuildingState");
+    } else {
+      formStateContainer.changeState("newQuoteState");
+      newOrRepairStateContainer.changeState("repairReplaceState");
+    }
+  }
+};
+
 resetBtns.forEach((rb) => rb.onClick(() => resetForm()));
+
+quoteTypeBackBtns.forEach((bb) => bb.onClick((ev) => goBack("quoteBuilding")));
+formBackBtns.forEach((bb) => bb.onClick((ev) => goBack("quoteForm")));
+
 // onClick funtions end
 
 // Functions
@@ -604,13 +722,38 @@ const updateBar = (f, b) => {
   b.value = (completed / needCompleting) * 100;
 };
 
+const setSlider = (fFields) => {
+  let sliderEl = fFields.rangeSlider;
+
+  let maxValue = sliderEl.max;
+  let minValue = sliderEl.min;
+
+  const textContainer = sliderEl.parent.children.filter((c) => c !== sliderEl);
+  console.log("rangeslider parents children -", sliderEl.parent.children, "textContainer -", textContainer);
+
+  console.log("tcont check", textContainer[0], "el check", textContainer[0].id);
+
+  try {
+    console.log("undefined check- ", textContainer[0].children);
+    textContainer[0].children.map((el) => {
+      console.log("MAP - EL = ", el);
+      if (el.customClassList.contains("form__sliderText")) {
+        el.children[0].html = `<span style="text-align: left">${minValue}Km</span>`;
+        el.children[1].html = `<span style="text-align: right">${maxValue}Km</span>`;
+      }
+    });
+  } catch (error) {
+    console.log("Error getting textContainer children", error);
+  }
+};
+
 const lowerFirst = (s) => (s && String(s[0]).toLowerCase() + String(s).slice(1)) || "";
 const capitaliseFirst = (s) => (s && String(s[0]).toUpperCase() + String(s).slice(1)) || "";
 
 const getForm = (isAllFields) => {
   let form = [];
   // selectedFormFields = formFields.find((fc) => fc.formContainer.id === formName);
-  setCaptcha(selectedFormFields);
+  setupUserCheck(selectedFormFields);
   const getForm = selectedFormFields.formContainer;
   const getFormStack = getForm.children.find((s) => s.id === `formStack-${formName.replace("-content", "")}`);
   getFormStack.children.map((field) => {
@@ -652,3 +795,9 @@ const getAllFields = (fieldsArray, element) => {
     fieldsArray.push(element);
   }
 };
+
+$w("#testBtn").onClick(() => {
+  console.log("Getting form");
+  const datasetFormFields = getForm(true);
+  datasetFormFields.map((field) => console.log("field validity", field.id, field.validity && field.validity.valid));
+});
