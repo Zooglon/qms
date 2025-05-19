@@ -364,9 +364,23 @@ export const getFormOptions = [
     formName: "portalFrameForm",
     formFields: [
       {
+        elementID: "quoteForLevelling-field-portalFrame",
+        showOptions: [
+          {
+            elementID: "siteImageUpload-field-portalFrame",
+            optionValue: "yes",
+            required: true,
+          },
+        ],
+      },
+      {
         elementID: "buildingUsage-field-portalFrame",
         showOptions: [
-          { elementID: "buildingUsageOther-field-portalFrame", optionValue: "other", required: true },
+          {
+            elementID: "buildingUsageOther-field-portalFrame",
+            optionValue: "other",
+            required: true,
+          },
           {
             elementID: "buildingUsageInternalsHorseCow-field-portalFrame",
             optionValue: "horseLooseHousing",
@@ -381,6 +395,411 @@ export const getFormOptions = [
             elementID: "buildingUsageInternalsStable-field-portalFrame",
             optionValue: "horseStable",
             required: true,
+          },
+          {
+            elementID: "cattleDoors-field-portalFrame",
+            optionValue: "animalHousing",
+            required: true,
+            showOptions: [
+              {
+                elementID: "cattleSheetPlacement-field-portalFrame",
+                optionValue: "yes",
+                required: true,
+                showOptions: [
+                  {
+                    elementID: "cattleSheetEavesHeight-field-portalFrame",
+                    optionValue: "underEaves",
+                    required: true,
+                  },
+                  {
+                    elementID: "cattleSheetEavesLength-field-portalFrame",
+                    optionValue: "underEaves",
+                    required: true,
+                  },
+                  {
+                    elementID: "cattleSheetEavesQuantity-field-portalFrame",
+                    optionValue: "underEaves",
+                    required: true,
+                  },
+                  {
+                    elementID: "cattleSheetGableHeight-field-portalFrame",
+                    optionValue: "gableEnd",
+                    required: true,
+                  },
+                  {
+                    elementID: "cattleSheetGableLength-field-portalFrame",
+                    optionValue: "gableEnd",
+                    required: true,
+                  },
+                  {
+                    elementID: "cattleSheetGableQuantity-field-portalFrame",
+                    optionValue: "gableEnd",
+                    required: true,
+                  },
+                  {
+                    elementID: "cattleSheetEavesHeight-field-portalFrame",
+                    optionValue: "both",
+                    required: true,
+                  },
+                  {
+                    elementID: "cattleSheetEavesLength-field-portalFrame",
+                    optionValue: "both",
+                    required: true,
+                  },
+                  {
+                    elementID: "cattleSheetEavesQuantity-field-portalFrame",
+                    optionValue: "both",
+                    required: true,
+                  },
+                  {
+                    elementID: "cattleSheetGableHeight-field-portalFrame",
+                    optionValue: "both",
+                    required: true,
+                  },
+                  {
+                    elementID: "cattleSheetGableLength-field-portalFrame",
+                    optionValue: "both",
+                    required: true,
+                  },
+                  {
+                    elementID: "cattleSheetGableQuantity-field-portalFrame",
+                    optionValue: "both",
+                    required: true,
+                  },
+                ],
+              },
+              {
+                elementID: "cattleSheetOption-field-portalFrame",
+                optionValue: "yes",
+                required: true,
+                showOptions: [
+                  {
+                    elementID: "cattleSheetColourOption-Image-portalFrame",
+                    optionValue: "plasticCoatedTin",
+                    required: true,
+                  },
+                  {
+                    elementID: "cattleSheetColourOption-field-portalFrame",
+                    optionValue: "plasticCoatedTin",
+                    required: true,
+                  },
+                  {
+                    elementID: "cattleSheetColourOption-Image-portalFrame",
+                    optionValue: "both",
+                    required: true,
+                  },
+                  {
+                    elementID: "cattleSheetColourOption-field-portalFrame",
+                    optionValue: "both",
+                    required: true,
+                  },
+                ],
+              },
+            ],
+          },
+
+          {
+            elementID: "cattleDoors-field-portalFrame",
+            optionValue: "horseStable",
+            required: true,
+            showOptions: [
+              {
+                elementID: "cattleSheetPlacement-field-portalFrame",
+                optionValue: "yes",
+                required: true,
+                showOptions: [
+                  {
+                    elementID: "cattleSheetEavesHeight-field-portalFrame",
+                    optionValue: "underEaves",
+                    required: true,
+                  },
+                  {
+                    elementID: "cattleSheetEavesLength-field-portalFrame",
+                    optionValue: "underEaves",
+                    required: true,
+                  },
+                  {
+                    elementID: "cattleSheetEavesQuantity-field-portalFrame",
+                    optionValue: "underEaves",
+                    required: true,
+                  },
+                  {
+                    elementID: "cattleSheetGableHeight-field-portalFrame",
+                    optionValue: "gableEnd",
+                    required: true,
+                  },
+                  {
+                    elementID: "cattleSheetGableLength-field-portalFrame",
+                    optionValue: "gableEnd",
+                    required: true,
+                  },
+                  {
+                    elementID: "cattleSheetGableQuantity-field-portalFrame",
+                    optionValue: "gableEnd",
+                    required: true,
+                  },
+                  {
+                    elementID: "cattleSheetEavesHeight-field-portalFrame",
+                    optionValue: "both",
+                    required: true,
+                  },
+                  {
+                    elementID: "cattleSheetEavesLength-field-portalFrame",
+                    optionValue: "both",
+                    required: true,
+                  },
+                  {
+                    elementID: "cattleSheetEavesQuantity-field-portalFrame",
+                    optionValue: "both",
+                    required: true,
+                  },
+                  {
+                    elementID: "cattleSheetGableHeight-field-portalFrame",
+                    optionValue: "both",
+                    required: true,
+                  },
+                  {
+                    elementID: "cattleSheetGableLength-field-portalFrame",
+                    optionValue: "both",
+                    required: true,
+                  },
+                  {
+                    elementID: "cattleSheetGableQuantity-field-portalFrame",
+                    optionValue: "both",
+                    required: true,
+                  },
+                ],
+              },
+              {
+                elementID: "cattleSheetOption-field-portalFrame",
+                optionValue: "yes",
+                required: true,
+                showOptions: [
+                  {
+                    elementID: "cattleSheetColourOption-Image-portalFrame",
+                    optionValue: "plasticCoatedTin",
+                    required: true,
+                  },
+                  {
+                    elementID: "cattleSheetColourOption-field-portalFrame",
+                    optionValue: "plasticCoatedTin",
+                    required: true,
+                  },
+                  {
+                    elementID: "cattleSheetColourOption-Image-portalFrame",
+                    optionValue: "both",
+                    required: true,
+                  },
+                  {
+                    elementID: "cattleSheetColourOption-field-portalFrame",
+                    optionValue: "both",
+                    required: true,
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            elementID: "cattleDoors-field-portalFrame",
+            optionValue: "horseLooseHousing",
+            required: true,
+            showOptions: [
+              {
+                elementID: "cattleSheetPlacement-field-portalFrame",
+                optionValue: "yes",
+                required: true,
+                showOptions: [
+                  {
+                    elementID: "cattleSheetEavesHeight-field-portalFrame",
+                    optionValue: "underEaves",
+                    required: true,
+                  },
+                  {
+                    elementID: "cattleSheetEavesLength-field-portalFrame",
+                    optionValue: "underEaves",
+                    required: true,
+                  },
+                  {
+                    elementID: "cattleSheetEavesQuantity-field-portalFrame",
+                    optionValue: "underEaves",
+                    required: true,
+                  },
+                  {
+                    elementID: "cattleSheetGableHeight-field-portalFrame",
+                    optionValue: "gableEnd",
+                    required: true,
+                  },
+                  {
+                    elementID: "cattleSheetGableLength-field-portalFrame",
+                    optionValue: "gableEnd",
+                    required: true,
+                  },
+                  {
+                    elementID: "cattleSheetGableQuantity-field-portalFrame",
+                    optionValue: "gableEnd",
+                    required: true,
+                  },
+                  {
+                    elementID: "cattleSheetEavesHeight-field-portalFrame",
+                    optionValue: "both",
+                    required: true,
+                  },
+                  {
+                    elementID: "cattleSheetEavesLength-field-portalFrame",
+                    optionValue: "both",
+                    required: true,
+                  },
+                  {
+                    elementID: "cattleSheetEavesQuantity-field-portalFrame",
+                    optionValue: "both",
+                    required: true,
+                  },
+                  {
+                    elementID: "cattleSheetGableHeight-field-portalFrame",
+                    optionValue: "both",
+                    required: true,
+                  },
+                  {
+                    elementID: "cattleSheetGableLength-field-portalFrame",
+                    optionValue: "both",
+                    required: true,
+                  },
+                  {
+                    elementID: "cattleSheetGableQuantity-field-portalFrame",
+                    optionValue: "both",
+                    required: true,
+                  },
+                ],
+              },
+              {
+                elementID: "cattleSheetOption-field-portalFrame",
+                optionValue: "yes",
+                required: true,
+                showOptions: [
+                  {
+                    elementID: "cattleSheetColourOption-Image-portalFrame",
+                    optionValue: "plasticCoatedTin",
+                    required: true,
+                  },
+                  {
+                    elementID: "cattleSheetColourOption-field-portalFrame",
+                    optionValue: "plasticCoatedTin",
+                    required: true,
+                  },
+                  {
+                    elementID: "cattleSheetColourOption-Image-portalFrame",
+                    optionValue: "both",
+                    required: true,
+                  },
+                  {
+                    elementID: "cattleSheetColourOption-field-portalFrame",
+                    optionValue: "both",
+                    required: true,
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            elementID: "cattleDoors-field-portalFrame",
+            optionValue: "cattleShed",
+            required: true,
+            showOptions: [
+              {
+                elementID: "cattleSheetPlacement-field-portalFrame",
+                optionValue: "yes",
+                required: true,
+                showOptions: [
+                  {
+                    elementID: "cattleSheetEavesHeight-field-portalFrame",
+                    optionValue: "underEaves",
+                    required: true,
+                  },
+                  {
+                    elementID: "cattleSheetEavesLength-field-portalFrame",
+                    optionValue: "underEaves",
+                    required: true,
+                  },
+                  {
+                    elementID: "cattleSheetEavesQuantity-field-portalFrame",
+                    optionValue: "underEaves",
+                    required: true,
+                  },
+                  {
+                    elementID: "cattleSheetGableHeight-field-portalFrame",
+                    optionValue: "gableEnd",
+                    required: true,
+                  },
+                  {
+                    elementID: "cattleSheetGableLength-field-portalFrame",
+                    optionValue: "gableEnd",
+                    required: true,
+                  },
+                  {
+                    elementID: "cattleSheetGableQuantity-field-portalFrame",
+                    optionValue: "gableEnd",
+                    required: true,
+                  },
+                  {
+                    elementID: "cattleSheetEavesHeight-field-portalFrame",
+                    optionValue: "both",
+                    required: true,
+                  },
+                  {
+                    elementID: "cattleSheetEavesLength-field-portalFrame",
+                    optionValue: "both",
+                    required: true,
+                  },
+                  {
+                    elementID: "cattleSheetEavesQuantity-field-portalFrame",
+                    optionValue: "both",
+                    required: true,
+                  },
+                  {
+                    elementID: "cattleSheetGableHeight-field-portalFrame",
+                    optionValue: "both",
+                    required: true,
+                  },
+                  {
+                    elementID: "cattleSheetGableLength-field-portalFrame",
+                    optionValue: "both",
+                    required: true,
+                  },
+                  {
+                    elementID: "cattleSheetGableQuantity-field-portalFrame",
+                    optionValue: "both",
+                    required: true,
+                  },
+                ],
+              },
+              {
+                elementID: "cattleSheetOption-field-portalFrame",
+                optionValue: "yes",
+                required: true,
+                showOptions: [
+                  {
+                    elementID: "cattleSheetColourOption-Image-portalFrame",
+                    optionValue: "plasticCoatedTin",
+                    required: true,
+                  },
+                  {
+                    elementID: "cattleSheetColourOption-field-portalFrame",
+                    optionValue: "plasticCoatedTin",
+                    required: true,
+                  },
+                  {
+                    elementID: "cattleSheetColourOption-Image-portalFrame",
+                    optionValue: "both",
+                    required: true,
+                  },
+                  {
+                    elementID: "cattleSheetColourOption-field-portalFrame",
+                    optionValue: "both",
+                    required: true,
+                  },
+                ],
+              },
+            ],
           },
         ],
       },
