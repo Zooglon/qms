@@ -850,6 +850,16 @@ export const getFormOptions = [
         ],
       },
       {
+        elementID: "cantilever-field-portalFrame",
+        showOptions: [
+          {
+            elementID: "roofRidgeCaps-field-portalFrame",
+            optionValue: "yes",
+            required: true,
+          },
+        ],
+      },
+      {
         elementID: "roofMaterial-field-portalFrame",
         showOptions: [
           {
@@ -876,6 +886,11 @@ export const getFormOptions = [
           },
           {
             elementID: "boxProfileFinish-field-portalFrame",
+            optionValue: "boxProfileRoofSheets",
+            required: true,
+          },
+          {
+            elementID: "boxProfileFinishUnderneath-field-portalFrame",
             optionValue: "boxProfileRoofSheets",
             required: true,
           },
@@ -947,22 +962,146 @@ export const getFormOptions = [
         ],
       },
       {
-        elementID: "rollerDoors-field-portalFrame",
+        elementID: "buildingType-field-portalFrame",
         showOptions: [
-          { elementID: "rollerDoors-text-portalFrame", optionValue: "yes", required: true },
-          { elementID: "rollerDoorLocation-field-portalFrame", optionValue: "yes", required: true },
           {
-            elementID: "numberOfRollerDoors-field-portalFrame",
-            optionValue: "yes",
+            elementID: "gutteringMatch-field-portalFrame",
+            optionValue: "extension",
             required: true,
             showOptions: [
               {
-                elementID: "numberOfRollerDoorsCustom-field-portalFrame",
-                optionValue: "custom",
+                elementID: "claddingGuttering-field-portalFrame",
+                optionValue: "no",
+                required: true,
+                showOptions: [
+                  {
+                    elementID: "gutteringColour-field-portalFrame",
+                    optionValue: "galvanisedFoldedColour",
+                    required: true,
+                  },
+                  {
+                    elementID: "gutteringColour-image-portalFrame",
+                    optionValue: "galvanisedFoldedColour",
+                  },
+                ],
+              },
+              {
+                elementID: "gutteringShape-field-portalFrame",
+                optionValue: "no",
+                required: true,
+              },
+              {
+                elementID: "gutteringShapeSelect-field-portalFrame",
+                optionValue: "no",
+                required: true,
+              },
+              {
+                elementID: "gutteringDownpipeSize-field-portalFrame",
+                optionValue: "no",
+                required: true,
+              },
+              {
+                elementID: "gutteringRainwaterCatchment-field-portalFrame",
+                optionValue: "no",
+                required: true,
+                showOptions: [
+                  {
+                    elementID: "gutteringRainwaterCatchmentTankSize-field-portalFrame",
+                    optionValue: "yes",
+                    required: true,
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            elementID: "claddingGuttering-field-portalFrame",
+            optionValue: "freeStanding",
+            required: true,
+            showOptions: [
+              {
+                elementID: "gutteringColour-field-portalFrame",
+                optionValue: "galvanisedFoldedColour",
+                required: true,
+              },
+              {
+                elementID: "gutteringColour-image-portalFrame",
+                optionValue: "galvanisedFoldedColour",
+              },
+            ],
+          },
+          {
+            elementID: "gutteringShape-field-portalFrame",
+            optionValue: "freeStanding",
+            required: true,
+          },
+          {
+            elementID: "gutteringShapeSelect-field-portalFrame",
+            optionValue: "freeStanding",
+            required: true,
+          },
+          {
+            elementID: "gutteringDownpipeSize-field-portalFrame",
+            optionValue: "freeStanding",
+            required: true,
+          },
+          {
+            elementID: "gutteringRainwaterCatchment-field-portalFrame",
+            optionValue: "freeStanding",
+            required: true,
+            showOptions: [
+              {
+                elementID: "gutteringRainwaterCatchmentTankSize-field-portalFrame",
+                optionValue: "yes",
                 required: true,
               },
             ],
           },
+        ],
+      },
+      {
+        elementID: "rollerDoors-field-portalFrame",
+        showOptions: [
+          { elementID: "rollerDoors-text-portalFrame", optionValue: "yes", required: true },
+          {
+            elementID: "rollerDoorLocation-field-portalFrame",
+            optionValue: "yes",
+            required: true,
+            showOptions: [
+              {
+                elementID: "numberOfRollerDoorsGable-field-portalFrame",
+                optionValue: "gableEnd",
+                required: true,
+              },
+              {
+                elementID: "numberOfRollerDoorsEaves-field-portalFrame,",
+                optionValue: "underEaves",
+                required: true,
+              },
+              {
+                elementID: "numberOfRollerDoorsGable-field-portalFrame",
+                optionValue: "both",
+                required: true,
+              },
+              {
+                elementID: "numberOfRollerDoorsEaves-field-portalFrame,",
+                optionValue: "both",
+                required: true,
+              },
+            ],
+          },
+          // {
+          //   elementID: "numberOfRollerDoors-field-portalFrame",
+          //   optionValue: "yes",
+          //   required: true,
+          //   showOptions: [
+          //     {
+          //       elementID: "numberOfRollerDoorsCustom-field-portalFrame",
+          //       optionValue: "custom",
+          //       required: true,
+          //     },
+          //   ],
+          // },
           { elementID: "rollerDoorwayWidth-field-portalFrame", optionValue: "yes", required: true },
           { elementID: "rollerDoorwayHeight-field-portalFrame", optionValue: "yes", required: true },
           { elementID: "rollerDoorBirdBrush-field-portalFrame", optionValue: "yes", required: true },
@@ -973,8 +1112,17 @@ export const getFormOptions = [
       {
         elementID: "personnelDoors-field-portalFrame",
         showOptions: [
-          { elementID: "numberOfPersonnelDoors-field-portalFrame", optionValue: "yes", required: true },
-          { elementID: "personnelDoorWidth-field-portalFrame", optionValue: "yes", required: true },
+          {
+            elementID: "personnelDoorWidth-field-portalFrame",
+            optionValue: "yes",
+            required: true,
+            showOptions: [
+              { elementID: "numberOfPersonnelDoors-field-portalFrame", optionValue: "single", required: true },
+              { elementID: "numberOfPersonnelDoorsDouble-field-portalFrame", optionValue: "double", required: true },
+              { elementID: "numberOfPersonnelDoors-field-portalFrame", optionValue: "both", required: true },
+              { elementID: "numberOfPersonnelDoorsDouble-field-portalFrame", optionValue: "both", required: true },
+            ],
+          },
           { elementID: "fireDoors-field-portalFrame", optionValue: "yes", required: true },
           { elementID: "numberOfFireDoors-field-portalFrame", optionValue: "yes", required: true },
         ],
@@ -1030,6 +1178,31 @@ export const getFormOptions = [
         elementID: "concreteFloor-field-portalFrame",
         showOptions: [
           { elementID: "concreteFloorQuote-field-portalFrame", optionValue: "yes", required: true },
+          { elementID: "concreteFloorReinforcement-field-portalFrame", optionValue: "yes", required: true },
+          {
+            elementID: "concreteFloorFinish-field-portalFrame",
+            optionValue: "yes",
+            required: true,
+            showOptions: [
+              {
+                elementID: "concreteFloorPattern-field-portalFrame",
+                optionValue: "patterned",
+                required: true,
+                showOptions: [
+                  { elementID: "concreteFloorPatternCustom-field-portalFrame", optionValue: "custom", required: true },
+                ],
+              },
+              { elementID: "concreteFloorPowerFloat-field-portalFrame", optionValue: "powerFloat", required: true },
+            ],
+          },
+          {
+            elementID: "concreteFloorUsage-field-portalFrame",
+            optionValue: "yes",
+            required: true,
+            showOptions: [
+              { elementID: "concreteFloorUsageOther-field-portalFrame", optionValue: "other", required: true },
+            ],
+          },
           {
             elementID: "concreteFloorAdditionalNotes-field-portalFrame",
             optionValue: "yes",
@@ -1046,13 +1219,11 @@ export const getFormOptions = [
             elementID: "mezzanineBayWidth-field-portalFrame",
             optionValue: "yes",
             required: true,
-            showOptions: [
-              {
-                elementID: "mezzanineBayWidthOther-field-portalFrame",
-                optionValue: "other",
-                required: false,
-              },
-            ],
+          },
+          {
+            elementID: "mezzanineBayCoverage-field-portalFrame",
+            optionValue: "other",
+            required: false,
           },
           {
             elementID: "mezzanineSpanOptions-field-portalFrame",
