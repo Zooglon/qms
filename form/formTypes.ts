@@ -182,6 +182,7 @@ type portalFrameForm = {
     details_buildingHeight: number;
     details_buildingBayWidth: number;
     details_steelOptions: string;
+    details_buildingType: string;
     details_roofPitch: string;
     details_roofPitchCustom: string;
     details_additionalNotes: string;
@@ -198,11 +199,13 @@ type portalFrameForm = {
   };
   roof: {
     roof_purlins: string;
+    roof_cantilever: string;
     roof_roofMaterial: string;
     roof_fiberCementColour: string;
     roof_roofColour: string;
     roof_roofCompositeThickness: string;
     roof_roofBoxProfileFinish: string;
+    roof_roofBoxProfileFinishUnderneath: string;
     roof_roofBoxProfileOption: string;
     roof_roofCorrugatedSheetFinish: string;
     roof_roofCorrugatedSheetOption: string;
@@ -221,14 +224,17 @@ type portalFrameForm = {
     doors_rollerDoorLocation: string;
     doors_numberOfRollerDoors: string;
     doors_numberOfRollerDoorsCustom: string;
+    doors_numberOfRollerDoorsGableEnd: number;
+    doors_numberOfRollerDoorsUnderEaves: number;
     doors_rollerDoorwayWidth: number;
     doors_rollerDoorwayHeight: number;
     doors_rollerDoorBirdBrush: string;
     doors_rollerDoorRubberFloorSeal: string;
-    doors_rollerDoorPowerFeed: string;
+    doors_rollerDoorPowerFeed: string[];
     doors_personnelDoors: string;
-    doors_numberOfPersonnelDoors: number;
     doors_personnelDoorWidth: string;
+    doors_numberOfPersonnelDoors: number;
+    doors_numberOfPersonnelDoorsDouble: number;
     doors_fireDoors: string;
     doors_numberOfFireDoors: number;
   };
@@ -247,6 +253,13 @@ type portalFrameForm = {
   floor: {
     floor_concreteFloor: string;
     floor_quoteForConcreteFloor: string;
+    floor_floorUsage: string;
+    floor_floorUsageOther: string;
+    floor_floorReinforcementOptions: string;
+    floor_floorFinish: string;
+    floor_floorFinishPattern: string;
+    floor_floorFinishPatternCustom: string;
+    floor_floorPowerFloat: string;
     floor_additionalNotesFloor: string;
   };
   mezzanineFloor: {
@@ -254,7 +267,7 @@ type portalFrameForm = {
     mezzanineFloor_quoteFromSupplier: string;
     mezzanineFloor_freestanding: string;
     mezzanineFloor_BayWidth: string;
-    mezzanineFloor_BayWidthOther: string;
+    mezzanineFloor_mezzanineFloorCoverage: string;
     mezzanineFloor_SpanOptions: string;
     mezzanineFloor_Height: string;
     mezzanineFloor_SteelOptions: string;
