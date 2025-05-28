@@ -144,8 +144,23 @@ export const getFormOptions = [
             optionValue: "boxProfileSheet",
             required: true,
           },
+          {
+            elementID: "roofBoxProfileFinishTop-field-monoPitch",
+            optionValue: "boxProfileSheet",
+            required: true,
+          },
+          {
+            elementID: "roofBoxProfileFinishUnderneath-field-monoPitch",
+            optionValue: "boxProfileSheet",
+            required: true,
+          },
           { elementID: "roofColour-field-monoPitch", optionValue: "corrugatedSheet", required: true },
           { elementID: "roofColour-image-monoPitch", optionValue: "corrugatedSheet", required: true },
+          {
+            elementID: "roof_corrugatedSheetOption",
+            optionValue: "corrugatedSheet",
+            required: true,
+          },
           {
             elementID: "roofCorrugatedSheet-field-monoPitch",
             optionValue: "corrugatedSheet",
@@ -253,20 +268,29 @@ export const getFormOptions = [
         elementID: "doorsRollerDoors-field-monoPitch",
         showOptions: [
           { elementID: "doorsRollerDoors-text-monoPitch", optionValue: "yes", required: true },
-          { elementID: "doorsDoorLocation-field-monoPitch", optionValue: "yes", required: true },
           {
-            elementID: "doorsRollerNumber-field-monoPitch",
+            elementID: "doorsDoorLocation-field-monoPitch",
             optionValue: "yes",
             required: true,
             showOptions: [
               {
-                elementID: "doorsRollerNumberCustom-field-monoPitch",
-                optionValue: "custom",
+                elementID: "doorsRollerNumberGableEnd-field-monoPitch",
+                optionValue: "gableEnd",
                 required: true,
               },
               {
-                elementID: "doorsRollerNumberCustom-text-monoPitch",
-                optionValue: "custom",
+                elementID: "doorsRollerNumberUnderEaves-text-monoPitch",
+                optionValue: "underEaves",
+                required: true,
+              },
+              {
+                elementID: "doorsRollerNumberGableEnd-field-monoPitch",
+                optionValue: "both",
+                required: true,
+              },
+              {
+                elementID: "doorsRollerNumberUnderEaves-text-monoPitch",
+                optionValue: "both",
                 required: true,
               },
             ],
@@ -1172,6 +1196,16 @@ export const getFormOptions = [
             optionValue: "corrugatedSheet",
             required: true,
           },
+          {
+            elementID: "claddingColour-text-portalFrame",
+            optionValue: "windbreaker",
+            required: true,
+          },
+          {
+            elementID: "claddingColour-field-portalFrame",
+            optionValue: "windbreaker",
+            required: true,
+          },
         ],
       },
       {
@@ -1245,6 +1279,7 @@ export const getFormOptions = [
           { elementID: "mezzanineSteelOptions-field-portalFrame", optionValue: "yes", required: true },
           { elementID: "mezzaninePurlins-field-portalFrame", optionValue: "yes", required: true },
           { elementID: "mezzanineFloorOptions-field-portalFrame", optionValue: "yes", required: true },
+          { elementID: "mezzanineFloorUsage-field-portalFrame", optionValue: "yes", required: true },
           { elementID: "mezzanineHandrails-field-portalFrame", optionValue: "yes", required: true },
           { elementID: "mezzanineFloorAccess-field-portalFrame", optionValue: "yes", required: true },
           { elementID: "mezzanineForkliftBay-field-portalFrame", optionValue: "yes", required: true },
