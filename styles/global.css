@@ -225,6 +225,24 @@ div[data-hook="product"] fieldset[data-hook="product-quantity"] {
   align-items: center;
 }
 
+.form__checkboxes .checkbox__input {
+  border-radius: 8px;
+  border-color: var(--mainOrange) !important;
+}
+
+.form__checkboxes .checkbox-group__label {
+  width: auto;
+}
+
+.form__checkboxes .checkbox-group__label::after {
+  display: inline-block;
+  position: relative;
+  content: "  (Multi select for quote comparison)";
+  margin-inline-start: 1rem;
+  font-size: 0.8rem;
+  color: var(--mainGrey);
+}
+
 .form__checkboxes [data-testid="items"] {
   flex-direction: row;
   justify-content: space-between;
@@ -369,4 +387,20 @@ div[class*=" form__"] input {
   color: var(--greenColour);
   left: calc(100% + 1rem);
   bottom: 0px;
+}
+
+.form__button--pulse > span {
+  animation: pulse 0.8s forwards;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.5);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
