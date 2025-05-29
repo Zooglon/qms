@@ -162,6 +162,17 @@ div[data-hook="product"] fieldset[data-hook="product-quantity"] {
   border-radius: 8px;
 }
 
+.form__input .text-input__input {
+  border: 1px solid var(--mainOrange);
+  color: var(--mainGrey);
+  padding: 0.5rem;
+  border-radius: 8px;
+}
+
+.form__input .text-input__input:focus {
+  border: 2px solid var(--mainOrange);
+}
+
 .formStack .form__units span {
   color: #545454;
   font-size: 2rem;
