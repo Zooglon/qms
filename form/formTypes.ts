@@ -12,6 +12,8 @@ type MonoPitchForm = {
     buildingLength: number;
     buildingWidth: number;
     buildingHeight: number;
+    details_buildingHeightHighSideToEaves: number;
+    details_buildingHeightLowSideToEaves: number;
     bayWidth: number;
     postDimensionsA: number;
     postDimensionsB: number;
@@ -36,7 +38,11 @@ type MonoPitchForm = {
     roofColour: string;
     compositeThickness: string;
     boxProfileOptions: string;
+    roof_boxProfileFinishTop: string;
+    roof_boxProfileFinishUnderneath: string;
+    roof_corrugatedSheetOption: string;
     corrugatedSheetFinish: string;
+    roof_roofColourFibreCement;
     roofLights: string;
     roofLightsPerBay: string;
     roofLightsPerBayCustom: string;
@@ -53,6 +59,9 @@ type MonoPitchForm = {
     buildingHasCladding: string;
     claddingType: string;
     claddingColour: string;
+    cladding_claddingWidthWindbreaker: string;
+    cladding_claddingHeightWindbreaker: string;
+    cladding_claddingWallWidthWindbreaker: string;
     claddingCompositeThickness: string;
     claddingTimberBoardType: string;
     claddingBoxProfileType: string;
@@ -60,13 +69,18 @@ type MonoPitchForm = {
     claddingHeight: string;
     claddingTecsFixings: string;
     guttering: string;
-    gutteringOutlets: number;
+    cladding_matchExistingGuttering: string;
+    cladding_gutteringTypeShape: string;
+    cladding_gutteringColour: string;
+    cladding_gutteringDownpipeSize: string;
+    cladding_gutteringRainwaterCatchment: string;
+    cladding_gutteringRainwaterCatchmentTankSize: string;
   };
   doors: {
     rollerDoors: string;
     rollerDoorLocation: string;
-    numberOfRollerDoors: string;
-    numberOfRollerDoorsCustom: string;
+    doors_numberOfRollerDoorsGableEnd: number;
+    doors_numberOfRollerDoorsUnderEaves: number;
     rollerDoorWidth: number;
     rollerDoorHeight: number;
     rollerDoorBirdBrush: string;
@@ -80,6 +94,14 @@ type MonoPitchForm = {
   };
   floor: {
     concretedFloor: string;
+    floor_concretedFloorQuote: string;
+    floor_floorUsage: string;
+    floor_floorUsageCustom: string;
+    floor_floorReinforcement: string;
+    floor_floorFinish: string;
+    floor_floorFinishPattern: string;
+    floor_floorFinishPowerFloat: string;
+    floor_floorPatternCustom: string;
     quoteForConcretingFloor: string;
     additionalNotesFloor: string;
     floorVisuals: string;
@@ -87,21 +109,26 @@ type MonoPitchForm = {
   mezzanineFloor: {
     mezzanineFloor_buildingHasMezzanineFloor: string;
     mezzanineFloor_quoteFromSupplier: string;
+    MezzanineFloor_mezzanineFloorCoverage;
     mezzanineFloor_freestanding: string;
     mezzanineFloor_BayWidth: string;
+    mezzanineFloor_mezzanineFloorNumberOfBaysCovered: string;
     mezzanineFloor_BayWidthOther: string;
     mezzanineFloor_SpanOptions: string;
     mezzanineFloor_Height: string;
     mezzanineFloor_SteelOptions: string;
     mezzanineFloor_Purlins: string;
     mezzanineFloor_Options: string;
+    mezzanineFloor_mezzanineFloorUsage: string;
+    mezzanineFloor_UsageOther: string;
     mezzanineFloor_HandRails: string;
     mezzanineFloor_Access: string;
     mezzanineFloor_ForkliftBay: string;
     mezzanineFloor_AdditionalNotes: string;
   };
   contact: {
-    howManyQuotes: number;
+    // howManyQuotes: number;
+    details_quoteRadiusKm: number;
     firstName: string;
     lastName: string;
     companyName: string;
@@ -231,6 +258,16 @@ type portalFrameForm = {
     doors_rollerDoorBirdBrush: string;
     doors_rollerDoorRubberFloorSeal: string;
     doors_rollerDoorPowerFeed: string[];
+    doors_flatSheetDoor: string;
+    doors_flatSheetDoorPlacement: string;
+    doors_numberOfDoorsUnderEavesFlatSheet: string;
+    doors_numberOfDoorsGableEndFlatSheet: string;
+    doors_eavesDoorWidthFlatSheet: string;
+    doors_flatSheetEavesDoorHeight: number;
+    doors_gableEndDoorWidthFlatSheet: string;
+    doors_flatSheetGableDoorHeight: number;
+    doors_flatSheetDoorOption: string;
+    doors_doorColourFlatSheet: string;
     doors_personnelDoors: string;
     doors_personnelDoorWidth: string;
     doors_numberOfPersonnelDoors: number;
@@ -246,9 +283,18 @@ type portalFrameForm = {
     cladding_claddingBoxProfileType: string;
     cladding_claddingCorrugatedSheetFinish: string;
     cladding_claddingHeight: string;
+    cladding_claddingWidthWindbreaker: string;
+    cladding_claddingHeightWindbreaker: string;
+    cladding_claddingWallWindbreaker: string;
     cladding_claddingTecsFixings: string;
     cladding_guttering: string;
     cladding_gutteringOutlets: number;
+    cladding_matchExistingGuttering: string;
+    cladding_gutteringTypeShape: string;
+    cladding_gutteringColour: string;
+    cladding_gutteringDownpipe: string;
+    cladding_gutteringRainwaterCatchment: string;
+    cladding_gutteringRainwaterCatchmentTank: string;
   };
   floor: {
     floor_concreteFloor: string;
@@ -273,6 +319,7 @@ type portalFrameForm = {
     mezzanineFloor_SteelOptions: string;
     mezzanineFloor_Purlins: string;
     mezzanineFloor_Options: string;
+    mezzanineFloor_Usage: string;
     mezzanineFloor_HandRails: string;
     mezzanineFloor_Access: string;
     mezzanineFloor_ForkliftBay: string;
@@ -298,7 +345,8 @@ type roundHouseForm = {
     details_quoteForLevellingSite: string;
   };
   contact: {
-    howManyQuotes: number;
+    // howManyQuotes: number;
+    details_quoteRadiusKm;
     firstName: string;
     lastName: string;
     companyName: string;
