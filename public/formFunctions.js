@@ -69,6 +69,99 @@ export const getFormOptions = [
           { elementID: "postDimensionA-field-monoPitch", optionValue: "extension", required: true },
           { elementID: "postDimensionB-field-monoPitch", optionValue: "extension", required: true },
           { elementID: "postDimensionC-field-monoPitch", optionValue: "extension", required: true },
+          {
+            elementID: "gutteringMatch-field-monoPitch",
+            optionValue: "extension",
+            required: true,
+            showOptions: [
+              {
+                elementID: "claddingGuttering-field-monoPitch",
+                optionValue: "no",
+                required: true,
+                showOptions: [
+                  {
+                    elementID: "gutteringColour-field-monoPitch",
+                    optionValue: "galvanisedFoldedColour",
+                    required: true,
+                  },
+                  {
+                    elementID: "gutteringColour-image-monoPitch",
+                    optionValue: "galvanisedFoldedColour",
+                  },
+                ],
+              },
+              {
+                elementID: "gutteringShape-field-monoPitch",
+                optionValue: "no",
+                required: true,
+              },
+              {
+                elementID: "gutteringShapeSelect-field-monoPitch",
+                optionValue: "no",
+                required: true,
+              },
+              {
+                elementID: "gutteringDownpipeSize-field-monoPitch",
+                optionValue: "no",
+                required: true,
+              },
+              {
+                elementID: "gutteringRainwaterCatchment-field-monoPitch",
+                optionValue: "no",
+                required: true,
+                showOptions: [
+                  {
+                    elementID: "gutteringRainwaterCatchmentTankSize-field-monoPitch",
+                    optionValue: "yes",
+                    required: true,
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            elementID: "claddingGuttering-field-monoPitch",
+            optionValue: "freeStanding",
+            required: true,
+            showOptions: [
+              {
+                elementID: "gutteringColour-field-monoPitch",
+                optionValue: "galvanisedFoldedColour",
+                required: true,
+              },
+              {
+                elementID: "gutteringColour-image-monoPitch",
+                optionValue: "galvanisedFoldedColour",
+              },
+            ],
+          },
+          {
+            elementID: "gutteringShape-field-monoPitch",
+            optionValue: "freeStanding",
+            required: true,
+          },
+          {
+            elementID: "gutteringShapeSelect-field-monoPitch",
+            optionValue: "freeStanding",
+            required: true,
+          },
+          {
+            elementID: "gutteringDownpipeSize-field-monoPitch",
+            optionValue: "freeStanding",
+            required: true,
+          },
+          {
+            elementID: "gutteringRainwaterCatchment-field-monoPitch",
+            optionValue: "freeStanding",
+            required: true,
+            showOptions: [
+              {
+                elementID: "gutteringRainwaterCatchmentTankSize-field-monoPitch",
+                optionValue: "yes",
+                required: true,
+              },
+            ],
+          },
         ],
       },
       {
@@ -166,6 +259,11 @@ export const getFormOptions = [
             optionValue: "corrugatedSheet",
             required: true,
           },
+          {
+            elementID: "roofColourFibreCement-field-monoPitch",
+            optionValue: "fibreCement",
+            required: true,
+          },
         ],
       },
       {
@@ -260,6 +358,31 @@ export const getFormOptions = [
                 optionValue: "timber",
                 required: true,
               },
+              {
+                elementID: "claddingWindbreaker-image-monoPitch",
+                optionValue: "windbreaker",
+                required: true,
+              },
+              {
+                elementID: "claddingColour-image-monoPitch",
+                optionValue: "windbreaker",
+                required: true,
+              },
+              {
+                elementID: "claddingWindbreakerA-image-monoPitch",
+                optionValue: "windbreaker",
+                required: true,
+              },
+              {
+                elementID: "claddingWindbreakerB-image-monoPitch",
+                optionValue: "windbreaker",
+                required: true,
+              },
+              {
+                elementID: "claddingWindbreakerC-image-monoPitch",
+                optionValue: "windbreaker",
+                required: true,
+              },
             ],
           },
         ],
@@ -325,6 +448,39 @@ export const getFormOptions = [
         elementID: "concretingFloor-field-monoPitch",
         showOptions: [
           { elementID: "concretingFloorQuote-field-monoPitch", optionValue: "yes", required: true },
+          {
+            elementID: "concretingFloorUsage-field-monoPitch",
+            optionValue: "yes",
+            required: true,
+            showOptions: [
+              { elementID: "concretingFloorUsageCustom-field-monoPitch", optionValue: "other", required: true },
+            ],
+          },
+          { elementID: "concretingFloorReinforcement-field-monoPitch", optionValue: "yes", required: true },
+          {
+            elementID: "concretingFloorFinish-field-monoPitch",
+            optionValue: "yes",
+            required: true,
+            showOptions: [
+              {
+                elementID: "concretingFloorFinishPattern-field-monoPitch",
+                optionValue: "patterned",
+                required: true,
+                showOptions: [
+                  {
+                    elementID: "concretingFloorFinishPatternCustom-field-monoPitch",
+                    optionValue: "custom",
+                    required: true,
+                  },
+                ],
+              },
+              {
+                elementID: "concretingFloorFinishPowerFloat-field-monoPitch",
+                optionValue: "powerFloat",
+                required: true,
+              },
+            ],
+          },
           { elementID: "floorAdditionalNotes-field-monoPitch", optionValue: "yes", required: true },
           { elementID: "floorUpload-field-monoPitch", optionValue: "yes", required: true },
         ],
@@ -335,17 +491,11 @@ export const getFormOptions = [
           { elementID: "mezzanineInstallation-field-monoPitch", optionValue: "yes", required: true },
           { elementID: "mezzanineFreestanding-field-monoPitch", optionValue: "yes", required: true },
           { elementID: "mezzanineSteelOptions-field-monoPitch", optionValue: "yes", required: true },
+          { elementID: "mezzanineBayNumber-field-monoPitch", optionValue: "yes", required: false },
           {
-            elementID: "mezzanineBayWidth-field-monoPitch",
+            elementID: "mezzanineBayCoverage-field-monoPitch",
             optionValue: "yes",
-            required: true,
-            showOptions: [
-              {
-                elementID: "mezzanineBayWidthOther-field-monoPitch",
-                optionValue: "other",
-                required: false,
-              },
-            ],
+            required: false,
           },
           {
             elementID: "mezzanineSpanOptions-field-monoPitch",
@@ -355,6 +505,18 @@ export const getFormOptions = [
               {
                 elementID: "mezzanineHeight-field-monoPitch",
                 optionValue: "supportPosts",
+                required: true,
+              },
+            ],
+          },
+          {
+            elementID: "mezzanineFloorUsage-field-monoPitch",
+            optionValue: "yes",
+            required: true,
+            showOptions: [
+              {
+                elementID: "mezzanineFloorUsageOther-field-monoPitch",
+                optionValue: "other",
                 required: true,
               },
             ],
@@ -1203,6 +1365,26 @@ export const getFormOptions = [
           },
           {
             elementID: "claddingColour-field-portalFrame",
+            optionValue: "windbreaker",
+            required: true,
+          },
+          {
+            elementID: "claddingWindbreaker-image-portalFrame",
+            optionValue: "windbreaker",
+            required: true,
+          },
+          {
+            elementID: "claddingWindbreakerA-field-portalFrame",
+            optionValue: "windbreaker",
+            required: true,
+          },
+          {
+            elementID: "claddingWindbreakerB-field-portalFrame",
+            optionValue: "windbreaker",
+            required: true,
+          },
+          {
+            elementID: "claddingWindbreakerC-field-portalFrame",
             optionValue: "windbreaker",
             required: true,
           },
