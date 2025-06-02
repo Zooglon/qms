@@ -1539,6 +1539,16 @@ export const getFormOptions = [
           },
         ],
       },
+      {
+        elementID: "mezzanineFloorUsage-field-mezzanineFloor",
+        showOptions: [
+          {
+            elementID: "mezzanineFloorUsageOther-field-mezzanineFloor",
+            optionValue: "other",
+            required: true,
+          },
+        ],
+      },
     ],
   },
   {
