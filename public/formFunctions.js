@@ -541,6 +541,13 @@ export const getFormOptions = [
             elementID: "siteRequiresLevellingQuote-field-roundHouse",
             optionValue: "yes",
             required: true,
+            showOptions: [
+              {
+                elementID: "siteImageUpload-field-roundHouse",
+                optionValue: "yes",
+                required: true,
+              },
+            ],
           },
         ],
       },
@@ -1316,77 +1323,93 @@ export const getFormOptions = [
       {
         elementID: "cladding-field-portalFrame",
         showOptions: [
-          { elementID: "claddingColour-text-portalFrame", optionValue: "composite", required: true },
-          { elementID: "claddingColour-field-portalFrame", optionValue: "composite", required: true },
           {
-            elementID: "claddingCompositeThickness-field-portalFrame",
-            optionValue: "composite",
+            elementID: "claddingMaterial-field-portalFrame",
+            optionValue: "yes",
+            required: true,
+            showOptions: [
+              { elementID: "claddingColour-text-portalFrame", optionValue: "composite", required: true },
+              { elementID: "claddingColour-field-portalFrame", optionValue: "composite", required: true },
+              {
+                elementID: "claddingCompositeThickness-field-portalFrame",
+                optionValue: "composite",
+                required: true,
+              },
+              {
+                elementID: "claddingTimberBoardType-field-portalFrame",
+                optionValue: "timber",
+                required: true,
+              },
+              {
+                elementID: "claddingBoxProfileType-field-portalFrame",
+                optionValue: "boxProfileSheet",
+                required: true,
+              },
+              {
+                elementID: "claddingColour-text-portalFrame",
+                optionValue: "boxProfileSheet",
+                required: true,
+              },
+              {
+                elementID: "claddingColour-field-portalFrame",
+                optionValue: "boxProfileSheet",
+                required: true,
+              },
+              {
+                elementID: "claddingCorrugatedSheetFinish-field-portalFrame",
+                optionValue: "corrugatedSheet",
+                required: true,
+              },
+              {
+                elementID: "claddingColour-text-portalFrame",
+                optionValue: "corrugatedSheet",
+                required: true,
+              },
+              {
+                elementID: "claddingColour-field-portalFrame",
+                optionValue: "corrugatedSheet",
+                required: true,
+              },
+              {
+                elementID: "claddingColour-text-portalFrame",
+                optionValue: "windbreaker",
+                required: true,
+              },
+              {
+                elementID: "claddingColour-field-portalFrame",
+                optionValue: "windbreaker",
+                required: true,
+              },
+              {
+                elementID: "claddingWindbreaker-image-portalFrame",
+                optionValue: "windbreaker",
+                required: true,
+              },
+              {
+                elementID: "claddingWindbreakerA-field-portalFrame",
+                optionValue: "windbreaker",
+                required: true,
+              },
+              {
+                elementID: "claddingWindbreakerB-field-portalFrame",
+                optionValue: "windbreaker",
+                required: true,
+              },
+              {
+                elementID: "claddingWindbreakerC-field-portalFrame",
+                optionValue: "windbreaker",
+                required: true,
+              },
+            ],
+          },
+          {
+            elementID: "claddingHeight-field-portalFrame",
+            optionValue: "yes",
             required: true,
           },
           {
-            elementID: "claddingTimberBoardType-field-portalFrame",
-            optionValue: "timber",
-            required: true,
-          },
-          {
-            elementID: "claddingBoxProfileType-field-portalFrame",
-            optionValue: "boxProfileSheet",
-            required: true,
-          },
-          {
-            elementID: "claddingColour-text-portalFrame",
-            optionValue: "boxProfileSheet",
-            required: true,
-          },
-          {
-            elementID: "claddingColour-field-portalFrame",
-            optionValue: "boxProfileSheet",
-            required: true,
-          },
-          {
-            elementID: "claddingCorrugatedSheetFinish-field-portalFrame",
-            optionValue: "corrugatedSheet",
-            required: true,
-          },
-          {
-            elementID: "claddingColour-text-portalFrame",
-            optionValue: "corrugatedSheet",
-            required: true,
-          },
-          {
-            elementID: "claddingColour-field-portalFrame",
-            optionValue: "corrugatedSheet",
-            required: true,
-          },
-          {
-            elementID: "claddingColour-text-portalFrame",
-            optionValue: "windbreaker",
-            required: true,
-          },
-          {
-            elementID: "claddingColour-field-portalFrame",
-            optionValue: "windbreaker",
-            required: true,
-          },
-          {
-            elementID: "claddingWindbreaker-image-portalFrame",
-            optionValue: "windbreaker",
-            required: true,
-          },
-          {
-            elementID: "claddingWindbreakerA-field-portalFrame",
-            optionValue: "windbreaker",
-            required: true,
-          },
-          {
-            elementID: "claddingWindbreakerB-field-portalFrame",
-            optionValue: "windbreaker",
-            required: true,
-          },
-          {
-            elementID: "claddingWindbreakerC-field-portalFrame",
-            optionValue: "windbreaker",
-            required: true,
+            elementID: "claddingHeight-text-portalFrame",
+            optionValue: "yes",
           },
         ],
       },
@@ -1930,7 +1953,11 @@ export const getFormOptions = [
             optionValue: "boxProfileRoofSheets",
             required: true,
           },
-
+          {
+            elementID: "boxProfileFinishUnderneath-field-reroofRepair",
+            optionValue: "boxProfileRoofSheets",
+            required: true,
+          },
           {
             elementID: "roofColour-image-reroofRepair",
             optionValue: "corrugatedRoofSheets",
@@ -1948,6 +1975,11 @@ export const getFormOptions = [
           },
           {
             elementID: "corrugatedSheetFinish-field-reroofRepair",
+            optionValue: "corrugatedRoofSheets",
+            required: true,
+          },
+          {
+            elementID: "corrugatedSheetFinishUnderneath-field-reroofRepair",
             optionValue: "corrugatedRoofSheets",
             required: true,
           },
@@ -2049,12 +2081,22 @@ export const getFormOptions = [
                 required: true,
               },
               {
-                elementID: "gutteringShapePlain-field-reroofRepair",
+                elementID: "gutteringShape-image-reroofRepair",
                 optionValue: "galvanisedFoldedPlain",
                 required: true,
               },
               {
-                elementID: "gutteringShapeColoured-field-reroofRepair",
+                elementID: "gutteringShape-image-reroofRepair",
+                optionValue: "galvanisedFoldedColoured",
+                required: true,
+              },
+              {
+                elementID: "gutteringShape-field-reroofRepair",
+                optionValue: "galvanisedFoldedPlain",
+                required: true,
+              },
+              {
+                elementID: "gutteringShape-field-reroofRepair",
                 optionValue: "galvanisedFoldedColoured",
                 required: true,
               },
@@ -2086,6 +2128,11 @@ export const getFormOptions = [
       {
         elementID: "cladding-field-dismantle",
         showOptions: [
+          {
+            elementId: "claddingAsbestos-field-dismantle",
+            optionValue: "yes",
+            required: true,
+          },
           {
             elementID: "claddingType-field-dismantle",
             optionValue: "yes",
