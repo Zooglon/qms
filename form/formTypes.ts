@@ -21,6 +21,7 @@ type MonoPitchForm = {
     roofPitch: string;
     additionalNotes: string;
     siteVisuals: string;
+    details_alternativeDesign: string;
   };
   walls: {
     buildingHasWalls: string;
@@ -213,6 +214,7 @@ type portalFrameForm = {
     details_roofPitch: string;
     details_roofPitchCustom: string;
     details_additionalNotes: string;
+    details_alternativeDesign: string;
   };
   walls: {
     walls_buildingHasWalls: string;
@@ -276,6 +278,7 @@ type portalFrameForm = {
     doors_numberOfFireDoors: number;
   };
   cladding: {
+    cladding_buildingHasCladding: string;
     cladding_claddingMaterial: string;
     cladding_claddingColour: string;
     cladding_claddingCompositeThickness: string;
@@ -343,10 +346,11 @@ type roundHouseForm = {
     details_animalHandlingInternals: string;
     details_siteRequiresLevelling: string;
     details_quoteForLevellingSite: string;
+    details_siteImagesVideos: string;
   };
   contact: {
     // howManyQuotes: number;
-    details_quoteRadiusKm;
+    details_quoteRadiusKm: string;
     firstName: string;
     lastName: string;
     companyName: string;
@@ -384,6 +388,7 @@ type mezzanineFloorForm = {
     details_forkliftBay: string;
     details_additionalNotes: string;
     details_floorImageVideoUpload: string;
+    details_quoteRadiusKm: number;
   };
   contact: {
     howManyQuotes: number;
@@ -408,6 +413,7 @@ type polyTunnelForm = {
     details_guttering: string;
     details_gutteringBothSides: string;
     details_anchoring: string;
+    details_quoteRadiusKm: number;
   };
   contact: {
     howManyQuotes: number;
@@ -431,7 +437,8 @@ type rainwaterRepairForm = {
     polytunnel_covering: string;
   };
   contact: {
-    howManyQuotes: number;
+    details_quoteRadiusKm: number;
+    // howManyQuotes: number;
     firstName: string;
     lastName: string;
     companyName: string;
@@ -462,9 +469,11 @@ type wallsRepairForm = {
     details_gablePostDimensionA: string;
     details_gablePostDimensionB: string;
     details_gablePostDimensionC: string;
+    details_siteImagesVideos: string;
   };
   contact: {
-    howManyQuotes: number;
+    details_quoteRadiusKm: number;
+    // howManyQuotes: number;
     firstName: string;
     lastName: string;
     companyName: string;
@@ -490,7 +499,8 @@ type gutteringRepairForm = {
     details_buildingHeight: string;
   };
   contact: {
-    howManyQuotes: number;
+    // howManyQuotes: number;
+    details_quoteRadiusKm: number;
     firstName: string;
     lastName: string;
     companyName: string;
@@ -515,7 +525,8 @@ type solarPanelsRepairForm = {
     details_roofPitch: string;
   };
   contact: {
-    howManyQuotes: number;
+    // howManyQuotes: number;
+    details_quoteRadiusKm: number;
     firstName: string;
     lastName: string;
     companyName: string;
@@ -532,6 +543,7 @@ type dismantleRepairForm = {
     details_buildingWidth: string;
     details_buildingHeight: string;
     details_cladding: string;
+    details_existingCladdingContainsAsbestos: string;
     details_claddingType: string;
     details_claddingTypeOther: string;
     details_roofMaterial: string;
@@ -541,6 +553,7 @@ type dismantleRepairForm = {
     details_shedImageVideoUploads: string;
   };
   contact: {
+    details_quoteRadiusKm: number;
     howManyQuotes: number;
     firstName: string;
     lastName: string;
@@ -567,11 +580,11 @@ type doorsRepairForm = {
     details_personnelDoorWidth: string;
     details_arePersonnelDoorsFireDoors: string;
     details_numberOfPersonnelFireDoors: string;
-
     details_doorImageVideoUploads: any;
   };
   contact: {
-    howManyQuotes: number;
+    // howManyQuotes: number;
+    details_quoteRadiusKm: number;
     firstName: string;
     lastName: string;
     companyName: string;
@@ -600,9 +613,11 @@ type reRoofRepairForm = {
     details_boxProfileRoofColour: string;
     details_boxProfileOption: string;
     details_boxProfileFinish: string;
+    details_boxProfileFinishUnderneath: string;
     details_corrugatedSheetColour: string;
     details_corrugatedSheetOption: string;
     details_corrugatedSheetFinish: string;
+    details_corrugatedSheetFinishUnderneath: string;
     details_roofSheetLengths: string;
     details_152mLengths: string;
     details_1670mLengths: string;
@@ -625,9 +640,11 @@ type reRoofRepairForm = {
     details_rainwaterCatchment: string;
     details_rainwaterCatchmentTank: string;
     details_gutteringMeasurementUnits: string;
+    details_siteImagesVideos: string;
   };
   contact: {
-    howManyQuotes: number;
+    // howManyQuotes: number;
+    details_quoteRadiusKm: number;
     firstName: string;
     lastName: string;
     companyName: string;
@@ -649,8 +666,10 @@ type claddingRepairForm = {
     details_timberBoardType: string;
     details_boxProfileType: string;
     details_corrugatedSheetType: string;
+    details_siteImageUpload: string;
   };
   contact: {
+    details_quoteRadiusKm: number;
     howManyQuotes: number;
     firstName: string;
     lastName: string;
