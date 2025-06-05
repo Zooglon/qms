@@ -7,7 +7,7 @@ import { getFormOptions } from "public/formFunctions";
 // Add input__required class to fields where input is required - it should add the '*'
 // capcha auth needs to be awaited - i think?
 
-let version = "000342";
+let version = "000343";
 let mapCreds;
 let measurementUnits;
 let formName;
@@ -796,13 +796,14 @@ const getAllFields = (fieldsArray, element) => {
   }
 };
 
-[$w("#roofPitch-field-portalFrame"), $w("#roofPitch-field-monoPitch")].forEach((rpe) =>
-  rpe.onMouseIn((e) => {
-    $w("#pitchCalcBtn").customClassList.add("form__button--pulse");
-    setTimeout(() => {
-      $w("#pitchCalcBtn").customClassList.remove("form__button--pulse");
-    }, 1000);
-  })
+[$w("#roofPitch-field-portalFrame"), $w("#roofPitch-field-monoPitch"), $w("#roofPitch-field-reroofRepair")].forEach(
+  (rpe) =>
+    rpe.onMouseIn((e) => {
+      $w("#pitchCalcBtn").customClassList.add("form__button--pulse");
+      setTimeout(() => {
+        $w("#pitchCalcBtn").customClassList.remove("form__button--pulse");
+      }, 1000);
+    })
 );
 
 $w("#testBtn").onClick(() => {
