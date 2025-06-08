@@ -493,10 +493,12 @@ type gutteringRepairForm = {
     details_gutteringColour: string;
     details_rainwaterCatchment: string;
     details_rainwaterCatchmentTank: string;
+    details_gutteringSides: string;
     details_measurementUnits: string;
     details_buildingLength: string;
     details_buildingWidth: string;
     details_buildingHeight: string;
+    details_siteImageVideoUpload: string;
   };
   contact: {
     // howManyQuotes: number;
