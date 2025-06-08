@@ -7,7 +7,7 @@ import { getFormOptions } from "public/formFunctions";
 // Add input__required class to fields where input is required - it should add the '*'
 // capcha auth needs to be awaited - i think?
 
-let version = "000343";
+let version = "000345";
 let mapCreds;
 let measurementUnits;
 let formName;
@@ -662,14 +662,14 @@ quoteTypeRepeaterChild.onClick((ev) => {
 });
 
 // When guttering type is selected add the value to open question
-$w("#gutteringShapeChild-field-guttering").onClick((ev) => {
+$w("#gutteringShape-field-guttering").onClick((ev) => {
   DEBUG_MODE && console.log("GutteringType", ev);
   let selectedField = $w("#gutteringShape-field-guttering").data.find((item) => item._id === ev.context.itemId);
   DEBUG_MODE && console.log("guttering ID", selectedField), $w("#gutteringShape-field-guttering");
   DEBUG_MODE && console.log("guttering Target", ev.target);
   let gutteringOptions = [$w("#gutteringShapeColoured-field-guttering"), $w("#gutteringShapePlain-field-guttering")];
 
-  $w("#gutteringShape-field-guttering").forEachItem(($item, itemData, i) => {
+  $w("#gutteringShape-image-guttering").forEachItem(($item, itemData, i) => {
     console.log("Item - ", $item);
     console.log("ItemData - ", itemData);
     $item("#gutteringShapeChild-field-guttering").style.borderWidth = "2px";
@@ -796,14 +796,18 @@ const getAllFields = (fieldsArray, element) => {
   }
 };
 
-[$w("#roofPitch-field-portalFrame"), $w("#roofPitch-field-monoPitch"), $w("#roofPitch-field-reroofRepair")].forEach(
-  (rpe) =>
-    rpe.onMouseIn((e) => {
-      $w("#pitchCalcBtn").customClassList.add("form__button--pulse");
-      setTimeout(() => {
-        $w("#pitchCalcBtn").customClassList.remove("form__button--pulse");
-      }, 1000);
-    })
+[
+  $w("#roofPitch-field-portalFrame"),
+  $w("#roofPitch-field-monoPitch"),
+  $w("#roofPitch-field-reroofRepair"),
+  $w("#roofPitch-field-solarRepair"),
+].forEach((rpe) =>
+  rpe.onMouseIn((e) => {
+    $w("#pitchCalcBtn").customClassList.add("form__button--pulse");
+    setTimeout(() => {
+      $w("#pitchCalcBtn").customClassList.remove("form__button--pulse");
+    }, 1000);
+  })
 );
 
 $w("#testBtn").onClick(() => {
