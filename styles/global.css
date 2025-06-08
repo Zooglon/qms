@@ -222,8 +222,14 @@ div[data-hook="product"] fieldset[data-hook="product-quantity"] {
 }
 
 .form__dropdown .dropdown__input {
-  border: var(--border);
+  /* border: var(--border); */
+  border: 2px solid blue;
   border-radius: var(--borderRadius);
+}
+
+.form__dropdown .dropdown__list {
+  background-color: green;
+  color: red;
 }
 
 .formSection .form__dropdown,
@@ -253,6 +259,10 @@ div[data-hook="product"] fieldset[data-hook="product-quantity"] {
   border-radius: 50%;
   border-width: 2px;
   border-color: var(--mainOrange) !important;
+}
+
+.form__checkboxes {
+  min-height: auto;
 }
 
 .form__checkboxes .checkbox-group__label {
