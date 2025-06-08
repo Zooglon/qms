@@ -2200,12 +2200,12 @@ export const getFormOptions = [
             required: true,
           },
           {
-            elementID: "gutteringShapePlain-field-guttering",
+            elementID: "gutteringShape-field-guttering",
             optionValue: "galvanisedFoldedPlain",
             required: true,
           },
           {
-            elementID: "gutteringShapeColoured-field-guttering",
+            elementID: "gutteringShape-field-guttering",
             optionValue: "galvanisedFoldedColoured",
             required: true,
           },
