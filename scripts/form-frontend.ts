@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { helloThere, getMapCreds } from "./masterPage";
 import { openLightbox } from "wix-window-frontend";
 import { captchaAuth } from "backend/captchaModule";
@@ -7,7 +8,7 @@ import { getFormOptions } from "public/formFunctions";
 // Add input__required class to fields where input is required - it should add the '*'
 // capcha auth needs to be awaited - i think?
 
-let version = "000345";
+let version = "000349";
 let mapCreds;
 let measurementUnits;
 let formName;
@@ -188,12 +189,13 @@ let selectedFormFields;
 // Variables End
 
 $w.onReady(async function () {
+  console.log(`Site loading...`);
   helloThere();
   formOptions = getFormOptions;
-  console.log(`Site loaded - ${version}`);
 
   formStartBtn.expand();
   supplierSignUp.expand();
+  console.log(`Site loaded - ${version}`);
 
   mapCreds = await getMapCreds();
 });
@@ -503,10 +505,13 @@ const datasetSet = (dataset) => {
   const formGuid = crypto.randomUUID();
   const areaDetails = "";
 
+  console.log("GUID FIELD START -", selectedFormFields.guidField);
   const guidField = selectedFormFields.guidField;
   guidField.value = formGuid;
+  console.log("GUID FIELD -", guidField, guidField.value);
 
-  activeDataset.element.onBeforeSave(async () => {
+  // activeDataset.element.onBeforeSave(async () => {
+  activeDataset.element.onBeforeSave(() => {
     selectedFormFields.submitBtn.disable();
     selectedFormFields.loadingElement.expand();
 
@@ -526,7 +531,9 @@ const datasetSet = (dataset) => {
     // }
 
     const datasetFormFields = getForm(false);
-    datasetFormFields.map((field) => console.log("field validity", field.validity));
+    datasetFormFields.map((field) =>
+      console.log(`field ${field.label} validity`, field.validity && field.validity.valid, field.validity)
+    );
 
     // Handle validation errors
     const fieldsFailedValidation = fieldsWithValidationErrors(datasetFormFields);
@@ -538,7 +545,9 @@ const datasetSet = (dataset) => {
         if (!ffv.value || ffv.value === "") {
           DEBUG_MODE && console.log("FAILED FIELD - ", ffv.id);
           validationMessage.push(
-            `"${ffv.label.endsWith("?") ? ffv.label.slice(0, ffv.label.length - 1) : ffv.label}" is a required field`
+            `"${
+              ffv.label ? (ffv.label.endsWith("?") ? ffv.label.slice(0, ffv.label.length - 1) : ffv.label) : ffv.id
+            }" is a required field`
           );
         } else {
           validationMessage.push(`"${ffv.value}" is not a valid input for ${ffv.label}`);
@@ -574,11 +583,13 @@ const datasetSet = (dataset) => {
       selectedFormFields.submitBtn.enable();
     }
   });
+
+  console.log("Dataset saved!");
 };
 
 const fieldsWithValidationErrors = (fields) => {
   DEBUG_MODE && console.log("Test form", fields);
-  const nonValidFields = fields.filter((field) => !field.valid);
+  const nonValidFields = fields.filter((field) => field.valid === false);
   if (nonValidFields.length >= 1) {
     return nonValidFields;
   }
