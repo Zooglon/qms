@@ -8,7 +8,7 @@ import { getFormOptions } from "public/formFunctions";
 // Add input__required class to fields where input is required - it should add the '*'
 // capcha auth needs to be awaited - i think?
 
-let version = "000349";
+let version = "000351";
 let mapCreds;
 let measurementUnits;
 let formName;
@@ -437,26 +437,6 @@ const loadForm = (formName) => {
     });
   });
 
-  // $w("#areaCalcBtn-concreteSlab").onClick(async () => {
-  //   const dataToSend = mapCreds;
-
-  //   const retObj = await openLightbox("area-calculator", dataToSend);
-  //   const areaField = $w("#concreteArea-field-concreteSlab");
-  //   const areaDetailsField = $w("#areaDetails-field-concreteSlab");
-
-  //   console.log("RETOBJ", retObj);
-
-  //   for (let [key, value] of Object.entries(retObj)) {
-  //     let formatKey = capitaliseFirst(key).replace(/_/g, " ");
-  //     areaCalcObj[`${formatKey}`] = value;
-  //   }
-  //   console.log("Inputting - ", `${Number(retObj.building_area_mono)}`);
-  //   if (areaField && areaDetailsField && retObj) {
-  //     areaField.value = `${Number(retObj.building_area_mono)}`;
-  //     areaDetailsField.value = JSON.stringify(areaCalcObj);
-  //   }
-  // });
-
   $w("#pitchCalcBtn").onClick(async () => await openLightbox("pitch-calculator"));
   $w("#convertCalcBtn").onClick(async () => await openLightbox("conversion-calculator"));
 };
@@ -470,7 +450,8 @@ const setupUserCheck = (selectedForm) => {
     selectedForm.captcha.onError(() => {
       const msg = "Something went wrong. Please redo the captcha challenge.";
       selectedFormFields.errorMsg.text = msg;
-      selectedFormFields.loadingElement.collapse();
+      // selectedFormFields.loadingElement.collapse();
+      formLoadingElement(selectedFormFields.loadingElement, "end");
       selectedFormFields.errorMsg.expand();
       selectedForm.captcha.reset();
 
@@ -508,16 +489,19 @@ const datasetSet = (dataset) => {
   console.log("GUID FIELD START -", selectedFormFields.guidField);
   const guidField = selectedFormFields.guidField;
   guidField.value = formGuid;
+  activeDataset.element.setFieldValue("formGuid", formGuid);
   console.log("GUID FIELD -", guidField, guidField.value);
 
   // activeDataset.element.onBeforeSave(async () => {
   activeDataset.element.onBeforeSave(() => {
     selectedFormFields.submitBtn.disable();
-    selectedFormFields.loadingElement.expand();
+    formLoadingElement(selectedFormFields.loadingElement, "start");
+    // selectedFormFields.loadingElement.expand();
 
     const showError = (msg) => {
       selectedFormFields.errorMsg.text = msg;
-      selectedFormFields.loadingElement.collapse();
+      formLoadingElement(selectedFormFields.loadingElement, "end");
+      // selectedFormFields.loadingElement.collapse();
       selectedFormFields.errorMsg.expand();
     };
     const hideError = () => selectedFormFields.errorMsg.collapse();
@@ -568,6 +552,7 @@ const datasetSet = (dataset) => {
       //     DEBUG_MODE && console.log("Auth check passed");
       //     selectedFormFields.captcha.reset();
       //     selectedFormFields.submitBtn.enable();
+      //     formLoadingElement(selectedFormFields.loadingElement, "end");
       //     selectedFormFields.loadingElement.collapse();
       //   })
       //   .catch(() => {
@@ -821,8 +806,13 @@ const getAllFields = (fieldsArray, element) => {
   })
 );
 
-$w("#testBtn").onClick(() => {
-  console.log("Getting form");
-  const datasetFormFields = getForm(true);
-  datasetFormFields.map((field) => console.log("field validity", field.id, field.validity && field.validity.valid));
-});
+const formLoadingElement = (loadingElem, state) => {
+  if (state === "start") {
+    loadingElem.customClassList.contains("form__loading-spin") && loadingElem.customClassList.add("form__loading-spin");
+    loadingElem.expand();
+  } else if (state === "end") {
+    loadingElem.customClassList.contains("form__loading-spin") &&
+      loadingElem.customClassList.remove("form__loading-spin");
+    loadingElem.collapse();
+  }
+};
