@@ -369,6 +369,11 @@ export const getFormOptions = [
                 required: true,
               },
               {
+                elementID: "claddingColour-field-monoPitch",
+                optionValue: "windbreaker",
+                required: true,
+              },
+              {
                 elementID: "claddingWindbreakerA-image-monoPitch",
                 optionValue: "windbreaker",
                 required: true,
@@ -610,6 +615,11 @@ export const getFormOptions = [
                     required: true,
                   },
                   {
+                    elementID: "cattleSheetEavesHeight-container-portalFrame",
+                    optionValue: "underEaves",
+                    required: false,
+                  },
+                  {
                     elementID: "cattleSheetEavesQuantity-field-portalFrame",
                     optionValue: "underEaves",
                     required: true,
@@ -623,6 +633,11 @@ export const getFormOptions = [
                     elementID: "cattleSheetGableLength-field-portalFrame",
                     optionValue: "gableEnd",
                     required: true,
+                  },
+                  {
+                    elementID: "cattleSheetGableHeight-container-portalFrame",
+                    optionValue: "gableEnd",
+                    required: false,
                   },
                   {
                     elementID: "cattleSheetGableQuantity-field-portalFrame",
@@ -640,6 +655,11 @@ export const getFormOptions = [
                     required: true,
                   },
                   {
+                    elementID: "cattleSheetEavesHeight-container-portalFrame",
+                    optionValue: "both",
+                    required: false,
+                  },
+                  {
                     elementID: "cattleSheetEavesQuantity-field-portalFrame",
                     optionValue: "both",
                     required: true,
@@ -653,6 +673,11 @@ export const getFormOptions = [
                     elementID: "cattleSheetGableLength-field-portalFrame",
                     optionValue: "both",
                     required: true,
+                  },
+                  {
+                    elementID: "cattleSheetGableHeight-container-portalFrame",
+                    optionValue: "both",
+                    required: false,
                   },
                   {
                     elementID: "cattleSheetGableQuantity-field-portalFrame",
@@ -712,6 +737,11 @@ export const getFormOptions = [
                     required: true,
                   },
                   {
+                    elementID: "cattleSheetEavesHeight-container-portalFrame",
+                    optionValue: "underEaves",
+                    required: false,
+                  },
+                  {
                     elementID: "cattleSheetEavesQuantity-field-portalFrame",
                     optionValue: "underEaves",
                     required: true,
@@ -725,6 +755,11 @@ export const getFormOptions = [
                     elementID: "cattleSheetGableLength-field-portalFrame",
                     optionValue: "gableEnd",
                     required: true,
+                  },
+                  {
+                    elementID: "cattleSheetGableHeight-container-portalFrame",
+                    optionValue: "gableEnd",
+                    required: false,
                   },
                   {
                     elementID: "cattleSheetGableQuantity-field-portalFrame",
@@ -742,6 +777,11 @@ export const getFormOptions = [
                     required: true,
                   },
                   {
+                    elementID: "cattleSheetEavesHeight-container-portalFrame",
+                    optionValue: "both",
+                    required: false,
+                  },
+                  {
                     elementID: "cattleSheetEavesQuantity-field-portalFrame",
                     optionValue: "both",
                     required: true,
@@ -755,6 +795,11 @@ export const getFormOptions = [
                     elementID: "cattleSheetGableLength-field-portalFrame",
                     optionValue: "both",
                     required: true,
+                  },
+                  {
+                    elementID: "cattleSheetGableHeight-container-portalFrame",
+                    optionValue: "both",
+                    required: false,
                   },
                   {
                     elementID: "cattleSheetGableQuantity-field-portalFrame",
@@ -813,6 +858,11 @@ export const getFormOptions = [
                     required: true,
                   },
                   {
+                    elementID: "cattleSheetEavesHeight-container-portalFrame",
+                    optionValue: "underEaves",
+                    required: false,
+                  },
+                  {
                     elementID: "cattleSheetEavesQuantity-field-portalFrame",
                     optionValue: "underEaves",
                     required: true,
@@ -826,6 +876,11 @@ export const getFormOptions = [
                     elementID: "cattleSheetGableLength-field-portalFrame",
                     optionValue: "gableEnd",
                     required: true,
+                  },
+                  {
+                    elementID: "cattleSheetGableHeight-container-portalFrame",
+                    optionValue: "gableEnd",
+                    required: false,
                   },
                   {
                     elementID: "cattleSheetGableQuantity-field-portalFrame",
@@ -843,6 +898,11 @@ export const getFormOptions = [
                     required: true,
                   },
                   {
+                    elementID: "cattleSheetEavesHeight-container-portalFrame",
+                    optionValue: "both",
+                    required: false,
+                  },
+                  {
                     elementID: "cattleSheetEavesQuantity-field-portalFrame",
                     optionValue: "both",
                     required: true,
@@ -856,6 +916,11 @@ export const getFormOptions = [
                     elementID: "cattleSheetGableLength-field-portalFrame",
                     optionValue: "both",
                     required: true,
+                  },
+                  {
+                    elementID: "cattleSheetGableHeight-container-portalFrame",
+                    optionValue: "both",
+                    required: false,
                   },
                   {
                     elementID: "cattleSheetGableQuantity-field-portalFrame",
@@ -914,6 +979,11 @@ export const getFormOptions = [
                     required: true,
                   },
                   {
+                    elementID: "cattleSheetEavesHeight-container-portalFrame",
+                    optionValue: "underEaves",
+                    required: false,
+                  },
+                  {
                     elementID: "cattleSheetEavesQuantity-field-portalFrame",
                     optionValue: "underEaves",
                     required: true,
@@ -927,6 +997,11 @@ export const getFormOptions = [
                     elementID: "cattleSheetGableLength-field-portalFrame",
                     optionValue: "gableEnd",
                     required: true,
+                  },
+                  {
+                    elementID: "cattleSheetGableHeight-container-portalFrame",
+                    optionValue: "gableEnd",
+                    required: false,
                   },
                   {
                     elementID: "cattleSheetGableQuantity-field-portalFrame",
@@ -944,6 +1019,11 @@ export const getFormOptions = [
                     required: true,
                   },
                   {
+                    elementID: "cattleSheetEavesHeight-container-portalFrame",
+                    optionValue: "both",
+                    required: false,
+                  },
+                  {
                     elementID: "cattleSheetEavesQuantity-field-portalFrame",
                     optionValue: "both",
                     required: true,
@@ -957,6 +1037,11 @@ export const getFormOptions = [
                     elementID: "cattleSheetGableLength-field-portalFrame",
                     optionValue: "both",
                     required: true,
+                  },
+                  {
+                    elementID: "cattleSheetGableHeight-container-portalFrame",
+                    optionValue: "both",
+                    required: false,
                   },
                   {
                     elementID: "cattleSheetGableQuantity-field-portalFrame",
@@ -1057,7 +1142,7 @@ export const getFormOptions = [
         showOptions: [
           {
             elementID: "fibreCementColour-field-portalFrame",
-            optionValue: "fibreCement",
+            optionValue: "fiberCement",
             required: true,
           },
           { elementID: "roofColour-image-portalFrame", optionValue: "composite", required: true },
