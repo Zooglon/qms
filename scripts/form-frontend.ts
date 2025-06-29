@@ -8,7 +8,7 @@ import { getFormOptions } from "public/formFunctions";
 // Add input__required class to fields where input is required - it should add the '*'
 // capcha auth needs to be awaited - i think?
 
-let version = "000351";
+let version = "000367";
 let mapCreds;
 let measurementUnits;
 let formName;
@@ -494,6 +494,7 @@ const datasetSet = (dataset) => {
 
   // activeDataset.element.onBeforeSave(async () => {
   activeDataset.element.onBeforeSave(() => {
+    DEBUG_MODE && console.log("Submit form fired...");
     selectedFormFields.submitBtn.disable();
     formLoadingElement(selectedFormFields.loadingElement, "start");
     // selectedFormFields.loadingElement.expand();
@@ -516,13 +517,17 @@ const datasetSet = (dataset) => {
 
     const datasetFormFields = getForm(false);
     datasetFormFields.map((field) =>
-      console.log(`field ${field.label} validity`, field.validity && field.validity.valid, field.validity)
+      field.label
+        ? console.log(`field ${field.label} validity`, field.validity && field.validity.valid, field.validity)
+        : console.log("Invalid field -", field)
     );
+
+    DEBUG_MODE && console.log("Checking validation...");
 
     // Handle validation errors
     const fieldsFailedValidation = fieldsWithValidationErrors(datasetFormFields);
     DEBUG_MODE && fieldsFailedValidation && console.log("Validation Failed - ", fieldsFailedValidation);
-    if (fieldsFailedValidation) {
+    if (fieldsFailedValidation.length >= 1) {
       let validationMessage = [];
 
       fieldsFailedValidation.forEach((ffv) => {
@@ -573,11 +578,11 @@ const datasetSet = (dataset) => {
 };
 
 const fieldsWithValidationErrors = (fields) => {
-  DEBUG_MODE && console.log("Test form", fields);
   const nonValidFields = fields.filter((field) => field.valid === false);
   if (nonValidFields.length >= 1) {
+    DEBUG_MODE && console.log("Test form, non valid fields -", nonValidFields);
     return nonValidFields;
-  }
+  } else return [];
 };
 
 const updateFormState = (dataset) => {
@@ -807,12 +812,22 @@ const getAllFields = (fieldsArray, element) => {
 );
 
 const formLoadingElement = (loadingElem, state) => {
+  const arrowsSvg = loadingElem.children.filter((c) => c.type.toLowerCase() === "$w.vectorimage")[0];
   if (state === "start") {
-    loadingElem.customClassList.contains("form__loading-spin") && loadingElem.customClassList.add("form__loading-spin");
+    !arrowsSvg.customClassList.contains("form__loading-spin") && arrowsSvg.customClassList.add("form__loading-spin");
     loadingElem.expand();
   } else if (state === "end") {
-    loadingElem.customClassList.contains("form__loading-spin") &&
-      loadingElem.customClassList.remove("form__loading-spin");
+    arrowsSvg.customClassList.contains("form__loading-spin") && arrowsSvg.customClassList.remove("form__loading-spin");
     loadingElem.collapse();
   }
 };
+
+// $w("#testBtn-cladding").onClick(() => {
+//   const datasetFormFields = getForm(false);
+//   datasetFormFields.map((field) =>
+//     console.log(`field ${field.label} validity`, field.validity && field.validity.valid, field.validity)
+//   );
+//   // Handle validation errors
+//   const fieldsFailedValidation = fieldsWithValidationErrors(datasetFormFields);
+//   console.log(`${fieldsFailedValidation.length} Fields failed validation - ${fieldsFailedValidation}`);
+// });
