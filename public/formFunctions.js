@@ -872,39 +872,83 @@ export const getFormOptions = [
         elementID: "walls-field-monoPitch",
         showOptions: [
           { elementID: "wallsSides-field-monoPitch", optionValue: "yes", required: true },
-          { elementID: "wallMaterial-field-monoPitch", optionValue: "yes", required: true },
-          { elementID: "wallNumberOfPanelHeight-field-monoPitch", optionValue: "yes", required: true },
           {
-            elementID: "wallPanelHeight-field-monoPitch",
+            elementID: "wallMaterial-field-monoPitch",
             optionValue: "yes",
             required: true,
             showOptions: [
+              { elementID: "wallBrickBlockHeight-field-monoPitch", optionValue: "brick", required: true },
+              { elementID: "wallBrickBlockHeight-field-monoPitch", optionValue: "block", required: true },
+              { elementID: "wallBrickBlockHeight-field-monoPitch", optionValue: "concreteLegoBlock", required: true },
+              { elementID: "wallNumberOfPanelHeight-field-monoPitch", optionValue: "concretePanels", required: true },
               {
-                elementID: "wallPanelHeightCustom-field-monoPitch",
-                optionValue: "custom",
+                elementID: "wallPanelHeight-field-monoPitch",
+                optionValue: "concretePanels",
                 required: true,
+                showOptions: [
+                  {
+                    elementID: "wallPanelHeightCustom-field-monoPitch",
+                    optionValue: "custom",
+                    required: true,
+                  },
+                  {
+                    elementID: "wallPanelHeightCustom-text-monoPitch",
+                    optionValue: "custom",
+                    required: true,
+                  },
+                ],
               },
               {
-                elementID: "wallPanelHeightCustom-text-monoPitch",
-                optionValue: "custom",
+                elementID: "wallPanelThickness-field-monoPitch",
+                optionValue: "concretePanels",
                 required: true,
+                showOptions: [
+                  {
+                    elementID: "wallPanelThicknessCustom-field-monoPitch",
+                    optionValue: "custom",
+                    required: true,
+                  },
+                  {
+                    elementID: "wallPanelThicknessCustom-text-monoPitch",
+                    optionValue: "custom",
+                    required: true,
+                  },
+                ],
               },
-            ],
-          },
-          {
-            elementID: "wallPanelThickness-field-monoPitch",
-            optionValue: "yes",
-            required: true,
-            showOptions: [
+              { elementID: "wallNumberOfPanelHeight-field-monoPitch", optionValue: "massConcrete", required: true },
               {
-                elementID: "wallPanelThicknessCustom-field-monoPitch",
-                optionValue: "custom",
+                elementID: "wallPanelHeight-field-monoPitch",
+                optionValue: "massConcrete",
                 required: true,
+                showOptions: [
+                  {
+                    elementID: "wallPanelHeightCustom-field-monoPitch",
+                    optionValue: "custom",
+                    required: true,
+                  },
+                  {
+                    elementID: "wallPanelHeightCustom-text-monoPitch",
+                    optionValue: "custom",
+                    required: true,
+                  },
+                ],
               },
               {
-                elementID: "wallPanelThicknessCustom-text-monoPitch",
-                optionValue: "custom",
+                elementID: "wallPanelThickness-field-monoPitch",
+                optionValue: "massConcrete",
                 required: true,
+                showOptions: [
+                  {
+                    elementID: "wallPanelThicknessCustom-field-monoPitch",
+                    optionValue: "custom",
+                    required: true,
+                  },
+                  {
+                    elementID: "wallPanelThicknessCustom-text-monoPitch",
+                    optionValue: "custom",
+                    required: true,
+                  },
+                ],
               },
             ],
           },
@@ -2334,39 +2378,87 @@ export const getFormOptions = [
         elementID: "buildingHasWalls-field-portalFrame",
         showOptions: [
           { elementID: "howManySidesWalls-field-portalFrame", optionValue: "yes", required: true },
-          { elementID: "wallMaterial-field-portalFrame", optionValue: "yes", required: true },
-          { elementID: "wallHeightInPanels-field-portalFrame", optionValue: "yes", required: true },
           {
-            elementID: "wallPanelHeight-field-portalFrame",
+            elementID: "wallMaterial-field-portalFrame",
             optionValue: "yes",
             required: true,
             showOptions: [
+              { elementID: "wallHeightBricksBlocks-field-portalFrame", optionValue: "brick", required: true },
+              { elementID: "wallHeightBricksBlocks-field-portalFrame", optionValue: "block", required: true },
               {
-                elementID: "wallPanelHeightCustom-field-portalFrame",
-                optionValue: "custom",
+                elementID: "wallHeightBricksBlocks-field-portalFrame",
+                optionValue: "concreteLegoBlock",
                 required: true,
               },
+              { elementID: "wallHeightInPanels-field-portalFrame", optionValue: "massConcrete", required: true },
               {
-                elementID: "wallPanelHeightCustom-text-portalFrame",
-                optionValue: "custom",
+                elementID: "wallPanelHeight-field-portalFrame",
+                optionValue: "massConcrete",
                 required: true,
+                showOptions: [
+                  {
+                    elementID: "wallPanelHeightCustom-field-portalFrame",
+                    optionValue: "custom",
+                    required: true,
+                  },
+                  {
+                    elementID: "wallPanelHeightCustom-text-portalFrame",
+                    optionValue: "custom",
+                    required: true,
+                  },
+                ],
               },
-            ],
-          },
-          {
-            elementID: "wallPanelThickness-field-portalFrame",
-            optionValue: "yes",
-            required: true,
-            showOptions: [
               {
-                elementID: "wallPanelThicknessCustom-field-portalFrame",
-                optionValue: "custom",
+                elementID: "wallPanelThickness-field-portalFrame",
+                optionValue: "massConcrete",
                 required: true,
+                showOptions: [
+                  {
+                    elementID: "wallPanelThicknessCustom-field-portalFrame",
+                    optionValue: "custom",
+                    required: true,
+                  },
+                  {
+                    elementID: "wallPanelThicknessCustom-text-portalFrame",
+                    optionValue: "custom",
+                    required: true,
+                  },
+                ],
+              },
+              { elementID: "wallHeightInPanels-field-portalFrame", optionValue: "concretePanels", required: true },
+              {
+                elementID: "wallPanelHeight-field-portalFrame",
+                optionValue: "concretePanels",
+                required: true,
+                showOptions: [
+                  {
+                    elementID: "wallPanelHeightCustom-field-portalFrame",
+                    optionValue: "custom",
+                    required: true,
+                  },
+                  {
+                    elementID: "wallPanelHeightCustom-text-portalFrame",
+                    optionValue: "custom",
+                    required: true,
+                  },
+                ],
               },
               {
-                elementID: "wallPanelThicknessCustom-text-portalFrame",
-                optionValue: "custom",
+                elementID: "wallPanelThickness-field-portalFrame",
+                optionValue: "concretePanels",
                 required: true,
+                showOptions: [
+                  {
+                    elementID: "wallPanelThicknessCustom-field-portalFrame",
+                    optionValue: "custom",
+                    required: true,
+                  },
+                  {
+                    elementID: "wallPanelThicknessCustom-text-portalFrame",
+                    optionValue: "custom",
+                    required: true,
+                  },
+                ],
               },
             ],
           },
@@ -3255,11 +3347,13 @@ export const getFormOptions = [
             elementID: "massConcreteWallThickness-field-wallsRepair",
             optionValue: "massConcrete",
             required: true,
-          },
-          {
-            elementID: "massConcreteWallThicknessOther-field-wallsRepair",
-            optionValue: "massConcrete",
-            required: true,
+            showOptions: [
+              {
+                elementID: "massConcreteWallThicknessOther-field-wallsRepair",
+                optionValue: "custom",
+                required: true,
+              },
+            ],
           },
           {
             elementID: "concreteLegoSize-field-wallsRepair",
@@ -3409,6 +3503,16 @@ export const getFormOptions = [
                 required: true,
               },
               {
+                elementID: "numberOfRollerDoorsEaves-field-doorsRepair",
+                optionValue: "underEaves",
+                required: true,
+              },
+              {
+                elementID: "numberOfRollerDoorsGable-field-doorsRepair",
+                optionValue: "gabledEnd",
+                required: true,
+              },
+              {
                 elementID: "rollerDoorsGableWidth-field-doorsRepair",
                 optionValue: "gableEnd",
                 required: true,
@@ -3438,22 +3542,30 @@ export const getFormOptions = [
                 optionValue: "both",
                 required: true,
               },
-            ],
-          },
-          {
-            elementID: "rollerDoorsNumber-field-doorsRepair",
-            optionValue: "rollerShutter",
-            required: true,
-            showOptions: [
               {
-                elementID: "rollerDoorsNumberCustom-field-doorsRepair",
-                optionValue: "custom",
+                elementID: "numberOfRollerDoorsEaves-field-doorsRepair",
+                optionValue: "both",
+                required: true,
+              },
+              {
+                elementID: "numberOfRollerDoorsGable-field-doorsRepair",
+                optionValue: "both",
                 required: true,
               },
             ],
           },
           {
-            elementID: "rollerDoorsBirdBrush-field-doorsRepair",
+            elementID: "fireDoors-field-doorsRepair",
+            optionValue: "fire",
+            required: true,
+          },
+          {
+            elementID: "rollerShutterLine-field-doorsRepair",
+            optionValue: "rollerShutter",
+            required: true,
+          },
+          {
+            elementID: "rollerShutterSubtitle-field-doorsRepair",
             optionValue: "rollerShutter",
             required: true,
           },
@@ -3488,6 +3600,26 @@ export const getFormOptions = [
                 required: true,
               },
             ],
+          },
+          {
+            elementID: "personnelDoorsLine-field-doorsRepair",
+            optionValue: "personnel",
+            required: true,
+          },
+          {
+            elementID: "personnelDoorsSubtitle-field-doorsRepair",
+            optionValue: "personnel",
+            required: true,
+          },
+          {
+            elementID: "flatSheetDoorsLine-field-doorsRepair",
+            optionValue: "flatSheet",
+            required: true,
+          },
+          {
+            elementID: "flatSheetDoorsSubtitle-field-doorsRepair",
+            optionValue: "flatSheet",
+            required: true,
           },
           {
             elementID: "flatSheetPlacement-field-doorsRepair",
