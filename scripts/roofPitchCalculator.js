@@ -1,16 +1,21 @@
-export function calculatePitch() {
-  let hyp = Number.parseFloat($w("#sideOne").value);
-  let run = Number.parseFloat($w("#sideTwo").value);
-  let rise = Number.parseFloat($w("#sideThree").value);
+export const calculatePitch = (sideOne, sideTwo, sideThree) => {
+  let hyp = Number.parseFloat(sideOne);
+  let run = Number.parseFloat(sideTwo);
+  let rise = Number.parseFloat(sideThree);
 
-  // Find hypotenuse
+  // Ensure at least two sides are provided
+  if ((!hyp && !run) || (!hyp && !rise) || (!run && !rise)) {
+    return { error: "At least two sides must be provided" };
+  }
+
+  // Calculate missing side
   if (!hyp) hyp = Math.sqrt(run * run + rise * rise);
-  // Find run
   if (!run) run = Math.sqrt(hyp * hyp - rise * rise);
-  // Find rise
   if (!rise) rise = Math.sqrt(hyp * hyp - run * run);
 
-  const pitch = ((rise / run) * (180 / Math.PI)).toFixed();
+  // Calculate pitch
+  const pitchInDegrees = Math.atan(rise / run) * (180 / Math.PI);
+  const pitch = pitchInDegrees.toFixed(1);
 
   if ((!hyp && !run) || (!hyp && !rise) || (!run && !rise)) {
     $w("#roofPitchError").show();
@@ -18,4 +23,4 @@ export function calculatePitch() {
     $w("#roofPitchShowText").show();
     $w("#roofPitchShowText").text = "Roof Pitch:" + " " + pitch + "°";
   }
-}
+};
