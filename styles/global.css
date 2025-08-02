@@ -1,3 +1,7 @@
+/* ========================================
+   CSS VARIABLES
+======================================== */
+
 :root {
   --mainOrange: #ed6a20;
   --mainPurple: #562b86;
@@ -5,7 +9,14 @@
   --greenColour: #02c41a;
   --border: 1px solid var(--mainOrange);
   --borderRadius: 8px;
+  --font-size-small: clamp(12px, 0.8rem, 18px);
+  --font-size-medium: clamp(14px, 1rem, 22px);
+  --font-size-large: clamp(16px, 1.2rem, 24px);
 }
+
+/* ========================================
+   UTILITY CLASSES
+======================================== */
 
 .flexRow {
   display: flex;
@@ -42,6 +53,10 @@
   cursor: pointer;
 }
 
+/* ========================================
+   LAYOUT COMPONENTS
+======================================== */
+
 section:has(.qms_formContainer) {
   height: fit-content !important;
   max-height: unset !important;
@@ -59,38 +74,6 @@ section:has(.qms_formContainer) {
 
 .triggerBtnContainer {
   z-index: 9999;
-}
-
-/* Styles for Mat testing */
-
-@media screen and (min-width: 750px) {
-  .responsiveStack {
-    height: 0px;
-    opacity: 0;
-    overflow: hidden;
-  }
-
-  .responsiveStack--expand {
-    transition: height 2s, opacity 0.8s;
-    opacity: 1;
-    height: 70vh !important;
-    max-height: fit-content !important;
-  }
-}
-
-/* Mobile Style */
-@media screen and (max-width: 750px) {
-  #quoteFormContainer {
-    /* overflow-y: scroll; */
-    background-color: green !important;
-    padding-top: 1rem;
-    border-top: 2px solid gray;
-  }
-
-  .quoteFormChildContainer {
-    width: 100%;
-    max-height: 250px;
-  }
 }
 
 header > section {
@@ -115,7 +98,9 @@ div[data-hook="product"] fieldset[data-hook="product-quantity"] {
   display: none;
 }
 
-/* FORM STYLES */
+/* ========================================
+   FORM COMPONENTS
+======================================== */
 
 .formSection {
   padding: 1%;
@@ -125,6 +110,24 @@ div[data-hook="product"] fieldset[data-hook="product-quantity"] {
 
 .formSection * {
   max-width: 100%;
+  color: black;
+}
+
+.formSection .button,
+.formSection [data-testid="upload-button"] {
+  width: 250px;
+  max-width: 250px;
+  height: 50px;
+  max-height: 50px;
+  background-color: var(--mainOrange);
+  border-radius: 2rem !important;
+}
+
+.formSection .button__label,
+.formSection .upload-button__label {
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 600;
 }
 
 .formSection .formStack {
@@ -135,11 +138,12 @@ div[data-hook="product"] fieldset[data-hook="product-quantity"] {
 .formSection .formStack > div,
 .formSection .formStack > div[class*=" form__"]:not(.form__multiSelect) {
   width: 100%;
+  margin-bottom: 1.5rem;
 }
 
-.formSection .formStack > div,
-.formSection .formStack > div[class*=" form__"]:not(.form__multiSelect):not(:last-child) {
-  margin-bottom: 1.5rem;
+.formSection .formStack > div:last-child,
+.formSection .formStack > div[class*=" form__"]:last-child {
+  margin-bottom: 0;
 }
 
 .formSection .formStack > div:last-child,
@@ -149,24 +153,12 @@ div[data-hook="product"] fieldset[data-hook="product-quantity"] {
   max-width: 100%;
 }
 
-.form__input:has(+ .rich-text) {
-  margin-bottom: 0.5rem;
+.form__imageSelect .repeater__item:hover {
+  transform: scale(1.025);
+  transition: transform 0.3s;
 }
 
-.form__areaMeasure .form__input {
-  gap: 0.3rem;
-  height: 100%;
-  padding: 0.8rem;
-}
-
-.formStack input[type="text"],
-.formStack input[type="number"],
-.formStack input[type="email"],
-.formStack input[type="tel"] {
-  /* background: green; */
-  padding: 0.5rem;
-  border-radius: var(--borderRadius);
-}
+/* Main Text/Number form input styles */
 
 .form__input .text-input__input {
   border: var(--border);
@@ -179,10 +171,28 @@ div[data-hook="product"] fieldset[data-hook="product-quantity"] {
   border: 2px solid var(--mainOrange);
 }
 
+.form__areaMeasure .form__input {
+  gap: 0.3rem;
+  height: 100%;
+}
+
 .formStack .form__units span {
   color: #545454;
   font-size: 2rem;
   letter-spacing: -1px;
+}
+
+.form__dualInputBox {
+  display: flex;
+  gap: 45px;
+  flex-direction: row;
+  justify-content: left;
+  width: 100%;
+}
+
+.form__dualInputBox .form__input {
+  width: 50%;
+  max-width: 350px;
 }
 
 .formStack > div:has(.form__input + .form__units) {
@@ -211,10 +221,6 @@ div[data-hook="product"] fieldset[data-hook="product-quantity"] {
   max-width: 94%;
 }
 
-.formStack .text-input {
-  max-width: 400px;
-}
-
 .formSection .form__line {
   max-width: 50%;
   min-width: 30%;
@@ -226,24 +232,13 @@ div[data-hook="product"] fieldset[data-hook="product-quantity"] {
 }
 
 .form__dropdown .dropdown__input {
-  /* border: var(--border); */
-  border: 2px solid var(--mainOrange);
+  border: 1px solid var(--mainOrange);
   border-radius: var(--borderRadius);
-}
-
-.form__dropdown .dropdown__list {
-  background-color: green;
-  color: red;
 }
 
 .formSection .form__dropdown,
 .formSection .form__upload {
   width: 99%;
-}
-
-.form__upload [data-testid="upload-button"] {
-  background-color: var(--mainOrange);
-  border-radius: 2rem;
 }
 
 .formSection .form__radio {
@@ -265,8 +260,19 @@ div[data-hook="product"] fieldset[data-hook="product-quantity"] {
   border-color: var(--mainOrange) !important;
 }
 
-.form__checkboxes {
+.form__checkboxes,
+.form__radio,
+.form__input:not(.text-box) {
   min-height: auto;
+}
+
+.formStack .text-box {
+  min-height: 8rem;
+}
+
+.radio-button-group__option:hover .radio-button-group__input,
+.form__checkboxes label:hover > .checkbox__input {
+  background-color: var(--mainOrange);
 }
 
 .form__checkboxes .checkbox-group__label {
@@ -284,17 +290,21 @@ div[data-hook="product"] fieldset[data-hook="product-quantity"] {
 
 .form__checkboxes [data-testid="items"] {
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: start;
   flex-wrap: wrap;
   align-items: center;
 }
 
 .form__checkboxes label [data-testid="items"] {
-  font-size: clamp(14px, 1rem, 22px);
+  font-size: var(--font-size-medium);
 }
 
 .form__checkboxes div[data-testid="items"] > label {
   width: 30%;
+}
+
+.form__checkboxes .wixui-checkbox__icon {
+  fill: var(--mainPurple) !important;
 }
 
 .form__radio [data-testid="radioGroup"] > label {
@@ -328,11 +338,11 @@ div[class*=" form__"] label:not(.form__multiSelect label),
   font-weight: bold;
   word-break: keep-all;
   margin: 0 0 0.75rem;
-  font-size: clamp(14px, 1rem, 22px);
+  font-size: var(--font-size-medium);
 }
 
 div[class*=" form__"] input {
-  font-size: clamp(12px, 0.8rem, 22px);
+  font-size: var(--font-size-small);
 }
 
 .form__multiSelect > div {
@@ -366,49 +376,18 @@ div[class*=" form__"] input {
 
 .form__radio div[data-testid="label"] {
   word-break: keep-all;
-  font-size: clamp(12px, 0.8rem, 22px);
+  font-size: var(--font-size-small);
 }
 
 .formSection p:not(.form__areaMeasure p) {
   word-break: keep-all;
-  font-size: clamp(12px, 0.8rem, 22px);
+  font-size: var(--font-size-small);
   color: #6b6b6b;
 }
 
 .formSection h1 {
   font-weight: bold;
   word-break: keep-all;
-}
-
-/* Mobile Style */
-@media screen and (max-width: 750px) {
-  .formSection h1 {
-    font-size: clamp(16px, 1.5rem, 32px);
-  }
-}
-
-/* Tablet Style */
-@media screen and (max-width: 1000px) {
-  .formSection h1 {
-    font-size: clamp(32px, 1.5rem, 32px);
-  }
-}
-
-@media screen and (min-width: 1000px) {
-  .formSection h1 {
-    font-size: clamp(48px, 1.5rem, 32px);
-  }
-}
-.form__diagramContainer {
-  border: 1px solid green;
-}
-.form__dimensionsStack {
-  border: 2px solid green;
-  width: 100%;
-}
-.form__imagesStack {
-  border: 2px solid pink;
-  width: 100%;
 }
 
 .form__imagesStack > * {
@@ -418,7 +397,7 @@ div[class*=" form__"] input {
 .form__sectiontext {
   word-break: keep-all;
   margin: 0 0 0.75rem;
-  font-size: clamp(12px, 0.8rem, 22px);
+  font-size: var(--font-size-small);
 }
 
 .form__contact--ab div:has(> input[type*="search"])::after,
@@ -436,6 +415,20 @@ div[class*=" form__"] input {
   animation: pulse 0.8s forwards;
 }
 
+.form__loading-spin {
+  animation: spin 1s linear infinite;
+}
+
+@media screen and (max-width: 750px) {
+  .form__toolPanel .button__icon {
+    transform: scale(0.8);
+  }
+}
+
+/* ========================================
+   ANIMATIONS
+======================================== */
+
 @keyframes pulse {
   0% {
     transform: scale(1);
@@ -448,15 +441,78 @@ div[class*=" form__"] input {
   }
 }
 
-.form__loading-spin {
-  animation: spin 1s linear infinite;
-}
-
 @keyframes spin {
   0% {
     transform: rotate(0deg);
   }
   100% {
     transform: rotate(360deg);
+  }
+}
+
+/* ========================================
+   MEDIA QUERIES
+======================================== */
+
+/* Mobile (max-width: 750px) */
+@media screen and (max-width: 750px) {
+  #quoteFormContainer {
+    padding-top: 1rem;
+    border-top: 2px solid gray;
+  }
+
+  .quoteFormChildContainer {
+    width: 100%;
+    max-height: 250px;
+  }
+
+  .formSection h1 {
+    font-size: var(--font-size-large);
+  }
+
+  .form__toolPanel .button__icon {
+    transform: scale(0.8);
+  }
+
+  .form__radio [data-testid="radioGroup"] {
+    justify-content: space-between;
+  }
+
+  .form__dualInputBox {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    justify-content: left;
+    width: 100%;
+  }
+}
+
+/* Tablet (max-width: 1000px) */
+@media screen and (max-width: 1000px) {
+  .formSection h1 {
+    font-size: clamp(32px, 1.5rem, 32px);
+  }
+}
+
+/* Desktop (min-width: 750px) */
+@media screen and (min-width: 750px) {
+  .responsiveStack {
+    height: 0px;
+    opacity: 0;
+    overflow: hidden;
+  }
+
+  .responsiveStack--expand {
+    transition: height 2s, opacity 0.8s;
+    opacity: 1;
+    height: 70vh !important;
+    max-height: fit-content !important;
+  }
+}
+
+/* Large Desktop (min-width: 1000px) */
+@media screen and (min-width: 1000px) {
+  .formSection h1 {
+    font-size: clamp(48px, 1.5rem, 32px);
   }
 }
