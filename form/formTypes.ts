@@ -30,6 +30,7 @@ type MonoPitchForm = {
     wallPanelHeight: string;
     wallPanelHeightCustom: string;
     wallHowManyPanelsHigh: string;
+    walls_wallBrickBlockHeightM: string;
     wallPanelThickness: string;
     wallPanelThicknessCustom: string;
   };
@@ -48,6 +49,7 @@ type MonoPitchForm = {
     roofLightsPerBay: string;
     roofLightsPerBayCustom: string;
     roofHasCantilever: string;
+    cantileverSize: number;
     cantileverSide: string;
     roofRidgeCaps: string;
     solarPanels: string;
@@ -63,6 +65,7 @@ type MonoPitchForm = {
     cladding_claddingWidthWindbreaker: string;
     cladding_claddingHeightWindbreaker: string;
     cladding_claddingWallWidthWindbreaker: string;
+    cladding_claddingColourWindbreaker: string;
     claddingCompositeThickness: string;
     claddingTimberBoardType: string;
     claddingBoxProfileType: string;
@@ -72,6 +75,15 @@ type MonoPitchForm = {
     guttering: string;
     cladding_matchExistingGuttering: string;
     cladding_gutteringTypeShape: string;
+    cladding_gutteringSideAmm: number;
+    cladding_gutteringSideBmm: number;
+    cladding_gutteringSideCmm: number;
+    cladding_gutteringSideDmm: number;
+    cladding_gutteringSideEmm: number;
+    cladding_gutteringSideFmm: number;
+    cladding_gutteringSideGmm: number;
+    cladding_gutteringAngle2degrees: number;
+    cladding_gutteringAngle1degrees: number;
     cladding_gutteringColour: string;
     cladding_gutteringDownpipeSize: string;
     cladding_gutteringRainwaterCatchment: string;
@@ -82,8 +94,10 @@ type MonoPitchForm = {
     rollerDoorLocation: string;
     doors_numberOfRollerDoorsGableEnd: number;
     doors_numberOfRollerDoorsUnderEaves: number;
-    rollerDoorWidth: number;
-    rollerDoorHeight: number;
+    doors_rollerDoorWidthUnderEavesM: number;
+    doors_rollerDoorWidthGableEndM: number;
+    doors_rollerDoorHeightGableEndM: number;
+    doors_rollerDoorHeightUnderEavesM: number;
     rollerDoorBirdBrush: string;
     rollerDoorRubberFloorSeal: string;
     rollerDoorPowerFeed: string;
@@ -92,6 +106,17 @@ type MonoPitchForm = {
     personnelDoorWidth: string;
     personnelDoorsAreFireDoors: string;
     numberOfFireEscapeDoors: string;
+    doors_flatSheetDoor: string;
+    doors_flatSheetDoorPlacement: string;
+    doors_flatSheetDoorUnderEavesPosition: string;
+    doors_numberOfFlatSheetDoorsUnderEaves: string;
+    doors_numberOfFlatSheetDoorsGableEnd: string;
+    doors_flatSheetDoorUnderEavesWidth: string;
+    doors_flatSheetDoorGableEndWidth: string;
+    doors_flatSheetDoorUnderEavesHeight: string;
+    doors_flatSheetDoorGableEndHeight: string;
+    doors_flatSheetDoorOption: string;
+    doors_flatSheetDoorColour: string;
   };
   floor: {
     concretedFloor: string;
@@ -211,6 +236,9 @@ type portalFrameForm = {
     details_buildingBayWidth: number;
     details_steelOptions: string;
     details_buildingType: string;
+    details_existingPostDimensionA: number;
+    details_existingPostDimensionB: number;
+    details_existingPostDimensionC: number;
     details_roofPitch: string;
     details_roofPitchCustom: string;
     details_additionalNotes: string;
@@ -220,6 +248,7 @@ type portalFrameForm = {
     walls_buildingHasWalls: string;
     walls_howManySidesHaveWalls: number;
     walls_wallMaterial: string;
+    walls_wallBrickBlockHeightM: number;
     walls_wallPanelHeight: string;
     walls_wallPanelHeightCustom: string;
     walls_wallPanelThickness: string;
@@ -229,6 +258,7 @@ type portalFrameForm = {
   roof: {
     roof_purlins: string;
     roof_cantilever: string;
+    roof_CantileverSize: number;
     roof_roofMaterial: string;
     roof_fiberCementColour: string;
     roof_roofColour: string;
@@ -255,13 +285,16 @@ type portalFrameForm = {
     doors_numberOfRollerDoorsCustom: string;
     doors_numberOfRollerDoorsGableEnd: number;
     doors_numberOfRollerDoorsUnderEaves: number;
-    doors_rollerDoorwayWidth: number;
-    doors_rollerDoorwayHeight: number;
+    doors_rollerDoorwayWidthUnderEavesMm: number;
+    doors_rollerDoorwayWidthGableEndMm: number;
+    doors_rollerDoorwayHeightUnderEavesMm: number;
+    doors_rollerDoorwayHeightUnderEavesM: number;
     doors_rollerDoorBirdBrush: string;
     doors_rollerDoorRubberFloorSeal: string;
     doors_rollerDoorPowerFeed: string[];
     doors_flatSheetDoor: string;
     doors_flatSheetDoorPlacement: string;
+    doors_flatSheetDoorUnderEavesPostition: string;
     doors_numberOfDoorsUnderEavesFlatSheet: string;
     doors_numberOfDoorsGableEndFlatSheet: string;
     doors_eavesDoorWidthFlatSheet: string;
@@ -294,6 +327,15 @@ type portalFrameForm = {
     cladding_gutteringOutlets: number;
     cladding_matchExistingGuttering: string;
     cladding_gutteringTypeShape: string;
+    cladding_gutteringSideAmm: number;
+    cladding_gutteringSideBmm: number;
+    cladding_gutteringSideCmm: number;
+    cladding_gutteringSideDmm: number;
+    cladding_gutteringSideEmm: number;
+    cladding_gutteringSideFmm: number;
+    cladding_gutteringSideGmm: number;
+    cladding_gutteringAngle2degrees: number;
+    cladding_gutteringAngle1degrees: number;
     cladding_gutteringColour: string;
     cladding_gutteringDownpipe: string;
     cladding_gutteringRainwaterCatchment: string;
@@ -344,6 +386,7 @@ type roundHouseForm = {
   details: {
     details_roundHouseSize: string;
     details_animalHandlingInternals: string;
+    details_usage: string;
     details_siteRequiresLevelling: string;
     details_quoteForLevellingSite: string;
     details_siteImagesVideos: string;
@@ -490,6 +533,15 @@ type gutteringRepairForm = {
     details_gutteringTypeShape: string;
     details_sizeOfDownpipe: string;
     details_downpipeSize: string;
+    details_gutteringSideAmm: number;
+    details_gutteringSideBmm: number;
+    details_gutteringSideCmm: number;
+    details_gutteringSideDmm: number;
+    details_gutteringSideEmm: number;
+    details_gutteringSideFmm: number;
+    details_gutteringSideGmm: number;
+    details_gutteringAngle2degrees: number;
+    details_gutteringAngle1degrees: number;
     details_gutteringColour: string;
     details_rainwaterCatchment: string;
     details_rainwaterCatchmentTank: string;
@@ -498,6 +550,8 @@ type gutteringRepairForm = {
     details_buildingLength: string;
     details_buildingWidth: string;
     details_buildingHeight: string;
+    details_roofPitch: number;
+    details_roofPitchUnits: string;
     details_siteImageVideoUpload: string;
   };
   contact: {
@@ -571,10 +625,13 @@ type doorsRepairForm = {
     details_removeOldDoor: string;
     details_doorType: string[];
     details_rollerShutterDoorLocation: string;
-    details_numberOfRollerShutterDoors: string;
-    details_numberOfRollerShutterDoorsCustom: string;
-    details_rollerShutterDoorWidthM: string;
-    details_rollerShutterDoorHeightM: string;
+    details_rollerShutterPositionUnderEaves: string;
+    details_rollerShutterDoorsUnderEaves: number;
+    details_rollerShutterDoorsGableEnd: number;
+    details_rollerShutterDoorWidthUnderEavesM: number;
+    details_rollerShutterDoorWidthGableEndM: number;
+    details_rollerShutterDoorHeightUnderEavesM: number;
+    details_rollerShutterDoorHeightGableEndM: number;
     details_rollerShutterDoorBirdBrush: string;
     details_rollerShutterDoorRubberBirdSeal: string;
     details_rollerShutterDoorPowerFeed: string;
@@ -582,6 +639,16 @@ type doorsRepairForm = {
     details_personnelDoorWidth: string;
     details_arePersonnelDoorsFireDoors: string;
     details_numberOfPersonnelFireDoors: string;
+    details_flatSheetDoorPlacement: string;
+    details_numberOfFlatSheetDoorsUnderEaves: string;
+    details_numberOfFlatSheetDoorsGableEnd: string;
+    details_flatSheetDoorWidthUnderEaves: string;
+    details_flatSheetDoorWidthGableEnd: string;
+    details_flatSheetDoorHeightUnderEaves: string;
+    details_flatSheetDoorHeightGableEnd: string;
+    details_flatSheetDoorFinish: string;
+    details_flatSheetDoorColour: string;
+    details_additionalNotes: string;
     details_doorImageVideoUploads: any;
   };
   contact: {
@@ -659,6 +726,11 @@ type reRoofRepairForm = {
 type claddingRepairForm = {
   details: {
     details_claddingHeight: string;
+    details_measurementUnits: string;
+    details_buildingLength: string;
+    details_buildingWidth: string;
+    details_roofPitch: number;
+    details_roofPitchUnits: string;
     details_claddingType: string;
     details_claddingTypesSelected: string[];
     details_claddingColourComposite: string;
@@ -668,6 +740,10 @@ type claddingRepairForm = {
     details_timberBoardType: string;
     details_boxProfileType: string;
     details_corrugatedSheetType: string;
+    details_windbreakerDimensionA: string;
+    details_windbreakerDimensionB: string;
+    details_windbreakerDimensionC: string;
+    details_windbreakerColour: string;
     details_siteImageUpload: string;
   };
   contact: {
