@@ -8,7 +8,7 @@ import { getFormOptions } from "public/formFunctions";
 // Add input__required class to fields where input is required - it should add the '*'
 // capcha auth needs to be awaited - i think?
 
-let version = "000417";
+let version = "000426";
 let mapCreds;
 let measurementUnits;
 let formName;
@@ -222,230 +222,6 @@ const loadForm = (formName) => {
   // update progress bar
   progressBar.value = 0;
 
-  // const handleFormChange = (field, ev) => {
-  //   console.log("FORM CHANGE FIRED", !!field, !!ev);
-  //   let fieldVal = !ev ? field.value : ev.target.value;
-  //   let fieldId = !ev ? field.id : ev.target.id;
-
-  //   DEBUG_MODE &&
-  //     console.log(
-  //       "Field Changed:",
-  //       ev.target.label ?? fieldId,
-  //       "\n",
-  //       "Field Details:",
-  //       field,
-  //       "\n",
-  //       "Field Value:",
-  //       field.value,
-  //       "Raw text -",
-  //       `|${field.value}|`,
-  //       "\n",
-  //       "Field Valid:",
-  //       field.validity && field.validity.valid
-  //     );
-
-  //   console.log("Has subfields - ", !!formOptions.find((o) => o.formName === formName));
-
-  //   console.log("Field parent parent", field.parent.parent.id);
-  //   if (field.parent.parent.id.includes("contactDetails")) {
-  //     try {
-  //       console.log("Adding tick to...", field.parent.id, "parent of", field.id, "type", field.type);
-
-  //       if (field.type !== "$w.AddressInput") {
-  //         console.log("non address input");
-  //         field.valid && field.customClassList.add("form__contact");
-  //         !field.valid &&
-  //           field.customClassList.contains("form__contact") &&
-  //           field.customClassList.remove("form__contact");
-  //       } else if (field.type === "$w.AddressInput") {
-  //         console.log("Address input adding class to", field.parent.id);
-  //         field.valid && field.parent.customClassList.add("form__contact--ab");
-  //         !field.valid &&
-  //           field.parent.customClassList.contains("form__contact--ab") &&
-  //           field.parent.customClassList.remove("form__contact--ab");
-  //       }
-  //     } catch (error) {
-  //       console.log("Tick error:", error);
-  //     }
-  //   }
-
-  //   if (field.id.startsWith("measurementUnits-field")) {
-  //     measurementUnits = field.value === "metric" ? "m" : "ft";
-
-  //     const formFields = getForm(true);
-  //     if (formFields.find((f) => f.text && f.text === "units")) {
-  //       formFields
-  //         .filter((ff) => ff.text && ff.text === "units")
-  //         .forEach((ff) => {
-  //           ff.customClassList.add("form__units");
-  //           ff.text = measurementUnits;
-  //           ff.expand();
-  //         });
-  //     } else if (formFields.find((f) => f.customClassList.contains("form__units"))) {
-  //       formFields
-  //         .filter((ff) => ff.customClassList.contains("form__units"))
-  //         .forEach((ff) => {
-  //           ff.text = measurementUnits;
-  //         });
-  //     }
-  //   }
-
-  //   if (field.id.startsWith("polytunnelWidth-field-polytunnel")) {
-  //     let polytunnelHeightElement = $w("#polytunnelHeight-text-polytunnel");
-  //     let polytunnelHoopDistance = $w("#polytunnelHoopDistance-text-polytunnel");
-  //     if (fieldVal === "4.88m") {
-  //       polytunnelHeightElement.text = "8ft 6in";
-  //       polytunnelHoopDistance.text = "27ft 10in";
-  //     } else if (fieldVal === "5.49m") {
-  //       polytunnelHeightElement.text = "8ft 6in";
-  //       polytunnelHoopDistance.text = "29ft 6in";
-  //     } else if (fieldVal === "6.4m") {
-  //       polytunnelHeightElement.text = "9ft 9in";
-  //       polytunnelHoopDistance.text = "34ft 9in";
-  //     } else if (fieldVal === "7.32m") {
-  //       polytunnelHeightElement.text = "10ft";
-  //       polytunnelHoopDistance.text = "37ft 11in";
-  //     } else if (fieldVal === "8.23m") {
-  //       polytunnelHeightElement.text = "10ft 5in";
-  //       polytunnelHoopDistance.text = "39ft 4in";
-  //     } else if (fieldVal === "9.15m") {
-  //       polytunnelHeightElement.text = "11ft";
-  //       polytunnelHoopDistance.text = "43ft 6in";
-  //     }
-  //     polytunnelHeightElement.collapsed && polytunnelHeightElement.expand();
-  //     polytunnelHoopDistance.collapsed && polytunnelHoopDistance.expand();
-  //   }
-
-  //   if (field.value !== "" && !completedFields.includes(field.id)) {
-  //     updateBar(getForm(false), progressBar);
-  //   }
-
-  //   completedFields.push(field.id);
-
-  //   if (!!formOptions.find((o) => o.formName === formName)) {
-  //     const selectedForm = formOptions.find((o) => o.formName === formName);
-
-  //     const findMatch = (id, obj) => {
-  //       let matches = [];
-
-  //       const findMatchedId = (id, obj) => {
-  //         if (obj.elementID === id) {
-  //           matches.push(obj);
-  //         }
-
-  //         const checkArray = (array) => {
-  //           for (const item of array) {
-  //             if (typeof item === "object") {
-  //               findMatchedId(id, item);
-  //             }
-  //           }
-  //         };
-
-  //         if (obj.formFields) {
-  //           checkArray(obj.formFields);
-  //         }
-
-  //         if (obj.showOptions) {
-  //           checkArray(obj.showOptions);
-  //         }
-  //       };
-
-  //       findMatchedId(id, obj);
-  //       console.log("Matches:", matches);
-  //       return matches;
-  //     };
-
-  //     const idToSearch = fieldId;
-  //     const foundObject = findMatch(idToSearch, selectedForm);
-  //     console.log(`Found ${idToSearch} in ${selectedForm.formName}... ${foundObject}`);
-
-  //     const hideField = (input) => {
-  //       if (!input.elementID) {
-  //         DEBUG_MODE && console.log("(Remove)", "Error, no elementID found in ", input);
-  //         return;
-  //       }
-  //       // @ts-ignore
-  //       const wixElementRef = $w(`#${input.elementID}`);
-  //       if (wixElementRef.collapsed) return;
-
-  //       DEBUG_MODE && console.log("removing...", wixElementRef, input);
-
-  //       if (wixElementRef.required) {
-  //         wixElementRef.required = false;
-  //       }
-
-  //       // reset field and if subfields reset recursively
-  //       if (input.showOptions) {
-  //         input.showOptions.map((option) => {
-  //           DEBUG_MODE && console.log("Hiding subsub...", option);
-  //           hideField(option);
-
-  //           // if (option.showOptions) {
-  //           //   option.showOptions.map((subSubField) => {
-  //           //     console.log("Hiding subsub...", subSubField);
-  //           //     hideField(subSubField);
-  //           //   });
-  //           // }
-  //         });
-  //       }
-
-  //       if (wixElementRef.type && wixElementRef.type.toLowerCase().includes("input")) {
-  //         // wixElementRef.value = "";
-  //         wixElementRef.value = undefined;
-  //         wixElementRef.resetValidityIndication();
-  //       }
-  //       wixElementRef.collapse();
-  //     };
-
-  //     const showField = (input) => {
-  //       DEBUG_MODE && console.log("Adding to view...", input);
-  //       // @ts-ignore
-  //       const wixElementRef = $w(`#${input.elementID}`);
-  //       wixElementRef.type &&
-  //         wixElementRef.type.toLowerCase().includes("input") &&
-  //         wixElementRef.resetValidityIndication();
-  //       wixElementRef.collapsed && wixElementRef.expand();
-  //     };
-
-  //     const handleFormOptionFields = (formOptionObj, selectedValue) => {
-  //       let fieldValue = selectedValue.map((v) => lowerFirst(v));
-  //       DEBUG_MODE &&
-  //         console.log("handler fired...", [
-  //           { "Options to render": formOptionObj.showOptions.map((f) => f.elementID ?? "No elementID") },
-  //           { "element ID": formOptionObj.elementID },
-  //           { "input value": fieldValue },
-  //         ]);
-  //       if (formOptionObj.showOptions && formOptionObj.elementID) {
-  //         // is a top level?
-  //         // show subFields that match option
-  //         let showFieldsArray = formOptionObj.showOptions;
-  //         console.log("Show Fields:", JSON.stringify(showFieldsArray));
-
-  //         let showList = [];
-  //         let hideList = [];
-
-  //         showFieldsArray.forEach((showOption) => {
-  //           fieldValue.includes(showOption.optionValue) ? showList.push(showOption) : hideList.push(showOption);
-  //         });
-  //         // add fields to page that match option
-  //         showList.forEach((hf) => showField(hf));
-  //         // if elementID matches a shown field, filter out of hide list
-  //         hideList = hideList.filter((hf) => !showList.find((h) => h.elementID === hf.elementID));
-  //         // Hide non matching fields from page
-  //         hideList.forEach((hf) => hideField(hf));
-  //       }
-  //     };
-
-  //     foundObject.forEach((foundObj) => {
-  //       if (!foundObj) console.log("Error, no object found in ", foundObj);
-  //       console.log("Processing...", foundObj);
-  //       foundObj.showOptions && handleFormOptionFields(foundObj, [fieldVal].flat());
-  //     });
-  //   } else {
-  //     console.log("Form options not found for", formName);
-  //   }
-  // };
-
   fillableFormFields.forEach((field) => {
     field.onChange((ev) => handleFormChange(field, ev));
   });
@@ -499,14 +275,12 @@ const datasetSet = (dataset) => {
   const formGuid = crypto.randomUUID();
   const areaDetails = "";
 
-  console.log("GUID FIELD START -", selectedFormFields.guidField);
   const guidField = selectedFormFields.guidField;
   guidField.value = formGuid;
   activeDataset.element.setFieldValue("formGuid", formGuid);
-  console.log("GUID FIELD -", guidField, guidField.value);
 
-  // activeDataset.element.onBeforeSave(async () => {
-  activeDataset.element.onBeforeSave(() => {
+  activeDataset.element.onBeforeSave(async () => {
+    // activeDataset.element.onBeforeSave(() => {
     DEBUG_MODE && console.log("Submit form fired...");
     selectedFormFields.submitBtn.disable();
     DEBUG_MODE && console.log("Submit Button state -", selectedFormFields.submitBtn);
@@ -528,17 +302,13 @@ const datasetSet = (dataset) => {
     // }
 
     const datasetFormFields = getForm(false);
-    datasetFormFields.map((field) =>
-      field.label
-        ? console.log(`field ${field.label} validity`, field.validity && field.validity.valid, field.validity)
-        : console.log("Invalid field -", field)
-    );
+    datasetFormFields.map((field) => !field.label && console.log("Invalid field -", field));
 
     DEBUG_MODE && console.log("Checking validation...");
 
     // Handle validation errors
     const fieldsFailedValidation = fieldsWithValidationErrors(datasetFormFields);
-    DEBUG_MODE && fieldsFailedValidation && console.log("Validation Failed - ", fieldsFailedValidation);
+    DEBUG_MODE && fieldsFailedValidation.length >= 1 && console.log("Validation Failed - ", fieldsFailedValidation);
     if (fieldsFailedValidation.length >= 1) {
       let validationMessage = [];
 
@@ -601,7 +371,6 @@ const updateFormState = (dataset) => {
   if (dataset) {
     let formTitle = $w("#formTitle");
     formName = formState.quoteFormId.replace("-content", "");
-    console.log("FORMNAME", formName);
     selectedFormFields = formFields.find((fc) => fc.formContainer.id === formName);
     selectedFormFields.imageElement.src = formState.image;
     selectedFormFields.imageElement.alt = formState.quoteTitle;
@@ -699,36 +468,23 @@ quoteTypeRepeaterChild.onClick((ev) => {
 
 // When guttering type is selected add the value to open question
 const gutteringClick = (el, targetElement) => {
-  console.log("EL", el);
   const parentEl = el.parent;
   el.onClick((e) => {
-    console.log("EL", el, "EL parent", parentEl, "El2 parent", el.parent, "TargetElement", targetElement);
     let selectedField = parentEl.data.find((item) => item._id === e.context.itemId);
-    console.log("selected field", selectedField);
 
-    console.log("pEl pre- ", parentEl.value, "Val -", selectedField.title);
     if (targetElement) {
-      console.log("Setting target Element...");
       targetElement.value = selectedField.title;
     }
-    console.log("pEl post- ", parentEl.value, "Val -", selectedField.title);
-    console.log("Seetting border...");
     // Style child elements
     parentEl.forEachItem(($item, itemData, i) => {
       $item(`#${el.id}`).style.borderWidth = "1px";
     });
     e.target.style.borderWidth = "5px";
-    console.log("Firing onchange... ");
     handleFormChange(targetElement);
-    console.log("Post onchange... ");
-    console.log("post border settings...");
   });
 };
 
-gutteringClick(gutteringRepairOptionElement, gutteringRepairOptionTarget);
-
 gutteringformElements.forEach((gutteringFormElement) => {
-  console.log("Adding onclick to -", JSON.stringify(gutteringFormElement));
   gutteringClick(gutteringFormElement.repeaterChild, gutteringFormElement.target);
 });
 
@@ -776,25 +532,16 @@ const updateBar = (f, b) => {
 };
 
 const setSlider = (fFields) => {
-  console.log("setSlider fired");
   let sliderEl = fFields.rangeSlider;
 
   let maxValue = sliderEl.max;
   let minValue = sliderEl.min;
 
   const textContainer = sliderEl.parent.children.filter((c) => c !== sliderEl);
-  console.log("rangeslider parents children -", sliderEl.parent.children, "textContainer -", textContainer);
-
-  console.log("tcont check", textContainer[0], "el check", textContainer[0].id);
-
-  console.log("MAX VALUE", maxValue, "MIN VALUE", minValue);
 
   try {
-    console.log("undefined check- ", textContainer[0].children);
     if (textContainer[0].customClassList.contains("form__sliderText")) {
       textContainer[0].children.map((el) => {
-        console.log("MAP - EL = ", el);
-        console.log("Contains fired");
         el.html = `<span style="text-align: left">${minValue}Km</span>`;
         el.html = `<span style="text-align: right">${maxValue}Km</span>`;
       });
@@ -879,12 +626,8 @@ const formLoadingElement = (loadingElem, state) => {
 };
 
 const handleFormChange = (field, ev) => {
-  console.log("FORM CHANGE FIRED", !!field, !!ev);
   let fieldVal = !ev ? field.value : ev.target.value;
   let fieldId = !ev ? field.id : ev.target.id;
-
-  console.log("checkpoint");
-
   DEBUG_MODE &&
     console.log(
       "Field Changed:",
@@ -902,21 +645,18 @@ const handleFormChange = (field, ev) => {
       field.validity && field.validity.valid
     );
 
-  console.log("Has subfields - ", !!formOptions.find((o) => o.formName === formName));
+  if (ev && ev.target.label === "First Name" && fieldVal === "test") {
+    autoCompleteConactForTesting(field.parent);
+  }
 
-  console.log("Field parent parent", field.parent.parent.id);
   if (field.parent.parent.id.includes("contactDetails")) {
     try {
-      console.log("Adding tick to...", field.parent.id, "parent of", field.id, "type", field.type);
-
       if (field.type !== "$w.AddressInput") {
-        console.log("non address input");
         field.valid && field.customClassList.add("form__contact");
         !field.valid &&
           field.customClassList.contains("form__contact") &&
           field.customClassList.remove("form__contact");
       } else if (field.type === "$w.AddressInput") {
-        console.log("Address input adding class to", field.parent.id);
         field.valid && field.parent.customClassList.add("form__contact--ab");
         !field.valid &&
           field.parent.customClassList.contains("form__contact--ab") &&
@@ -1009,13 +749,11 @@ const handleFormChange = (field, ev) => {
       };
 
       findMatchedId(id, obj);
-      console.log("Matches:", matches);
       return matches;
     };
 
     const idToSearch = fieldId;
     const foundObject = findMatch(idToSearch, selectedForm);
-    console.log(`Found ${idToSearch} in ${selectedForm.formName}... ${foundObject}`);
 
     const hideField = (input) => {
       if (!input.elementID) {
@@ -1077,7 +815,6 @@ const handleFormChange = (field, ev) => {
         // is a top level?
         // show subFields that match option
         let showFieldsArray = formOptionObj.showOptions;
-        console.log("Show Fields:", JSON.stringify(showFieldsArray));
 
         let showList = [];
         let hideList = [];
@@ -1096,10 +833,128 @@ const handleFormChange = (field, ev) => {
 
     foundObject.forEach((foundObj) => {
       if (!foundObj) console.log("Error, no object found in ", foundObj);
-      console.log("Processing...", foundObj);
       foundObj.showOptions && handleFormOptionFields(foundObj, [fieldVal].flat());
     });
   } else {
     console.log("Form options not found for", formName);
   }
+};
+
+const li = $w("#digoutLength-field-concreteSlab");
+const wi = $w("#digoutWidth-field-concreteSlab");
+const di = $w("#digoutDepth-field-concreteSlab");
+const volFields = [li, wi, di];
+const vrb = $w("#volumeResult-field-concreteSlab");
+const vrl = $w("#volumeResultLabel-field-concreteSlab");
+const arb = $w("#areaResult-field-concreteSlab");
+const arl = $w("#areaResultLabel-field-concreteSlab");
+const eb = $w("#volumeError-field-concreteSlab");
+
+const calculateVolume = (li, wi, di, rb, rl) => {
+  const l = parseFloat(li.value);
+  const w = parseFloat(wi.value);
+  const d = parseFloat(di.value);
+
+  if (isNaN(l) || isNaN(w) || isNaN(d)) {
+    eb.text = "Please enter all dimensions.";
+    rl.collapse();
+    return;
+  }
+
+  const v = l * w * d;
+  const res = v.toFixed(2);
+  rl.expand();
+  rb.text = `${res}m³`;
+};
+
+const calculateArea = (li, wi, rb, rl) => {
+  const l = parseFloat(li.value);
+  const w = parseFloat(wi.value);
+  const d = parseFloat(di.value);
+
+  if (isNaN(l) || isNaN(w)) {
+    eb.text = "Please enter all dimensions.";
+    rl.collapse();
+    return;
+  }
+
+  const v = l * w;
+  const res = v.toFixed(2);
+
+  rl.expand();
+  rb.text = `${res}m²`;
+};
+
+const autoCalculate = (l, w, d) => {
+  if (!isNaN(l.value) && !isNaN(w.value) && !isNaN(d.value)) {
+    calculateArea(l, w, arb, arl);
+  }
+  if (isNaN(l.value) || isNaN(w.value) || isNaN(d.value)) {
+    return;
+  }
+  calculateVolume(l, w, d, vrb, vrl);
+};
+
+$w("#volumeCalc-button-concreteSlab").onClick(() => calculateVolume(li, wi, di, vrb, vrl));
+
+volFields.forEach((f) =>
+  f.onBlur((e) => {
+    autoCalculate(li, wi, di);
+  })
+);
+
+const autoCompleteConactForTesting = (contactFields) => {
+  const cInputs = contactFields.children;
+
+  const firstName = cInputs.find((f) => f.id.includes("first"));
+  const lastName = cInputs.find((f) => f.id.includes("last"));
+  const company = cInputs.find((f) => f.id.includes("company"));
+  const email = cInputs.find((f) => f.id.includes("email"));
+  const phone = cInputs.find((f) => f.id.includes("phone"));
+  const address = cInputs.find((f) => f.id.includes("address"));
+
+  firstName.value = "Test";
+  lastName.value = "User";
+  company.value = "Test Company Ltd";
+  email.value = "testuser@test.com";
+  phone.value = `07123456789`;
+  address.value = {
+    formatted: "Teston, Maidstone, UK",
+    country: "GB",
+    location: {
+      latitude: 51.25526,
+      longitude: 0.4421859,
+    },
+    streetAddress: {
+      number: "",
+      name: "",
+      apt: "",
+      formattedAddressLine: "Teston",
+    },
+    postalCode: "undefined",
+    subdivision: "ENG",
+    subdivisions: [
+      {
+        code: "England",
+        name: "England",
+        type: "ADMINISTRATIVE_AREA_LEVEL_1",
+      },
+      {
+        code: "Kent",
+        name: "Kent",
+        type: "ADMINISTRATIVE_AREA_LEVEL_2",
+      },
+      {
+        code: "Teston",
+        name: "Teston",
+        type: "ADMINISTRATIVE_AREA_LEVEL_3",
+      },
+      {
+        code: "GB",
+        name: "United Kingdom",
+        type: "COUNTRY",
+      },
+    ],
+    city: "Teston",
+  };
 };
