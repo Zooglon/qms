@@ -2,11 +2,30 @@
  * Autocomplete function declaration, do not delete
  * @param {import('./__schema__.js').Payload} options
  */
-import wixData from "wix-data";
-import { triggeredEmails, contacts } from "wix-crm-backend";
-import { fetch } from "wix-fetch";
 
-let TEST_MODE = false;
+// import wixData from "wix-data";
+// import { triggeredEmails, contacts } from "wix-crm-backend";
+// import { fetch } from "wix-fetch";
+
+let TEST_MODE = true;
+
+const qmsStoreCollections = [
+  "CladdingQuotes",
+  "ConcreteSlabQuotes",
+  "DismantleQuotes",
+  "DoorsQuotes",
+  "GutteringQuotes",
+  "MezzanineFloorForm",
+  "MonoPitchQuotes",
+  "PolytunnelQuotes",
+  "PortalFrameQuotes",
+  "RainwaterHarvestingQuotes",
+  "reroofQuotes",
+  "RoundHouseForm",
+  "SolarPanelsQuotes",
+  "WallQuotes",
+  "MyTestCollection",
+];
 
 const monoPitchFormFields = {
   formDetails: {
@@ -302,10 +321,7 @@ const getFormDetailsFromCollection = async (collection, guid) => {
 
   if (!queryCollection.length) {
     handleErrors(`Could not locate form ${guid} in collection ${collection}`);
-    console.log("No data found in collection", collection);
   }
-
-  console.log("Filtered collection data:", queryCollection);
 
   const filteredCollectionData = Object.fromEntries(
     Object.entries(queryCollection[0]).filter(([k, v]) => v !== null && v !== "" && !fieldsToIgnore.includes(k))
@@ -482,6 +498,7 @@ const getCollectionData = async (collection, filterField, filter, limit) => {
 };
 
 const handleErrors = async (msg) => {
+  if (TEST_MODE) return;
   const getAdminDetails = await getCollectionData("QMSTeam", "role", "DEVELOPER", 100);
 
   console.log("Sending error notification - ", msg);
@@ -497,6 +514,8 @@ const handleErrors = async (msg) => {
       console.log(`Error could not find QMS Team collection`);
     }
   }
+
+  throw new Error(msg);
 };
 
 async function sendSupplierEmail(supplier, options, collection) {
@@ -558,14 +577,15 @@ const getLatLng = (addressField, guid) => {
   }
 };
 
-export const invoke = async ({ payload }) => {
-  if (payload.TEST_COMPLETION) TEST_MODE = true;
-  console.log("TESTMODE", TEST_MODE, "\n", "PAYLOAD", payload);
+export const prepareFormData = (rawFormData) => {
   let formObject = {};
+  console.log("PREPARING FORM DATA", rawFormData);
 
   // strip out everything but field names
-  for (let [key, value] of Object.entries(payload)) {
-    formObject[key.replace(/(.*:)/gi, "")] = value;
+  const fieldId = rawFormData.formId ?? null;
+  for (let [key, value] of Object.entries(rawFormData)) {
+    const regex = new RegExp(fieldId ? `.*${fieldId}\:{1}` : /(.*:)/, "g");
+    formObject[key.replace(regex, "")] = value;
   }
 
   // Format form name
@@ -574,30 +594,68 @@ export const invoke = async ({ payload }) => {
         .replace("Home - submit into ", "")
         .replace(" Quotes collection", "")
         .replace(" Form collection", "")
-    : "Unknown";
+    : "Unknown form name";
 
   const formGuid = formObject.formGuid;
+  const address = formObject.address && formObject.address.formatted;
 
-  console.log("FORMOBJECT", formObject, "\n", `formName: ${formName}`, "\n", `formGuid: ${formGuid}`);
+  if (!address || !formName || !formGuid) {
+    handleErrors(`Form incomplete or missing fields:${" " + address}${" " + formName}${" " + formGuid}`);
+  }
 
-  const collectionList = [
-    "MezzanineFloorForm",
-    "ConcreteSlabQuotes",
-    "MonoPitchQuotes",
-    "PortalFrameQuotes",
-    "RoundHouseForm",
-    "PolytunnelQuotes",
-  ];
-  let typeString = formName.replace(" ", "");
+  return { ...formObject, formName, formGuid, address };
+};
+
+export const getCollection = (formName) => {
+  let typeString = formName.replace(/\s/g, "");
   let typeRegExp = new RegExp(typeString, "gi");
-  let collection = collectionList.find((i) => {
+  return qmsStoreCollections.find((i) => {
     return !!i.match(typeRegExp);
   });
+};
+
+export const getSuppliers = async (formGuid) => {
+  let suppliers = [];
+  // identify suppliers for this form
+  // ensure that the IDs are the same for each form
+
+  // quoteForQuantitySurveyor === "yes"
+  // "details_quoteForInstallation": "quoteFromOtherSteelErector",
+  // "field:comp-m709keah:details_quoteForLevellingSite": "",
+  // "solarPanelQuoteFromProvider": "yes",
+  // "floor_concretedFloorQuote": "yes",
+  // "mezzanineFloor_quoteFromSupplier": "quoteFromOtherSteelErector",
+
+  // get all suppliers within 50miles for this suppliers
+
+  // if none then expand the net.
+
+  // return array of suppliers
+
+  // identify the specific form answers for the specific suppliers
+
+  // getNearestSuppliers;
+  return suppliers;
+};
+
+export const invoke = async ({ payload }) => {
+  if (payload.TEST_COMPLETION) TEST_MODE = true;
+  console.log("TESTMODE", TEST_MODE, "\n", "PAYLOAD", payload);
+
+  const formObject = prepareFormData(payload);
+  const { formName, formGuid } = formObject;
+  const collection = getCollection(formName);
+
+  console.log("FORMOBJECT", formObject, "\n", `formName: ${formName}`, "\n", `formGuid: ${formGuid}`);
 
   if (formGuid && formName) {
     const completedForm = await getFormDetailsFromCollection(collection, formGuid);
 
     console.log("COMP FORM", completedForm);
+
+    const suppliers2 = await getSuppliers();
+
+    if (suppliers2.length <= 10) return;
 
     const numberOfQuotes = Object.entries(formObject).find((keyVal) =>
       keyVal[0].toLowerCase().startsWith("howmanyquotes")
@@ -680,7 +738,8 @@ export const invoke = async ({ payload }) => {
     suppliers.forEach((ssl) => {
       console.log("SSL", ssl);
       try {
-        sendSupplierEmail(ssl.supplier, emailOptions, { formGuid: formGuid, formCollection: collection });
+        // sendSupplierEmail(ssl.supplier, emailOptions, { formGuid: formGuid, formCollection: collection });
+        console.log("Emails mock - test mode");
       } catch (error) {
         handleErrors(error);
         console.log(`Error sending email to supplier: ${ssl.supplier.supplierName}\n`, error.message);
