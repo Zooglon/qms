@@ -3,9 +3,9 @@
  * @param {import('./__schema__.js').Payload} options
  */
 
-// import wixData from "wix-data";
-// import { triggeredEmails, contacts } from "wix-crm-backend";
-// import { fetch } from "wix-fetch";
+import wixData from "wix-data";
+import { triggeredEmails, contacts } from "wix-crm-backend";
+import { fetch } from "wix-fetch";
 
 let TEST_MODE = true;
 
@@ -34,14 +34,15 @@ const monoPitchFormFields = {
     steelOptions: undefined,
     buildingType: undefined,
     usage: undefined,
-    usageInternalsStable: undefined,
-    usageInternalsHorseCow: undefined,
-    usageCustom: undefined,
+    internalsStable: undefined,
+    internalsHorseCow: undefined,
     internalsCustom: undefined,
     measurementUnits: undefined,
     buildingLength: undefined,
     buildingWidth: undefined,
     buildingHeight: undefined,
+    buildingHeightHighSideToEaves: undefined,
+    buildingHeightLowSideToEaves: undefined,
     bayWidth: undefined,
     postDimensionA: undefined,
     postDimensionB: undefined,
@@ -49,8 +50,7 @@ const monoPitchFormFields = {
     roofPitch: undefined,
     additionalNotes: undefined,
     siteVisuals: undefined,
-    areaMapDetails: undefined,
-    MySplat: undefined,
+    alternativeDesign: undefined,
   },
   formWalls: {
     willTheBuildingHaveWalls: undefined,
@@ -59,6 +59,7 @@ const monoPitchFormFields = {
     wallPanelHeight: undefined,
     wallPanelHeightCustom: undefined,
     wallHowManyPanelsHigh: undefined,
+    wallBrickBlockHeightM: undefined,
     wallPanelThickness: undefined,
     wallPanelThicknessCustom: undefined,
   },
@@ -68,13 +69,18 @@ const monoPitchFormFields = {
     roofColour: undefined,
     compositeThickness: undefined,
     boxProfileOption: undefined,
+    boxProfileFinishTop: undefined,
+    boxProfileFinishUnderneath: undefined,
+    corrugatedSheetOption: undefined,
     corrugatedSheetFinish: undefined,
+    roofColourFibreCement: undefined,
     roofLights: undefined,
     roofLightsPerBay: undefined,
     roofLightsPerBayCustom: undefined,
-    hasCantilever: undefined,
+    roofHasCantilever: undefined,
+    cantileverSize: undefined,
     cantileverSide: undefined,
-    ridgeCaps: undefined,
+    roofRidgeCaps: undefined,
     solarPanels: undefined,
     solarPanelsInTheFuture: undefined,
     solarPanelCoverage: undefined,
@@ -85,6 +91,10 @@ const monoPitchFormFields = {
     buildingHasCladding: undefined,
     claddingType: undefined,
     claddingColour: undefined,
+    claddingWidthWindbreaker: undefined,
+    claddingHeightWindbreaker: undefined,
+    claddingWallWidthWindbreaker: undefined,
+    claddingColourWindbreaker: undefined,
     claddingCompositeThickness: undefined,
     claddingTimberBoardType: undefined,
     claddingBoxProfileType: undefined,
@@ -92,15 +102,31 @@ const monoPitchFormFields = {
     claddingHeight: undefined,
     claddingTecsFixings: undefined,
     guttering: undefined,
-    gutteringOutlets: undefined,
+    matchExistingGuttering: undefined,
+    gutteringTypeShape: undefined,
+    gutteringSideAmm: undefined,
+    gutteringSideBmm: undefined,
+    gutteringSideCmm: undefined,
+    gutteringSideDmm: undefined,
+    gutteringSideEmm: undefined,
+    gutteringSideFmm: undefined,
+    gutteringSideGmm: undefined,
+    gutteringAngle2degrees: undefined,
+    gutteringAngle1degrees: undefined,
+    gutteringColour: undefined,
+    gutteringDownpipeSize: undefined,
+    gutteringRainwaterCatchment: undefined,
+    gutteringRainwaterCatchmentTankSize: undefined,
   },
   formDoors: {
     rollerDoors: undefined,
     rollerDoorLocation: undefined,
-    numberOfRollerDoors: undefined,
-    numberOfRollerDoorsCustom: undefined,
-    rollerDoorWidth: undefined,
-    rollerDoorHeight: undefined,
+    numberOfRollerDoorsGableEnd: undefined,
+    numberOfRollerDoorsUnderEaves: undefined,
+    rollerDoorWidthUnderEavesM: undefined,
+    rollerDoorWidthGableEndM: undefined,
+    rollerDoorHeightGableEndM: undefined,
+    rollerDoorHeightUnderEavesM: undefined,
     rollerDoorBirdBrush: undefined,
     rollerDoorRubberFloorSeal: undefined,
     rollerDoorPowerFeed: undefined,
@@ -109,17 +135,55 @@ const monoPitchFormFields = {
     personnelDoorWidth: undefined,
     personnelDoorsAreFireDoors: undefined,
     numberOfFireEscapeDoors: undefined,
+    flatSheetDoor: undefined,
+    flatSheetDoorPlacement: undefined,
+    flatSheetDoorUnderEavesPosition: undefined,
+    numberOfFlatSheetDoorsUnderEaves: undefined,
+    numberOfFlatSheetDoorsGableEnd: undefined,
+    flatSheetDoorUnderEavesWidth: undefined,
+    flatSheetDoorGableEndWidth: undefined,
+    flatSheetDoorUnderEavesHeight: undefined,
+    flatSheetDoorGableEndHeight: undefined,
+    flatSheetDoorOption: undefined,
+    flatSheetDoorColour: undefined,
   },
   formFloor: {
     concretedFloor: undefined,
+    concretedFloorQuote: undefined,
+    floorUsage: undefined,
+    floorUsageCustom: undefined,
+    floorReinforcement: undefined,
+    floorFinish: undefined,
+    floorFinishPattern: undefined,
+    floorFinishPowerFloat: undefined,
+    floorPatternCustom: undefined,
     quoteForConcretingFloor: undefined,
     additionalNotesFloor: undefined,
     floorVisuals: undefined,
   },
   formMezzanineFloor: {
     buildingHasMezzanineFloor: undefined,
+    quoteFromSupplier: undefined,
+    mezzanineFloorCoverage: undefined,
+    freestanding: undefined,
+    bayWidth: undefined,
+    mezzanineFloorNumberOfBaysCovered: undefined,
+    bayWidthOther: undefined,
+    spanOptions: undefined,
+    height: undefined,
+    steelOptions: undefined,
+    purlins: undefined,
+    options: undefined,
+    mezzanineFloorUsage: undefined,
+    usageOther: undefined,
+    handRails: undefined,
+    access: undefined,
+    forkliftBay: undefined,
+    additionalNotes: undefined,
   },
   formContact: {
+    // howManyQuotes: undefined,
+    // details_quoteRadiusKm: undefined,
     firstName: undefined,
     lastName: undefined,
     companyName: undefined,
@@ -133,9 +197,10 @@ const concreteSlabFormFields = {
   formDetails: {
     formGuid: undefined,
     sitePrepared: undefined,
+    quoteForQuantitySurveyor: undefined,
     concreteThickness: undefined,
     concreteThicknessCustom: undefined,
-    InteriorExteriorPlacement: undefined,
+    interiorExteriorPlacement: undefined,
     concreteAreaM2: undefined,
     siteVisualsImageVideo: undefined,
     finishedAreaUsage: undefined,
@@ -161,6 +226,7 @@ const concreteSlabFormFields = {
 let portalFrameFormFields = {
   formDetails: {
     quoteForLevellingSite: undefined,
+    siteImagesVideos: undefined,
     quoteForInstallation: undefined,
     shedUsage: undefined,
     shedUsageInternals: undefined,
@@ -171,14 +237,20 @@ let portalFrameFormFields = {
     buildingHeight: undefined,
     buildingBayWidth: undefined,
     steelOptions: undefined,
+    buildingType: undefined,
+    existingPostDimensionA: undefined,
+    existingPostDimensionB: undefined,
+    existingPostDimensionC: undefined,
     roofPitch: undefined,
     roofPitchCustom: undefined,
     additionalNotes: undefined,
+    alternativeDesign: undefined,
   },
   formWalls: {
     buildingHasWalls: undefined,
     howManySidesHaveWalls: undefined,
     wallMaterial: undefined,
+    wallBrickBlockHeightM: undefined,
     wallPanelHeight: undefined,
     wallPanelHeightCustom: undefined,
     wallPanelThickness: undefined,
@@ -187,11 +259,14 @@ let portalFrameFormFields = {
   },
   formRoof: {
     purlins: undefined,
+    cantilever: undefined,
+    cantileverSize: undefined,
     roofMaterial: undefined,
     fiberCementColour: undefined,
     roofColour: undefined,
     roofCompositeThickness: undefined,
     roofBoxProfileFinish: undefined,
+    roofBoxProfileFinishUnderneath: undefined,
     roofBoxProfileOption: undefined,
     roofCorrugatedSheetFinish: undefined,
     roofCorrugatedSheetOption: undefined,
@@ -210,36 +285,96 @@ let portalFrameFormFields = {
     rollerDoorLocation: undefined,
     numberOfRollerDoors: undefined,
     numberOfRollerDoorsCustom: undefined,
-    rollerDoorwayWidth: undefined,
-    rollerDoorwayHeight: undefined,
+    numberOfRollerDoorsGableEnd: undefined,
+    numberOfRollerDoorsUnderEaves: undefined,
+    rollerDoorwayWidthUnderEavesMm: undefined,
+    rollerDoorwayWidthGableEndMm: undefined,
+    rollerDoorwayHeightUnderEavesMm: undefined,
+    rollerDoorwayHeightUnderEavesM: undefined,
     rollerDoorBirdBrush: undefined,
     rollerDoorRubberFloorSeal: undefined,
     rollerDoorPowerFeed: undefined,
+    flatSheetDoor: undefined,
+    flatSheetDoorPlacement: undefined,
+    flatSheetDoorUnderEavesPostition: undefined,
+    numberOfDoorsUnderEavesFlatSheet: undefined,
+    numberOfDoorsGableEndFlatSheet: undefined,
+    eavesDoorWidthFlatSheet: undefined,
+    flatSheetEavesDoorHeight: undefined,
+    gableEndDoorWidthFlatSheet: undefined,
+    flatSheetGableDoorHeight: undefined,
+    flatSheetDoorOption: undefined,
+    doorColourFlatSheet: undefined,
     personnelDoors: undefined,
-    numberOfPersonnelDoors: undefined,
     personnelDoorWidth: undefined,
+    numberOfPersonnelDoors: undefined,
+    numberOfPersonnelDoorsDouble: undefined,
     fireDoors: undefined,
     numberOfFireDoors: undefined,
   },
   formCladding: {
+    buildingHasCladding: undefined,
     claddingMaterial: undefined,
     claddingColour: undefined,
     claddingCompositeThickness: undefined,
-    claddingTimberBoardconsts: undefined,
-    claddingBoxProfileconst: undefined,
+    claddingTimberBoardTypes: undefined,
     claddingBoxProfileType: undefined,
     claddingCorrugatedSheetFinish: undefined,
-    cladding_claddingHeight: undefined,
+    claddingHeight: undefined,
+    claddingWidthWindbreaker: undefined,
+    claddingHeightWindbreaker: undefined,
+    claddingWallWindbreaker: undefined,
     claddingTecsFixings: undefined,
     guttering: undefined,
     gutteringOutlets: undefined,
+    matchExistingGuttering: undefined,
+    gutteringTypeShape: undefined,
+    gutteringSideAmm: undefined,
+    gutteringSideBmm: undefined,
+    gutteringSideCmm: undefined,
+    gutteringSideDmm: undefined,
+    gutteringSideEmm: undefined,
+    gutteringSideFmm: undefined,
+    gutteringSideGmm: undefined,
+    gutteringAngle2degrees: undefined,
+    gutteringAngle1degrees: undefined,
+    gutteringColour: undefined,
+    gutteringDownpipe: undefined,
+    gutteringRainwaterCatchment: undefined,
+    gutteringRainwaterCatchmentTank: undefined,
   },
   formFloor: {
     concreteFloor: undefined,
     quoteForConcreteFloor: undefined,
+    floorUsage: undefined,
+    floorUsageOther: undefined,
+    floorReinforcementOptions: undefined,
+    floorFinish: undefined,
+    floorFinishPattern: undefined,
+    floorFinishPatternCustom: undefined,
+    floorPowerFloat: undefined,
     additionalNotesFloor: undefined,
   },
+  formMezzanineFloor: {
+    buildingHasMezzanineFloor: undefined,
+    quoteFromSupplier: undefined,
+    freestanding: undefined,
+    bayWidth: undefined,
+    mezzanineFloorCoverage: undefined,
+    spanOptions: undefined,
+    height: undefined,
+    steelOptions: undefined,
+    purlins: undefined,
+    options: undefined,
+    usage: undefined,
+    handRails: undefined,
+    access: undefined,
+    forkliftBay: undefined,
+    additionalNotes: undefined,
+  },
   formContact: {
+    quoteRadiusKm: undefined,
+    howManyQuotes: undefined,
     firstName: undefined,
     lastName: undefined,
     companyName: undefined,
@@ -255,6 +390,7 @@ const roundHouseFormFields = {
     animalHandlingInternals: undefined,
     siteRequiresLevelling: undefined,
     quoteForLevellingSite: undefined,
+    usage: undefined,
   },
   formContact: {
     firstName: undefined,
@@ -269,6 +405,7 @@ const roundHouseFormFields = {
 const mezzanineFloorFormFields = {
   formDetails: {
     quoteForInstallation: undefined,
+    quoteForLevellingSite: undefined,
     mezzanineOption: undefined,
     mainPostDimensionA: undefined,
     mainPostDimensionB: undefined,
@@ -293,8 +430,36 @@ const mezzanineFloorFormFields = {
     forkliftBay: undefined,
     additionalNotes: undefined,
     floorImageVideoUpload: undefined,
+    quoteRadiusKm: undefined,
   },
   formContact: {
+    howManyQuotes: undefined,
+    firstName: undefined,
+    lastName: undefined,
+    companyName: undefined,
+    email: undefined,
+    phoneNumber: undefined,
+    address: undefined,
+  },
+};
+
+const polytunnelFormFields = {
+  formDetails: {
+    siteNeedsLevelling: undefined,
+    quoteForLevelling: undefined,
+    polytunnelWidth: undefined,
+    polytunnelLength: undefined,
+    polytunnelCovering: undefined,
+    doors: undefined,
+    doorPlacement: undefined,
+    guttering: undefined,
+    gutteringBothSides: undefined,
+    anchoring: undefined,
+    quoteRadiusKm: undefined,
+    polytunnelUsage: undefined,
+  },
+  formContact: {
+    howManyQuotes: undefined,
     firstName: undefined,
     lastName: undefined,
     companyName: undefined,
@@ -319,7 +484,7 @@ const getFormDetailsFromCollection = async (collection, guid) => {
   const formGuid = guid ?? "test";
   const queryCollection = await getCollectionData(collection, "formGuid", formGuid);
 
-  if (!queryCollection.length) {
+  if (!queryCollection) {
     handleErrors(`Could not locate form ${guid} in collection ${collection}`);
   }
 
@@ -329,55 +494,27 @@ const getFormDetailsFromCollection = async (collection, guid) => {
   return filteredCollectionData;
 };
 
-async function getNearestSuppliers(quoteTypeOption, quoteLatLng, numberOfQuotes) {
-  const cn = "SupplierList";
-  const lat = quoteLatLng.lat;
-  const lng = quoteLatLng.lng;
+export const sortSuppliersByDistance = (suppliers, quoteLatLng) => {
+  const distanceInMetres = (lng1, lat1, lng2, lat2) => {
+    const er = 6371e3;
+    const l1 = (lat1 * Math.PI) / 180;
+    const l2 = (lat2 * Math.PI) / 180;
+    const clat = ((lat2 - lat1) * Math.PI) / 180;
+    const clng = ((lng2 - lng1) * Math.PI) / 180;
 
-  // Use to filter by quote type - i.e 'Solar Panels'
-  const quoteOption = quoteTypeOption;
+    const a =
+      Math.sin(clat / 2) * Math.sin(clat / 2) + Math.cos(l1) * Math.cos(l2) * Math.sin(clng / 2) * Math.sin(clng / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    // distance in metres
+    const d = er * c;
+    return d;
+  };
 
-  try {
-    let suppliers;
-    if (quoteOption) {
-      suppliers = await wixData
-        .query(cn)
-        .eq("isActive", true)
-        .hasSome("quoteTypesProvided", [quoteOption])
-        .limit(1000)
-        .find()
-        .then((results) => results.items);
-    } else {
-      suppliers = await getCollectionData(cn, "isActive", true, 1000);
-    }
-
-    const distanceInMetres = (lng1, lat1, lng2, lat2) => {
-      const er = 6371e3;
-      const l1 = (lat1 * Math.PI) / 180;
-      const l2 = (lat2 * Math.PI) / 180;
-      const clat = ((lat2 - lat1) * Math.PI) / 180;
-      const clng = ((lng2 - lng1) * Math.PI) / 180;
-
-      const a =
-        Math.sin(clat / 2) * Math.sin(clat / 2) + Math.cos(l1) * Math.cos(l2) * Math.sin(clng / 2) * Math.sin(clng / 2);
-      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-      // distance in metres
-      const d = er * c;
-      return d;
-    };
-
-    // Return x nearest suppliers
-    return suppliers
-      .map((s) => ({
-        dist: distanceInMetres(lat, lng, s.latitude, s.longitude),
-        supplier: s,
-      }))
-      .sort((a, b) => a.dist - b.dist)
-      .slice(0, numberOfQuotes);
-  } catch (error) {
-    console.log(`Error could not find collection ${cn}, details-\n${error}`);
-  }
-}
+  // Return x nearest suppliers
+  return suppliers
+    .map((s) => ({ ...s, distance: distanceInMetres(quoteLatLng.lat, quoteLatLng.lng, s.latitude, s.longitude) }))
+    .sort((a, b) => a.distance - b.distance);
+};
 
 const stringifyForm = (form, name) => {
   const formatField = (f) => (typeof f === "string" ? f.replace(/([a-z])([A-Z])/g, `$1 $2`) : f);
@@ -388,6 +525,7 @@ const stringifyForm = (form, name) => {
   const formCladding = [];
   const formDoors = [];
   const formFloor = [];
+  const formMezzanineFloor = [];
   const formContact = [];
 
   const formTypeObj =
@@ -395,23 +533,24 @@ const stringifyForm = (form, name) => {
       ? monoPitchFormFields
       : name === "Concrete"
       ? concreteSlabFormFields
+      : name === "Concrete Slab"
+      ? concreteSlabFormFields
       : name === "Mezzanine Floor"
       ? mezzanineFloorFormFields
       : name === "Round House"
       ? roundHouseFormFields
       : name === "Portal Frame"
       ? portalFrameFormFields
+      : name === "Polytunnel"
+      ? polytunnelFormFields
       : {};
 
   TEST_MODE && console.log(`Used ${name} to select form template ${JSON.stringify(formTypeObj)}`);
-
-  let measurementUnits = form.measurementUnits === "metric" ? "mm" : "ft";
-
-  console.log("Measure units:", measurementUnits);
-
+  const lowerFirst = (s) => (s && String(s[0]).toLowerCase() + String(s).slice(1)) || "";
+  let orphanedFields = [];
   // Iterate over form fields and populate template form objects
   Object.entries(form).map((field) => {
-    const key = field[0].replace(/.+_/gi, "");
+    let key = lowerFirst(field[0].replace(/.+_/gi, ""));
     let value;
 
     if (key.toLowerCase() === "address") {
@@ -439,12 +578,16 @@ const stringifyForm = (form, name) => {
       formTypeObj.formDoors[`${key}`] = value;
     } else if (formTypeObj.formFloor && Object.keys(formTypeObj.formFloor).includes(key)) {
       formTypeObj.formFloor[`${key}`] = value;
+    } else if (formTypeObj.formMezzanineFloor && Object.keys(formTypeObj.formMezzanineFloor).includes(key)) {
+      formTypeObj.formMezzanineFloor[`${key}`] = value;
     } else if (formTypeObj.formContact && Object.keys(formTypeObj.formContact).includes(key)) {
       formTypeObj.formContact[`${key}`] = value;
     } else {
       TEST_MODE && console.log(`Missing form template field for ${key} - ${value}`);
+      orphanedFields.push(`${key} - ${value}`);
     }
   });
+  console.log("Orphaned fields:", orphanedFields);
 
   [
     [formTypeObj.formDetails, formDetails],
@@ -453,6 +596,7 @@ const stringifyForm = (form, name) => {
     [formTypeObj.formCladding, formCladding],
     [formTypeObj.formDoors, formDoors],
     [formTypeObj.formFloor, formFloor],
+    [formTypeObj.formMezzanineFloor, formMezzanineFloor],
     [formTypeObj.formContact, formContact],
   ].forEach((obj) => {
     if (obj[0]) {
@@ -463,59 +607,82 @@ const stringifyForm = (form, name) => {
       });
     }
   });
+
+  console.log("Form stringified... returning....");
+
   return {
-    formDetails: formDetails.length > 0 ? formDetails.join("") : "No details provided",
-    formWalls: formWalls.length > 0 ? formWalls.join("") : "No wall details provided",
-    formRoof: formRoof.length > 0 ? formRoof.join("") : "No roof details provided",
-    formCladding: formCladding.length > 0 ? formCladding.join("") : "No cladding details provided",
-    formDoors: formDoors.length > 0 ? formDoors.join("") : "No door details provided",
-    formFloor: formFloor.length > 0 ? formFloor.join("") : "No floor details provided",
-    formContact: formContact.length > 0 ? formContact.join("") : "No contact details given",
+    ...(formDetails.length > 0 && { ["Form Details"]: formDetails.join("") }),
+    ...(formWalls.length > 0 && { ["Form Walls"]: formWalls.join("") }),
+    ...(formRoof.length > 0 && { ["Form Roof"]: formRoof.join("") }),
+    ...(formCladding.length > 0 && { ["Form Cladding"]: formCladding.join("") }),
+    ...(formDoors.length > 0 && { ["Form Doors"]: formDoors.join("") }),
+    ...(formFloor.length > 0 && { ["Form Floor"]: formFloor.join("") }),
+    ...(formMezzanineFloor.length > 0 && { ["Form MezzanineFloor"]: formMezzanineFloor.join("") }),
+    ["Form Contact"]: formContact.length > 0 ? formContact.join("") : "No contact details given",
   };
 };
 
-const getCollectionData = async (collection, filterField, filter, limit) => {
-  TEST_MODE && console.log(`Getting data from ${collection} with filter ${filterField}=${filter}`);
-  const queryCollection = await wixData
+const getCollectionData = async (collection, filterField, filter, lmt) => {
+  TEST_MODE &&
+    console.log(
+      `Getting ${!filterField && !filter ? "all" : ""} ${
+        filterField && filter ? "with filter " + filterField + "=" + filter : ""
+      }`
+    );
+
+  let limit = lmt ?? 100;
+
+  // const queryResponse = await wixData
+  //   .query(collection)
+  //   .isNotEmpty("supplierType")
+  //   .limit(limit)
+  //   .find()
+  //   .then((results) => {
+  // const items = results.items;
+  //     return items.map(i => i.supplierType);
+  //   });
+
+  const queryResponse = await wixData
     .query(collection)
     .eq(filterField, filter)
-    .limit(limit ?? 100)
+    .limit(limit)
     .find()
     .then((results) => results.items);
 
-  if (!queryCollection.length) {
+  if (!queryResponse.length) {
     handleErrors(`Could not locate collection ${collection}`);
     console.log("No data found in collection", collection);
     return;
   }
   TEST_MODE &&
     console.log(
-      `Returning ${queryCollection.length} ${
-        queryCollection.length > 0 ? "items" : "item"
-      } from collection ${collection}`
+      `Returning ${queryResponse.length} ${queryResponse.length > 0 ? "items" : "item"} from collection ${collection}`
     );
-  return queryCollection;
+  return queryResponse;
 };
 
 const handleErrors = async (msg) => {
-  if (TEST_MODE) return;
-  const getAdminDetails = await getCollectionData("QMSTeam", "role", "DEVELOPER", 100);
+  if (TEST_MODE) {
+    throw new Error(msg);
+  } else {
+    const getAdminDetails = await getCollectionData("QMSTeam", "role", "DEVELOPER", 100);
 
-  console.log("Sending error notification - ", msg);
+    console.log("Sending error notification - ", msg);
 
-  for (const admin of getAdminDetails) {
-    try {
-      triggeredEmails.emailMember("adminErrorAlert", admin._id, {
-        variables: {
-          errorMessage: JSON.stringify(msg),
-        },
-      });
-    } catch (error) {
-      console.log(`Error could not find QMS Team collection`);
+    for (const admin of getAdminDetails) {
+      try {
+        triggeredEmails.emailMember("adminErrorAlert", admin._id, {
+          variables: {
+            errorMessage: JSON.stringify(msg),
+          },
+        });
+      } catch (error) {
+        console.log(`Error could not find QMS Team collection`);
+      }
     }
-  }
 
-  throw new Error(msg);
+    throw new Error(msg);
+  }
 };
 
 async function sendSupplierEmail(supplier, options, collection) {
@@ -528,21 +695,25 @@ async function sendSupplierEmail(supplier, options, collection) {
   const emailId = "new_form_submission";
   const contactId = supplier.contactId;
 
+  console.log("Email sent to:", emailId, contactId, "with: ", emailOptions);
   // Send email to supplier
   try {
-    triggeredEmails.emailContact(emailId, contactId, emailOptions);
+    if (TEST_MODE) {
+    } else {
+      triggeredEmails.emailContact(emailId, contactId, emailOptions);
 
-    console.log(`Email was sent to contact ${supplier.supplierName}`);
-    // update supplier CMS with id of quotes sent
-    const collectionData = await getCollectionData("SupplierList", "_id", supplier._id);
-    if (collectionData.length > 0) {
-      let supplier = collectionData[0];
-      if (Array.isArray(supplier.quotesSent) && supplier.quotesSent.length > 0) {
-        let supplierQuotes = supplier.quotesSent ?? [];
-        supplierQuotes.push(collection.formGuid);
-        supplier.quotesSent = supplierQuotes;
-        wixData.update(collection, supplier);
-        console.log(`Contact ${supplier.supplierName} quote list updated with form ${collection.formGuid}`);
+      console.log(`Email was sent to contact ${supplier.supplierName}`);
+      // update supplier CMS with id of quotes sent
+      const collectionData = await getCollectionData("SupplierList", "_id", supplier._id);
+      if (collectionData.length > 0) {
+        let supplier = collectionData[0];
+        if (Array.isArray(supplier.quotesSent) && supplier.quotesSent.length > 0) {
+          let supplierQuotes = supplier.quotesSent ?? [];
+          supplierQuotes.push(collection.formGuid);
+          supplier.quotesSent = supplierQuotes;
+          wixData.update(collection, supplier);
+          console.log(`Contact ${supplier.supplierName} quote list updated with form ${collection.formGuid}`);
+        }
       }
     }
   } catch (error) {
@@ -579,7 +750,6 @@ const getLatLng = (addressField, guid) => {
 
 export const prepareFormData = (rawFormData) => {
   let formObject = {};
-  console.log("PREPARING FORM DATA", rawFormData);
 
   // strip out everything but field names
   const fieldId = rawFormData.formId ?? null;
@@ -587,7 +757,6 @@ export const prepareFormData = (rawFormData) => {
     const regex = new RegExp(fieldId ? `.*${fieldId}\:{1}` : /(.*:)/, "g");
     formObject[key.replace(regex, "")] = value;
   }
-
   // Format form name
   const formName = formObject.formName
     ? formObject.formName
@@ -614,17 +783,289 @@ export const getCollection = (formName) => {
   });
 };
 
-export const getSuppliers = async (formGuid) => {
-  let suppliers = [];
-  // identify suppliers for this form
-  // ensure that the IDs are the same for each form
+export const getFieldValue = (form, field, searchByValue) => {
+  let retVal = Object.entries(form).find(([key, value]) => key.toLowerCase().includes(field.toLowerCase()));
 
-  // quoteForQuantitySurveyor === "yes"
-  // "details_quoteForInstallation": "quoteFromOtherSteelErector",
-  // "field:comp-m709keah:details_quoteForLevellingSite": "",
-  // "solarPanelQuoteFromProvider": "yes",
-  // "floor_concretedFloorQuote": "yes",
-  // "mezzanineFloor_quoteFromSupplier": "quoteFromOtherSteelErector",
+  if (!retVal && searchByValue) {
+    retVal = Object.entries(form).find(([key, value]) => value.toLowerCase().includes(field.toLowerCase()));
+  }
+
+  return retVal ? retVal[1] : null;
+};
+
+export const getAllSupplierTypesInForm = (supplierList, formAnswers) => {
+  const requiredSupplierTypes = new Set();
+
+  Object.entries(formAnswers).forEach(([fieldKey, fieldValue]) => {
+    if (
+      fieldValue === "yes" ||
+      fieldValue === true ||
+      fieldKey.toLowerCase().includes("supply") ||
+      fieldKey.toLowerCase().includes("quote") ||
+      typeof fieldValue !== "object"
+    ) {
+      const normalizedFieldKey = fieldKey.toLowerCase().replace(/[^a-z]/g, "");
+      const normalizedFieldValue =
+        typeof fieldValue !== "string" ? `${fieldValue}` : fieldValue.toLowerCase().replace(/[^a-z]/g, "");
+      // console.log("normalised fieldKey", fieldKey, "normalised fieldValue", fieldValue);
+
+      supplierList.forEach((supplierListChild) => {
+        if (
+          normalizedFieldKey.includes(supplierListChild.supplierType.toLowerCase()) ||
+          normalizedFieldValue.includes(supplierListChild.supplierType.toLowerCase())
+        ) {
+          requiredSupplierTypes.add(supplierListChild.supplierType);
+        } else if (
+          normalizedFieldKey.includes(supplierListChild.baseType.toLowerCase()) ||
+          normalizedFieldValue.includes(supplierListChild.baseType.toLowerCase())
+        ) {
+          requiredSupplierTypes.add(supplierListChild.baseType);
+        }
+      });
+    }
+  });
+
+  const supplierTypesNeeded = Array.from(requiredSupplierTypes);
+
+  return [...supplierTypesNeeded, formAnswers.formName];
+};
+
+const asbestosQuestionPatterns = [
+  "containasbestos",
+  "containsasbestos",
+  "haveasbestos",
+  "hasasbestos",
+  "madeofasbestos",
+  "asbestospresent",
+  "asbestosispresent",
+  "asbestosin",
+  "withasbestos",
+  "includingasbestos",
+  "asbestos",
+];
+
+const asbestosQuestionAntiPatterns = [
+  "doesnotcontainasbestos",
+  "doesntcontainasbestos",
+  "doesntcontainsasbestos",
+  "noasbestos",
+  "hasasbestos",
+  "notmadeofasbestos",
+  "noasbestospresent",
+  "noasbestosispresent",
+  "noasbestosin",
+  "notwithasbestos",
+  "notincludingasbestos",
+];
+
+export const checkQuestionForAsbestos = (questionString, questionKey = "") => {
+  const normalizedQuestion = questionString.toLowerCase().replace(/\s/g, "");
+  const normalizedKey = questionKey.toLowerCase();
+
+  // Check if the question text contains asbestos patterns
+  const questionContainsAsbestos = asbestosQuestionPatterns.some((pattern) => normalizedQuestion.includes(pattern));
+
+  // Check if the question key contains 'asbestos'
+  const keyContainsAsbestos = normalizedKey.includes("asbestos");
+
+  return questionContainsAsbestos || keyContainsAsbestos;
+};
+export const checkAnswerForAsbestos = (answerString) => {
+  if (answerString.toLowerCase() === "asbestos") return true;
+
+  const pattern = asbestosQuestionPatterns.some((p) => answerString.toLowerCase().replace(/\s/g, "").includes(p));
+  const antiPattern = asbestosQuestionAntiPatterns.some((p) => {
+    return answerString.toLowerCase().replace(/\s/g, "").includes(p);
+  });
+
+  return !pattern && !antiPattern ? pattern : true;
+};
+
+export const getAllFieldsWith = (form, field, searchByValue) => {
+  let retVal = Object.entries(form).filter(([key, value]) => key.toLowerCase().includes(field.toLowerCase()));
+
+  if (searchByValue) {
+    const hasMatchingValue = Object.entries(form).filter(([key, value]) => {
+      if (typeof value !== "object" || value === null) {
+        let val = String(value).toLowerCase();
+        return val.toLowerCase().includes(field.toLowerCase());
+      } else return false;
+    });
+    retVal = hasMatchingValue;
+  }
+
+  return retVal ? retVal.map((r) => ({ field: r[0], value: r[1] })) : null;
+};
+export const buildingSizes = (formFields) => {
+  // Always return metric metre measurements
+  const units = getFieldValue(formFields, "measurementUnits") === "metric" ? "m" : "ft";
+  const length = getFieldValue(formFields, "polytunnelLength") || getFieldValue(formFields, "buildingLength");
+  const width = getFieldValue(formFields, "buildingWidth");
+  const height = getFieldValue(formFields, "buildingHeight");
+  console.log("buildingSizes", { length, width, height, units });
+  const format = (val) =>
+    typeof val === "string"
+      ? val.includes("ft")
+        ? Number((Number(val.replace("ft", "")) * 0.3048).toFixed(2))
+        : Number(val.replace("m", ""))
+      : Number(val);
+
+  return {
+    length: length ? format(length) : null,
+    width: width ? format(width) : null,
+    height: height ? format(height) : null,
+    units: units ?? null,
+  };
+};
+
+export const lowerFirst = (s) => (s && String(s[0]).toLowerCase() + String(s).slice(1)) || "";
+
+// Helper function to check if form contains asbestos
+const checkFormForAsbestos = (formAnswers) => {
+  // Check field names that contain 'asbestos' and have positive values
+  const asbestosFieldsWithPositiveValues = getAllFieldsWith(formAnswers, "asbestos", false).filter((field) => {
+    const hasAsbestosInKey = checkQuestionForAsbestos(field.field);
+    const hasPositiveValue = field.value === "yes" || field.value === "true" || field.value === true;
+    return hasAsbestosInKey && hasPositiveValue;
+  });
+
+  // Check field values that contain 'asbestos' and indicate presence
+  const asbestosInFieldValues = getAllFieldsWith(formAnswers, "asbestos", true).filter((field) =>
+    checkAnswerForAsbestos(field.value)
+  );
+
+  return asbestosFieldsWithPositiveValues.length > 0 || asbestosInFieldValues.length > 0;
+};
+
+export const filterSuppliers = (suppliers, supplierTypesInForm, formAnswers) => {
+  console.log("Start", suppliers.length, " suppliers");
+  const quoteContainsAsbestos = checkFormForAsbestos(formAnswers);
+  const quoteLatLng = getLatLng(formAnswers.address, formAnswers.Guid);
+  const quoteBuildingDimensions = buildingSizes(formAnswers);
+
+  if (quoteContainsAsbestos) {
+    console.log("Contains asbestos?");
+    suppliers = suppliers.filter((supplier) => supplier.handlesAsbestos);
+  }
+
+  const containsSubstring = (str, substring) => {
+    const escapeRegExp = (string) => {
+      return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    };
+    const escapedSubstring = escapeRegExp(substring);
+    const regex = new RegExp(escapedSubstring, "i");
+    return regex.test(str);
+  };
+
+  const mainBuildingSuppliersByType = suppliers.filter((supplier) =>
+    supplier.quoteTypesProvided.some((quoteType) => containsSubstring(formAnswers.formName, quoteType))
+  );
+
+  const mainBuildingSuppliers = {
+    type: formAnswers.formName,
+    suppliers: mainBuildingSuppliersByType,
+  };
+
+  const nonDimensionSupplierTypes = supplierTypesInForm
+    .filter((s) => !s.hasMinMaxDimensions)
+    .map((type) => ({
+      type: type,
+      suppliers: suppliers.filter((supplier) =>
+        supplier.quoteTypesProvided.some((quoteType) => containsSubstring(type.supplierType, quoteType))
+      ),
+    }));
+
+  console.log("MAIN CHECk", mainBuildingSuppliers);
+
+  console.log(
+    "NONDIMEN CHECk",
+    nonDimensionSupplierTypes.filter((i) => i.suppliers.length > 0)
+  );
+
+  const dimensionSupplierTypes = supplierTypesInForm
+    .filter((s) => s.hasMinMaxDimensions)
+    .map((type) => ({
+      type: type,
+      suppliers: suppliers.filter((supplier) => {
+        const { length, width, height } = quoteBuildingDimensions;
+        const isSupplierType = supplier.quoteTypesProvided.some((quoteType) =>
+          containsSubstring(type.supplierType, quoteType)
+        );
+
+        if (!supplier.minMaxMeasurements.hasOwnProperty(type.baseType)) return false;
+
+        const isWithinLength =
+          length >= supplier.minMaxMeasurements[type.baseType].minLength &&
+          length <= supplier.minMaxMeasurements[type.baseType].maxLength;
+        const isWithinWidth = width
+          ? width >= supplier.minMaxMeasurements[type.baseType].minWidth &&
+            width <= supplier.minMaxMeasurements[type.baseType].maxWidth
+          : true;
+        const isWithinHeight = height
+          ? height >= supplier.minMaxMeasurements[type.baseType].minHeight &&
+            height <= supplier.minMaxMeasurements[type.baseType].maxHeight
+          : true;
+        return isWithinLength && isWithinWidth && isWithinHeight && isSupplierType;
+      }),
+    }));
+
+  console.log(
+    "DIMEN CHECk",
+    dimensionSupplierTypes.filter((i) => i.suppliers.length > 0)
+  );
+
+  const sortedSuppliersByDistance = [
+    ...nonDimensionSupplierTypes,
+    ...dimensionSupplierTypes,
+    ...[mainBuildingSuppliers],
+  ]
+    .filter((s) => s.suppliers.length > 0)
+    .map((s) => ({
+      type: s.type,
+      suppliers: sortSuppliersByDistance(s.suppliers, quoteLatLng),
+    }));
+
+  // // Return type -
+  // [
+  //   {
+  //     supplierType: "roofSupplyAndInstall",
+  //     baseType: "roof",
+  //     newBuildings: true,
+  //     repairReplace: false,
+  //     hasMinMaxDimensions: true,
+  //     suppliers: [
+  //       {
+  //         subscriptionEndDate: "2022-08-20",
+  //         latitude: 51.981923,
+  //         _id: "6b1a26fa-56d7-429e-a6da-f12211db6a73",
+  //         _owner: "85839425-0cfe-471f-94da-e4086b1dc961",
+  //         _createdDate: "2025-01-01T13:40:30.828Z",
+  //         minMaxMeasurements: {},
+  //         handlesAsbestos: false,
+  //         emailAddress: "dave@abcxyz.com",
+  //         quoteTypesProvided: ["Mono Pitch", "Concrete Slab", "Mezzanine Floor", "Round House", "Portal Frame"],
+  //         _updatedDate: "2025-08-07T11:39:46.481Z",
+  //         longitude: -3.410408,
+  //         quotesSent: [],
+  //         subscriptionDate: "2021-08-20",
+  //         contactId: "ca6facad-745f-4358-91bc-cf819132739b",
+  //         isActive: true,
+  //         supplierName: "XYZ Corporation",
+  //       },
+  //     ],
+  //   },
+  // ];
+
+  // buildingSuppliers: buildingSuppliers,
+  //   steelErectorSuppliers: steelErectSuppliers,
+  //   steelFabricationSuppliers: steelFabricationSuppliers,
+  //   roofSuppliers: roofSuppliers,
+
+  // Run the fetch for all suppliers
+  // Filter?
+
+  // If they want X supplier quote, get all suppliers of X within 50miles for this supplier
+  // If they want X installation quote, get all installers of X within 50miles for this supplier
 
   // get all suppliers within 50miles for this suppliers
 
@@ -634,13 +1075,523 @@ export const getSuppliers = async (formGuid) => {
 
   // identify the specific form answers for the specific suppliers
 
-  // getNearestSuppliers;
-  return suppliers;
+  return sortedSuppliersByDistance;
+};
+
+export const getSuppliers = async (form) => {
+  // identify suppliers for this form
+  // ensure that the IDs are the same for each form
+
+  // quoteForQuantitySurveyor === "yes"
+  // "details_quoteForInstallation": "quoteFromOtherSteelErector",
+  // "details_quoteForLevellingSite": "",
+  // "solarPanelQuoteFromProvider": "yes",
+  // "floor_concretedFloorQuote": "yes",
+  // "mezzanineFloor_quoteFromSupplier": "quoteFromOtherSteelErector",
+
+  // groundworkers and concrete - supply and install is same right?
+  // Would groundworks and concrete boys both quote for a concrete floor? Would it be both?
+  // Steel erector would just be install - or supply too?
+
+  // get with collection - SupplierTypes
+
+  // const supplierTypeList = await getCollectionData("SupplierTypes", "createdOn", "2025-08-07T11:52:56Z");
+
+  const supplierTypeList = [
+    {
+      supplierType: "demolitionWalls",
+      baseType: "demolitionWalls",
+      newBuildings: false,
+      repairReplace: true,
+      hasMinMaxDimensions: false,
+    },
+    {
+      supplierType: "demolitionCladding",
+      baseType: "demolitionCladding",
+      newBuildings: false,
+      repairReplace: true,
+      hasMinMaxDimensions: false,
+    },
+    {
+      supplierType: "quantitySurveyorInstall",
+      baseType: "quantitySurveyor",
+      newBuildings: true,
+      repairReplace: false,
+      hasMinMaxDimensions: false,
+    },
+    {
+      supplierType: "concreteBlockInstall",
+      baseType: "concreteBlock",
+      newBuildings: true,
+      repairReplace: false,
+      hasMinMaxDimensions: false,
+    },
+    {
+      supplierType: "roofSupplyAndInstall",
+      baseType: "roof",
+      newBuildings: true,
+      repairReplace: false,
+      hasMinMaxDimensions: true,
+    },
+    {
+      supplierType: "roofRepairSupply",
+      baseType: "roofRepair",
+      newBuildings: false,
+      repairReplace: true,
+      hasMinMaxDimensions: true,
+    },
+    {
+      supplierType: "steelFabricatorSupplyAndInstall",
+      baseType: "steelFabricator",
+      newBuildings: true,
+      repairReplace: false,
+      hasMinMaxDimensions: true,
+    },
+    {
+      supplierType: "solarPanelSupply",
+      baseType: "solarPanel",
+      newBuildings: true,
+      repairReplace: false,
+      hasMinMaxDimensions: false,
+    },
+    {
+      supplierType: "polytunnelSupplyAndInstall",
+      baseType: "polytunnel",
+      newBuildings: true,
+      repairReplace: false,
+      hasMinMaxDimensions: true,
+    },
+    {
+      supplierType: "polytunnelSupply",
+      baseType: "polytunnel",
+      newBuildings: true,
+      repairReplace: false,
+      hasMinMaxDimensions: true,
+    },
+    {
+      supplierType: "demolitionRoof",
+      baseType: "demolitionRoof",
+      newBuildings: false,
+      repairReplace: true,
+      hasMinMaxDimensions: false,
+    },
+    {
+      supplierType: "concreteWallRepairSupplyAndInstall",
+      baseType: "concreteWallRepair",
+      newBuildings: false,
+      repairReplace: true,
+      hasMinMaxDimensions: false,
+    },
+    {
+      supplierType: "massConcreteSupplyAndInstall",
+      baseType: "massConcrete",
+      newBuildings: true,
+      repairReplace: false,
+      hasMinMaxDimensions: false,
+    },
+    {
+      supplierType: "roofInstall",
+      baseType: "roof",
+      newBuildings: true,
+      repairReplace: false,
+      hasMinMaxDimensions: true,
+    },
+    {
+      supplierType: "concreteBlockSupply",
+      baseType: "concreteBlock",
+      newBuildings: true,
+      repairReplace: false,
+      hasMinMaxDimensions: false,
+    },
+    {
+      supplierType: "steelErectorSupplyAndInstall",
+      baseType: "steelErector",
+      newBuildings: true,
+      repairReplace: false,
+      hasMinMaxDimensions: true,
+    },
+    {
+      supplierType: "solarPanelInstall",
+      baseType: "solarPanel",
+      newBuildings: true,
+      repairReplace: false,
+      hasMinMaxDimensions: false,
+    },
+    {
+      supplierType: "cattleSheetDoorSupplyAndInstall",
+      baseType: "cattleSheetDoor",
+      newBuildings: true,
+      repairReplace: false,
+      hasMinMaxDimensions: false,
+    },
+    {
+      supplierType: "quantitySurveyorSupply",
+      baseType: "quantitySurveyor",
+      newBuildings: true,
+      repairReplace: false,
+      hasMinMaxDimensions: false,
+    },
+    {
+      supplierType: "polytunnelInstall",
+      baseType: "polytunnel",
+      newBuildings: true,
+      repairReplace: false,
+      hasMinMaxDimensions: true,
+    },
+    {
+      supplierType: "concreteBlockSupplyAndInstall",
+      baseType: "concreteBlock",
+      newBuildings: true,
+      repairReplace: false,
+      hasMinMaxDimensions: false,
+    },
+    {
+      supplierType: "demolitionStructures",
+      baseType: "demolitionStructures",
+      newBuildings: false,
+      repairReplace: true,
+      hasMinMaxDimensions: false,
+    },
+    {
+      supplierType: "concreteFloorSupplyAndInstall",
+      baseType: "concreteFloor",
+      newBuildings: true,
+      repairReplace: false,
+      hasMinMaxDimensions: false,
+    },
+    {
+      supplierType: "groundWorkerSupply",
+      baseType: "groundWorker",
+      newBuildings: true,
+      repairReplace: false,
+      hasMinMaxDimensions: false,
+    },
+    {
+      supplierType: "steelErectorSupply",
+      baseType: "steelErector",
+      newBuildings: true,
+      repairReplace: false,
+      hasMinMaxDimensions: true,
+    },
+    {
+      supplierType: "rainwaterHarvestingSupply",
+      baseType: "rainwaterHarvesting",
+      newBuildings: true,
+      repairReplace: false,
+      hasMinMaxDimensions: false,
+    },
+    {
+      supplierType: "claddingRepairInstall",
+      baseType: "claddingRepair",
+      newBuildings: false,
+      repairReplace: true,
+      hasMinMaxDimensions: false,
+    },
+    {
+      supplierType: "concretePanelSupply",
+      baseType: "concretePanel",
+      newBuildings: true,
+      repairReplace: false,
+      hasMinMaxDimensions: false,
+    },
+    {
+      supplierType: "roofRepairSupplyAndInstall",
+      baseType: "roofRepair",
+      newBuildings: false,
+      repairReplace: true,
+      hasMinMaxDimensions: true,
+    },
+    {
+      supplierType: "cattleSheetDoorSupply",
+      baseType: "cattleSheetDoor",
+      newBuildings: true,
+      repairReplace: false,
+      hasMinMaxDimensions: false,
+    },
+    {
+      supplierType: "claddingRepairSupplyAndInstall",
+      baseType: "claddingRepair",
+      newBuildings: false,
+      repairReplace: true,
+      hasMinMaxDimensions: false,
+    },
+    {
+      supplierType: "rainwaterHarvestingSupplyAndInstall",
+      baseType: "rainwaterHarvesting",
+      newBuildings: true,
+      repairReplace: false,
+      hasMinMaxDimensions: false,
+    },
+    {
+      supplierType: "gutteringSupplyAndInstall",
+      baseType: "guttering",
+      newBuildings: true,
+      repairReplace: false,
+      hasMinMaxDimensions: false,
+    },
+    {
+      supplierType: "gutteringRepairInstall",
+      baseType: "gutteringRepair",
+      newBuildings: false,
+      repairReplace: true,
+      hasMinMaxDimensions: false,
+    },
+    {
+      supplierType: "claddingRepairSupply",
+      baseType: "claddingRepair",
+      newBuildings: false,
+      repairReplace: true,
+      hasMinMaxDimensions: false,
+    },
+    {
+      supplierType: "roofSupply",
+      baseType: "roof",
+      newBuildings: true,
+      repairReplace: false,
+      hasMinMaxDimensions: true,
+    },
+    {
+      supplierType: "solarPanelSupplyAndInstall",
+      baseType: "solarPanel",
+      newBuildings: true,
+      repairReplace: false,
+      hasMinMaxDimensions: false,
+    },
+    {
+      supplierType: "concreteFloorSupply",
+      baseType: "concreteFloor",
+      newBuildings: true,
+      repairReplace: false,
+      hasMinMaxDimensions: false,
+    },
+    {
+      supplierType: "concreteWallRepairSupply",
+      baseType: "concreteWallRepair",
+      newBuildings: false,
+      repairReplace: true,
+      hasMinMaxDimensions: false,
+    },
+    {
+      supplierType: "claddingSupplyAndInstall",
+      baseType: "cladding",
+      newBuildings: true,
+      repairReplace: false,
+      hasMinMaxDimensions: false,
+    },
+    {
+      supplierType: "groundWorkerInstall",
+      baseType: "groundWorker",
+      newBuildings: true,
+      repairReplace: false,
+      hasMinMaxDimensions: false,
+    },
+    {
+      supplierType: "concretePanelInstall",
+      baseType: "concretePanel",
+      newBuildings: true,
+      repairReplace: false,
+      hasMinMaxDimensions: false,
+    },
+    {
+      supplierType: "gutteringRepairSupply",
+      baseType: "gutteringRepair",
+      newBuildings: false,
+      repairReplace: true,
+      hasMinMaxDimensions: false,
+    },
+    {
+      supplierType: "gutteringRepairSupplyAndInstall",
+      baseType: "gutteringRepair",
+      newBuildings: false,
+      repairReplace: true,
+      hasMinMaxDimensions: false,
+    },
+    {
+      supplierType: "massConcreteInstall",
+      baseType: "massConcrete",
+      newBuildings: true,
+      repairReplace: false,
+      hasMinMaxDimensions: false,
+    },
+    {
+      supplierType: "rainwaterHarvestingInstall",
+      baseType: "rainwaterHarvesting",
+      newBuildings: true,
+      repairReplace: false,
+      hasMinMaxDimensions: false,
+    },
+    {
+      supplierType: "doorSupplyAndInstall",
+      baseType: "door",
+      newBuildings: true,
+      repairReplace: false,
+      hasMinMaxDimensions: false,
+    },
+    {
+      supplierType: "massConcreteSupply",
+      baseType: "massConcrete",
+      newBuildings: true,
+      repairReplace: false,
+      hasMinMaxDimensions: false,
+    },
+    {
+      supplierType: "gutteringSupply",
+      baseType: "guttering",
+      newBuildings: true,
+      repairReplace: false,
+      hasMinMaxDimensions: false,
+    },
+    {
+      supplierType: "doorSupply",
+      baseType: "door",
+      newBuildings: true,
+      repairReplace: false,
+      hasMinMaxDimensions: false,
+    },
+    {
+      supplierType: "groundWorkerSupplyAndInstall",
+      baseType: "groundWorker",
+      newBuildings: true,
+      repairReplace: false,
+      hasMinMaxDimensions: false,
+    },
+    {
+      supplierType: "steelFabricatorInstall",
+      baseType: "steelFabricator",
+      newBuildings: true,
+      repairReplace: false,
+      hasMinMaxDimensions: true,
+    },
+    {
+      supplierType: "steelErectorInstall",
+      baseType: "steelErector",
+      newBuildings: true,
+      repairReplace: false,
+      hasMinMaxDimensions: true,
+    },
+    {
+      supplierType: "concretePanelSupplyAndInstall",
+      baseType: "concretePanel",
+      newBuildings: true,
+      repairReplace: false,
+      hasMinMaxDimensions: false,
+    },
+    {
+      supplierType: "concreteFloorInstall",
+      baseType: "concreteFloor",
+      newBuildings: true,
+      repairReplace: false,
+      hasMinMaxDimensions: false,
+    },
+    {
+      supplierType: "steelFabricatorSupply",
+      baseType: "steelFabricator",
+      newBuildings: true,
+      repairReplace: false,
+      hasMinMaxDimensions: true,
+    },
+    {
+      supplierType: "doorInstall",
+      baseType: "door",
+      newBuildings: true,
+      repairReplace: false,
+      hasMinMaxDimensions: false,
+    },
+    {
+      supplierType: "demolitionConcrete",
+      baseType: "demolitionConcrete",
+      newBuildings: false,
+      repairReplace: true,
+      hasMinMaxDimensions: false,
+    },
+    {
+      supplierType: "cattleSheetDoorInstall",
+      baseType: "cattleSheetDoor",
+      newBuildings: true,
+      repairReplace: false,
+      hasMinMaxDimensions: false,
+    },
+    {
+      supplierType: "roofRepairInstall",
+      baseType: "roofRepair",
+      newBuildings: false,
+      repairReplace: true,
+      hasMinMaxDimensions: true,
+    },
+    {
+      supplierType: "claddingSupply",
+      baseType: "cladding",
+      newBuildings: true,
+      repairReplace: false,
+      hasMinMaxDimensions: false,
+    },
+    {
+      supplierType: "gutteringInstall",
+      baseType: "guttering",
+      newBuildings: true,
+      repairReplace: false,
+      hasMinMaxDimensions: false,
+    },
+    {
+      supplierType: "quantitySurveyorSupplyAndInstall",
+      baseType: "quantitySurveyor",
+      newBuildings: true,
+      repairReplace: false,
+      hasMinMaxDimensions: false,
+    },
+    {
+      supplierType: "concreteWallRepairInstall",
+      baseType: "concreteWallRepair",
+      newBuildings: false,
+      repairReplace: true,
+      hasMinMaxDimensions: false,
+    },
+    {
+      supplierType: "claddingInstall",
+      baseType: "cladding",
+      newBuildings: true,
+      repairReplace: false,
+      hasMinMaxDimensions: false,
+    },
+  ];
+
+  // PT 1 - Get all supplier types
+  const supplierTypesInForm = getAllSupplierTypesInForm(supplierTypeList, form);
+
+  console.log("Supplier Types in Form: ", supplierTypesInForm);
+
+  // PT 2 - Get filtered suppliers
+  let suppliers = await wixData
+    .query("SupplierList")
+    .hasSome("quoteTypesProvided", supplierTypesInForm)
+    .eq("isActive", true)
+    .limit(1000)
+    .find()
+    .then((results) => results.items);
+
+  console.log("Suppliers returned: ", suppliers);
+
+  //     "claddingRepairSupply",
+  // "claddingRepairInstall",
+  // "claddingRepairSupplyAndInstall",
+  // "roofRepairSupply", *
+  // "roofRepairInstall", *
+  // "roofRepairSupplyAndInstall", *
+  //     "demolitionStructures",
+  // "demolitionWalls",
+  // "demolitionRoof",
+  // "demolitionCladding",
+  // "demolitionConcrete",
+  // Asbestos filtering for reRoof and reCladding(?) and demolition quotes
+
+  const filteredSuppliers = filterSuppliers(suppliers, supplierTypesInForm, form);
+
+  console.log("returning filtered suppliers: ", filteredSuppliers);
+  return filteredSuppliers;
 };
 
 export const invoke = async ({ payload }) => {
-  if (payload.TEST_COMPLETION) TEST_MODE = true;
-  console.log("TESTMODE", TEST_MODE, "\n", "PAYLOAD", payload);
+  console.log("Fired");
 
   const formObject = prepareFormData(payload);
   const { formName, formGuid } = formObject;
@@ -651,100 +1602,67 @@ export const invoke = async ({ payload }) => {
   if (formGuid && formName) {
     const completedForm = await getFormDetailsFromCollection(collection, formGuid);
 
-    console.log("COMP FORM", completedForm);
+    console.log("COMPLETED FORM:\n", completedForm);
 
-    const suppliers2 = await getSuppliers();
+    const suppliers = (await getSuppliers({ ...completedForm, formName: formName })).map((supplierType) => {
+      return supplierType.supplier.map((s) => ({
+        ...s,
+        supplierType: supplierType.supplierType,
+        baseSupplierType: supplierType.supplierType,
+      }));
+    });
 
-    if (suppliers2.length <= 10) return;
+    console.log("Selected suppliers:", suppliers);
 
-    const numberOfQuotes = Object.entries(formObject).find((keyVal) =>
-      keyVal[0].toLowerCase().startsWith("howmanyquotes")
-    )[1];
-
-    const quoteLatLng = getLatLng(completedForm.address, formGuid);
-
-    console.log("NUMBER OF QUOTES", numberOfQuotes);
-
-    // Suppliers needed - always building, then pass in solar panels, concrete, erection etc etc
     // IF only a concrete supplier etc - only send them relative fields
-
-    const suppliers = TEST_MODE
-      ? await getNearestSuppliers("test", quoteLatLng, numberOfQuotes)
-      : await getNearestSuppliers(formName, quoteLatLng, numberOfQuotes);
-
-    const solarSuppliers = await getNearestSuppliers("Solar Panels", quoteLatLng, numberOfQuotes);
-
-    console.log("SUPPLIERS", suppliers);
-    console.log("Solar SUPPLIERS", solarSuppliers);
-
-    const quoteTypesPresentInForm = (completedForm) => {
-      let quoteTypes = [completedForm.formName];
-
-      // solar panel quote
-      if (completedForm.solarPanelQuoteFromProvider) {
-        quoteTypes.push("Solar Panels");
-      }
-      // installation quote
-      if (completedForm.quoteForInstallation) {
-        quoteTypes.push("Installation");
-      }
-      // levelling quote
-      if (completedForm.quoteForInstallation) {
-        quoteTypes.push("Groundworks");
-      }
-      // concrete floor quote
-      if (completedForm.quoteForInstallation) {
-        quoteTypes.push("Concrete Internal");
-      }
-    };
-
-    // Filter suppliers by active status and same quotation type
-    const getBuildingSuppliers = suppliers.filter(
-      (supp) => supp.supplier.isActive && supp.supplier.quoteTypesProvided.includes(quoteTypesPresentInForm)
-    );
-
-    // Email suppliers for main buildings
-    const emailMainSupplier = () => {};
-
-    // Email suppliers for groundworks, concrete and/or solar panels
-    const emailMinorSupplier = () => {};
 
     // get form details from collection
 
     // send to suppliers - whole form and groundworkers etc.
     // if xyz is filled, send to groundworkers etc.
 
-    // Send email to each supplier with quote details
-    //   for (let i = 0; i <= (qn >= ssl.length ? ssl.length : qn) - 1; i++) {
-
     const stringifiedForm = stringifyForm(completedForm, formName);
 
-    TEST_MODE && console.log("Stringified Form", stringifiedForm);
+    // TEST_MODE && console.log("Stringified Form", stringifiedForm);
 
     const emailOptions = {
       submittedName: completedForm.firstName + " " + completedForm.lastName,
       submittedType: `New ${formName}`,
       //   submittedDistance: Math.trunc(ssl[i].dist / 1000),
       submittedDistance: 40,
-      formDetails: stringifiedForm.formDetails,
-      formWalls: stringifiedForm.formWalls,
-      formRoof: stringifiedForm.formRoof,
-      formCladding: stringifiedForm.formCladding,
-      formDoors: stringifiedForm.formDoors,
-      formFloor: stringifiedForm.formFloor,
-      formContact: stringifiedForm.formContact,
+      formDetails: stringifiedForm["Form Details"],
+      formWalls: stringifiedForm["Form Walls"],
+      formRoof: stringifiedForm["Form Roof"],
+      formCladding: stringifiedForm["Form Cladding"],
+      formDoors: stringifiedForm["Form Doors"],
+      formFloor: stringifiedForm["Form Floor"],
+      formContact: stringifiedForm["Form Contact"],
     };
 
-    suppliers.forEach((ssl) => {
-      console.log("SSL", ssl);
+    TEST_MODE && console.log("Email built...", emailOptions);
+    if (suppliers.length === 0) console.log("No suppliers found!");
+    for (const supplier of suppliers) {
+      console.log("supplier", supplier);
+
+      const secondarySuppliers = ["steelFabricator", "solarPanel", "quantitySurveyor", "groundWorker"];
+
+      console.log(
+        `Emailing ${secondarySuppliers.includes(supplier.baseSupplierType) ? "secondary" : "main"} supplier ${
+          supplier.supplierName
+        }`
+      );
+
       try {
-        // sendSupplierEmail(ssl.supplier, emailOptions, { formGuid: formGuid, formCollection: collection });
+        await sendSupplierEmail(supplier.supplier, emailOptions, {
+          formGuid: formGuid,
+          formCollection: collection,
+        });
         console.log("Emails mock - test mode");
       } catch (error) {
         handleErrors(error);
-        console.log(`Error sending email to supplier: ${ssl.supplier.supplierName}\n`, error.message);
+        console.log(`Error sending email to supplier: ${supplier.supplier.supplierName}\n`, error.message);
       }
-    });
+    }
   } else {
     handleErrors(`Missing formGuid for form ${formName}`);
   }
