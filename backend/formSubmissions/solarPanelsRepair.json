@@ -1,36 +1,41 @@
-[
-  {
-    "formName": "Home - submit into Solar Panels Quotes collection",
-    "field:comp-m8lop5pm:details_measurementUnits": "metric",
-    "field:comp-m8lop5pm:details_roofArea": "45",
-    "context": {
-      "metaSiteId": "44e400a2-80db-47ef-b7c5-cd101c8abe97",
-      "activationId": "9a13692e-947a-4ba6-91d0-09acc019a3fa"
+{
+  "formName": "Home - submit into Solar Panels Quotes collection",
+  "field:comp-m8lop5pm:details_measurementUnits": "metric",
+  "field:comp-m8lop5pm:details_roofArea": "45",
+  "context": {
+    "metaSiteId": "44e400a2-80db-47ef-b7c5-cd101c8abe97",
+    "activationId": "9a13692e-947a-4ba6-91d0-09acc019a3fa"
+  },
+  "field:comp-m8lop5pm:details_roofMaterialOther": "Cardboard",
+  "_context": {
+    "app": { "_id": "1973457f-c021-4da5-941f-58444ff761d4" },
+    "trigger": { "key": "cms-dataset_form_submitted" },
+    "configuration": { "_id": "4f4bfd8d-7131-4fb1-873b-6017b79562e9" },
+    "activation": { "_id": "9a13692e-947a-4ba6-91d0-09acc019a3fa" }
+  },
+  "field:comp-m8lop5pm:address": {
+    "location": {
+      "latitude": 52.629205,
+      "longitude": -2.048218
     },
-    "field:comp-m8lop5pm:details_roofMaterialOther": "Cardboard",
-    "_context": {
-      "app": { "_id": "1973457f-c021-4da5-941f-58444ff761d4" },
-      "trigger": { "key": "cms-dataset_form_submitted" },
-      "configuration": { "_id": "4f4bfd8d-7131-4fb1-873b-6017b79562e9" },
-      "activation": { "_id": "9a13692e-947a-4ba6-91d0-09acc019a3fa" }
-    },
-    "field:comp-m8lop5pm:company": "t",
-    "field:comp-m8lop5pm:details_roofMaterial": "other",
-    "field:comp-m8lop5pm:details_roofContainsAsbestos": "yes",
-    "field:comp-m8lop5pm:formGuid": "edcd62f9-499a-4f9d-9411-cac9d211533b",
-    "field:comp-m8lop5pm:_createdDate": "Fri Apr 25 2025 19:11:38 GMT+0100 (British Summer Time)",
-    "field:comp-m8lop5pm:lastName": "t",
-    "field:comp-m8lop5pm:howManyQuotes": "3",
-    "field:comp-m8lop5pm:phoneNumber": "01234543234",
-    "field:comp-m8lop5pm:details_buildingWidth": "40000",
-    "field:comp-m8lop5pm:details_roofPitch": "unknown",
-    "field:comp-m8lop5pm:_updatedDate": "Fri Apr 25 2025 19:11:38 GMT+0100 (British Summer Time)",
-    "field:comp-m8lop5pm:firstName": "t",
-    "field:comp-m8lop5pm:details_buildingHeight": "24999.95",
-    "field:comp-m8lop5pm:email": "t@t.t",
-    "submitterId": "0e07e33a-c24d-4beb-946c-7cf122d30dc8",
-    "field:comp-m8lop5pm:details_buildingLength": "50000",
-    "field:comp-m8lop5pm:details_coverage": "part",
-    "formId": "comp-m8lop5pm"
-  }
-]
+    "formatted": "Teston, Maidstone, UK"
+  },
+  "field:comp-m8lop5pm:company": "t",
+  "field:comp-m8lop5pm:details_roofMaterial": "other",
+  "field:comp-m8lop5pm:details_roofContainsAsbestos": "yes",
+  "field:comp-m8lop5pm:formGuid": "edcd62f9-499a-4f9d-9411-cac9d211533b",
+  "field:comp-m8lop5pm:_createdDate": "Fri Apr 25 2025 19:11:38 GMT+0100 (British Summer Time)",
+  "field:comp-m8lop5pm:lastName": "t",
+  "field:comp-m8lop5pm:howManyQuotes": "3",
+  "field:comp-m8lop5pm:phoneNumber": "01234543234",
+  "field:comp-m8lop5pm:details_buildingWidth": "40000",
+  "field:comp-m8lop5pm:details_roofPitch": "unknown",
+  "field:comp-m8lop5pm:_updatedDate": "Fri Apr 25 2025 19:11:38 GMT+0100 (British Summer Time)",
+  "field:comp-m8lop5pm:firstName": "t",
+  "field:comp-m8lop5pm:details_buildingHeight": "24999.95",
+  "field:comp-m8lop5pm:email": "t@t.t",
+  "submitterId": "0e07e33a-c24d-4beb-946c-7cf122d30dc8",
+  "field:comp-m8lop5pm:details_buildingLength": "50000",
+  "field:comp-m8lop5pm:details_coverage": "part",
+  "formId": "comp-m8lop5pm"
+}
