@@ -1,6 +1,10 @@
-/** @type {import('jest').Config} */
-const config = {
-  verbose: true,
+module.exports = {
+  testEnvironment: "node",
+  setupFilesAfterEnv: ["<rootDir>/tests/setup.js"],
+  moduleNameMapper: {
+    "^wix-data$": "<rootDir>/tests/mocks/wixDataMock.js",
+  },
+  transform: {
+    "^.+\\.js$": "babel-jest",
+  },
 };
-
-module.exports = config;
