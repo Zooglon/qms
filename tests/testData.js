@@ -910,8 +910,8 @@ export const mockCollectionData = {
       details_finishedAreaUsageOther: "Other usage",
     },
   ],
-  GutteringQuotes: [],
-  WallQuotes: [],
+  GutteringQuotes: [{}],
+  WallQuotes: [{}],
   reroofQuotes: [
     {
       details_gutteringType: "",
@@ -1026,7 +1026,7 @@ export const mockCollectionData = {
       details_doorPlacement: "bothEnds",
     },
   ],
-  DismantleQuotes: [],
+  DismantleQuotes: [{}],
   DoorsQuotes: [
     {
       details_numberOfRollerShutterDoorsCustom: "3",
@@ -1572,7 +1572,7 @@ export const mockCollectionData = {
       details_gableIntermediatePostsPresent: "yes",
     },
   ],
-  RainwaterHarvestingQuotes: [],
+  RainwaterHarvestingQuotes: [{}],
 };
 
 export const supplierDistanceInput = [

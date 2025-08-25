@@ -201,7 +201,7 @@ describe("Form Submission tests - New Buildings", () => {
   });
 });
 
-describe.skip("Form Submission tests - Repair/Replace Buildings", () => {
+describe("Form Submission tests - Repair/Replace Buildings", () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
@@ -214,7 +214,7 @@ describe.skip("Form Submission tests - Repair/Replace Buildings", () => {
   test("test form submission - rainwaterRepairForm", async () => {
     setupMockCollections({
       SupplierList: mockCollectionData.SupplierList,
-      PolytunnelQuotes: mockCollectionData.RainwaterHarvestingQuotes,
+      RainwaterHarvestingQuotes: mockCollectionData.RainwaterHarvestingQuotes,
     });
     const testRun = await invoke({ payload: rainwaterRepairForm });
 
@@ -236,7 +236,7 @@ describe.skip("Form Submission tests - Repair/Replace Buildings", () => {
   test("test form submission - doorsRepairForm", async () => {
     setupMockCollections({
       SupplierList: mockCollectionData.SupplierList,
-      PolytunnelQuotes: mockCollectionData.DoorsQuotes,
+      DoorsQuotes: mockCollectionData.DoorsQuotes,
     });
     const testRun = await invoke({ payload: doorsRepairForm });
     expect(testRun).not.toBeNull();
@@ -251,7 +251,7 @@ describe.skip("Form Submission tests - Repair/Replace Buildings", () => {
   test("test form submission - dismantleRepairForm", async () => {
     setupMockCollections({
       SupplierList: mockCollectionData.SupplierList,
-      PolytunnelQuotes: mockCollectionData.DismantleQuotes,
+      DismantleQuotes: mockCollectionData.DismantleQuotes,
     });
     const testRun = await invoke({ payload: dismantleRepairForm });
     expect(testRun).not.toBeNull();
@@ -260,7 +260,7 @@ describe.skip("Form Submission tests - Repair/Replace Buildings", () => {
   test("test form submission - solarRepairForm", async () => {
     setupMockCollections({
       SupplierList: mockCollectionData.SupplierList,
-      PolytunnelQuotes: mockCollectionData.SolarPanelsQuotes,
+      SolarPanelsQuotes: mockCollectionData.SolarPanelsQuotes,
     });
     const testRun = await invoke({ payload: solarPanelsRepairForm });
     expect(testRun).not.toBeNull();
@@ -568,7 +568,7 @@ describe("Form Submission tests - Repair/Replace other suppliers", () => {
   });
 });
 
-describe.only("Supplier list advanced tests", () => {
+describe("Supplier list advanced tests", () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
@@ -986,7 +986,7 @@ describe.only("Supplier list advanced tests", () => {
     ).toEqual(["Sensible Steve", "Dodgy Dan", "Roofer Ryan"]);
   });
 
-  test.only("General suppliers are found and return", async () => {
+  test("General suppliers are found and return", async () => {
     const suppliers = supplierReturnObj;
 
     const concreteSlabReturn = filterSuppliers(suppliers, supplierTypes, {
@@ -994,7 +994,7 @@ describe.only("Supplier list advanced tests", () => {
       formName: "Concrete Slab",
     });
 
-    expect(concreteSlabReturn.map((i) => i.type)).toContain("Concrete Slab");
+    expect(concreteSlabReturn.map((i) => i.supplierType)).toContain("Concrete Slab");
     expect(
       concreteSlabReturn.flatMap((i) => i.suppliers).some((i) => i.quoteTypesProvided.includes("Concrete Slab"))
     ).toBe(true);
