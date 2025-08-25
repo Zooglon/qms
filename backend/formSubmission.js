@@ -7,7 +7,7 @@ import wixData from "wix-data";
 import { triggeredEmails, contacts } from "wix-crm-backend";
 import { fetch } from "wix-fetch";
 
-let TEST_MODE = true;
+let TEST_MODE = false;
 
 const qmsStoreCollections = [
   "CladdingQuotes",
@@ -700,7 +700,7 @@ async function sendSupplierEmail(supplier, options, collection) {
   try {
     if (TEST_MODE) {
     } else {
-      triggeredEmails.emailContact(emailId, contactId, emailOptions);
+      await triggeredEmails.emailContact(emailId, contactId, emailOptions);
 
       console.log(`Email was sent to contact ${supplier.supplierName}`);
       // update supplier CMS with id of quotes sent
@@ -962,7 +962,7 @@ export const filterSuppliers = (suppliers, supplierTypesInForm, formAnswers) => 
   );
 
   const mainBuildingSuppliers = {
-    type: formAnswers.formName,
+    type: { supplierType: formAnswers.formName, baseSupplierType: formAnswers.formName },
     suppliers: mainBuildingSuppliersByType,
   };
 
@@ -1021,7 +1021,7 @@ export const filterSuppliers = (suppliers, supplierTypesInForm, formAnswers) => 
   ]
     .filter((s) => s.suppliers.length > 0)
     .map((s) => ({
-      type: s.type,
+      ...s.type,
       suppliers: sortSuppliersByDistance(s.suppliers, quoteLatLng),
     }));
 
@@ -1584,7 +1584,16 @@ export const getSuppliers = async (form) => {
   // "demolitionConcrete",
   // Asbestos filtering for reRoof and reCladding(?) and demolition quotes
 
-  const filteredSuppliers = filterSuppliers(suppliers, supplierTypesInForm, form);
+  const filteredSuppliers = filterSuppliers(suppliers, supplierTypesInForm, form)
+    .map((supplierType) => {
+      return supplierType.suppliers.map((s) => ({
+        ...s,
+        supplierType: supplierType.supplierType,
+        baseSupplierType:
+          "baseSupplierType" in supplierType ? supplierType.baseSupplierType : supplierType.supplierType,
+      }));
+    })
+    .flat();
 
   console.log("returning filtered suppliers: ", filteredSuppliers);
   return filteredSuppliers;
@@ -1604,13 +1613,7 @@ export const invoke = async ({ payload }) => {
 
     console.log("COMPLETED FORM:\n", completedForm);
 
-    const suppliers = (await getSuppliers({ ...completedForm, formName: formName })).map((supplierType) => {
-      return supplierType.supplier.map((s) => ({
-        ...s,
-        supplierType: supplierType.supplierType,
-        baseSupplierType: supplierType.supplierType,
-      }));
-    });
+    const suppliers = await getSuppliers({ ...completedForm, formName: formName });
 
     console.log("Selected suppliers:", suppliers);
 
@@ -1627,16 +1630,25 @@ export const invoke = async ({ payload }) => {
 
     const emailOptions = {
       submittedName: completedForm.firstName + " " + completedForm.lastName,
-      submittedType: `New ${formName}`,
+      submittedType: `New ${formName === "Concrete Slab" ? "Concrete Project" : formName}`,
       //   submittedDistance: Math.trunc(ssl[i].dist / 1000),
       submittedDistance: 40,
-      formDetails: stringifiedForm["Form Details"],
-      formWalls: stringifiedForm["Form Walls"],
-      formRoof: stringifiedForm["Form Roof"],
-      formCladding: stringifiedForm["Form Cladding"],
-      formDoors: stringifiedForm["Form Doors"],
-      formFloor: stringifiedForm["Form Floor"],
-      formContact: stringifiedForm["Form Contact"],
+      ...(stringifiedForm["Form Details"] && { formDetails: stringifiedForm["Form Details"] }),
+      ...(stringifiedForm["Form Details"] && { formDetails: stringifiedForm["Form Details"] }),
+      ...(stringifiedForm["Form Details"] && { formDetails: stringifiedForm["Form Details"] }),
+      ...(stringifiedForm["Form Walls"] && { formWalls: stringifiedForm["Form Walls"] }),
+      ...(stringifiedForm["Form Roof"] && { formRoof: stringifiedForm["Form Roof"] }),
+      ...(stringifiedForm["Form Cladding"] && { formCladding: stringifiedForm["Form Cladding"] }),
+      ...(stringifiedForm["Form Doors"] && { formDoors: stringifiedForm["Form Doors"] }),
+      ...(stringifiedForm["Form Floor"] && { formFloor: stringifiedForm["Form Floor"] }),
+      ...(stringifiedForm["Form Contact"] && { formContact: stringifiedForm["Form Contact"] }),
+      // formDetails: stringifiedForm["Form Details"],
+      // formWalls: stringifiedForm["Form Walls"],
+      // formRoof: stringifiedForm["Form Roof"],
+      // formCladding: stringifiedForm["Form Cladding"],
+      // formDoors: stringifiedForm["Form Doors"],
+      // formFloor: stringifiedForm["Form Floor"],
+      // formContact: stringifiedForm["Form Contact"],
     };
 
     TEST_MODE && console.log("Email built...", emailOptions);
@@ -1651,16 +1663,14 @@ export const invoke = async ({ payload }) => {
           supplier.supplierName
         }`
       );
-
       try {
-        await sendSupplierEmail(supplier.supplier, emailOptions, {
+        await sendSupplierEmail(supplier, emailOptions, {
           formGuid: formGuid,
           formCollection: collection,
         });
-        console.log("Emails mock - test mode");
       } catch (error) {
         handleErrors(error);
-        console.log(`Error sending email to supplier: ${supplier.supplier.supplierName}\n`, error.message);
+        console.log(`Error sending email to supplier: ${supplier.supplierName}\n`, error.message);
       }
     }
   } else {
