@@ -1041,3 +1041,20 @@ describe("Form Submission tests - Other behaviour", () => {
     expect(yes).toBe(true);
   });
 });
+
+describe("General tests", () => {
+  test("General tests passed", () => {
+    const myarray = [[], [], [], [], "$w('#buildQuoteHeaderBtn')", "$w('#buildQuoteFooterBtn')"];
+
+    console.log("MY ARRAY", myarray.flat());
+  });
+
+  test("Test format field", () => {
+    const formatField = (f) => (typeof f === "string" ? f.replace(/([a-z])([A-Z])/g, `$1 $2`) : f);
+
+    expect(formatField("buildingLength")).toBe("building Length");
+    expect(formatField("StructuralFibresAndSteelReinfocringBarsMesh")).toBe(
+      "Structural Fibres And Steel Reinfocring Bars Mesh"
+    );
+  });
+});
