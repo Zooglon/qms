@@ -76,7 +76,7 @@ describe("Form Submission tests - General form submission", () => {
     wixData.find.mockReset();
   });
 
-  test("Form Submission tests - basic form data", () => {
+  test("Form Submission tests - basic form data", async () => {
     const payloadData = payloadTestData;
     const formObject = prepareFormData(payloadData);
 
@@ -93,7 +93,7 @@ describe("Form Submission tests - General form submission", () => {
     expect(formObject.address).toBe("Teston, Maidstone, UK");
   });
 
-  test("Form Submission tests - collection data found", () => {
+  test("Form Submission tests - collection data found", async () => {
     // Is correct collection identified?
     expect(getCollection("Cladding Quotes")).toBe("CladdingQuotes"),
       expect(getCollection("Concrete Slab Quotes")).toBe("ConcreteSlabQuotes"),
@@ -111,7 +111,7 @@ describe("Form Submission tests - General form submission", () => {
       expect(getCollection("Wall Quotes")).toBe("WallQuotes");
   });
 
-  test("Form Submission tests - form is stringified successfully", () => {
+  test("Form Submission tests - form is stringified successfully", async () => {
     const stringifiedForm = "";
     const identifiedStringifiedForm = "";
 
@@ -119,7 +119,7 @@ describe("Form Submission tests - General form submission", () => {
     expect(identifiedStringifiedForm).toBe(stringifiedForm);
   });
 
-  test("Form identifies dimension and non dimension supplier types", () => {
+  test("Form identifies dimension and non dimension supplier types", async () => {
     const nonDimensionSupplierTypes = supplierTypeList.filter((s) => !s.hasMinMaxDimensions);
     const dimensionSupplierTypes = supplierTypeList.filter((s) => s.hasMinMaxDimensions);
 
@@ -905,7 +905,7 @@ describe("Supplier list advanced tests", () => {
     ).not.toContain("Roofman Rich");
   });
 
-  test("During supplier filtering the form is searched for potential asbestos containing questions/answers", () => {
+  test("During supplier filtering the form is searched for potential asbestos containing questions/answers", async () => {
     const questionOrAnswerStrings = [
       "doesRoofContainAsbestos",
       "Its an old roof, it might contain asbestos - actually i think it does",
@@ -1006,7 +1006,7 @@ describe("Form Submission tests - Other behaviour", () => {
     jest.clearAllMocks();
   });
 
-  test("Suppliers are sorted by distance", () => {
+  test("Suppliers are sorted by distance", async () => {
     const formLatLng = { lat: "52.520920", lng: "-1.666381" };
     const supplierList = sortSuppliersByDistance(supplierDistanceInput, formLatLng);
 
@@ -1043,13 +1043,13 @@ describe("Form Submission tests - Other behaviour", () => {
 });
 
 describe("General tests", () => {
-  test("General tests passed", () => {
+  test("General tests passed", async () => {
     const myarray = [[], [], [], [], "$w('#buildQuoteHeaderBtn')", "$w('#buildQuoteFooterBtn')"];
 
     console.log("MY ARRAY", myarray.flat());
   });
 
-  test("Test format field", () => {
+  test("Test format field", async () => {
     const formatField = (f) => (typeof f === "string" ? f.replace(/([a-z])([A-Z])/g, `$1 $2`) : f);
 
     expect(formatField("buildingLength")).toBe("building Length");

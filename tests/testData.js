@@ -910,8 +910,42 @@ export const mockCollectionData = {
       details_finishedAreaUsageOther: "Other usage",
     },
   ],
-  GutteringQuotes: [{}],
-  WallQuotes: [{}],
+  GutteringQuotes: [
+    {
+      address: {
+        subdivisions: [
+          { code: "England", name: "England", type: "ADMINISTRATIVE_AREA_LEVEL_1" },
+          { code: "Greater London", name: "Greater London", type: "ADMINISTRATIVE_AREA_LEVEL_2" },
+          { code: "GB", name: "United Kingdom", type: "COUNTRY" },
+        ],
+        city: "London",
+        location: { latitude: 51.4818203, longitude: -0.1815417 },
+        streetAddress: { number: "512", name: "King's Road", apt: "", formattedAddressLine: "512 King's Rd" },
+        formatted: "512 King's Rd, London SW10 0LD, UK",
+        country: "GB",
+        postalCode: "SW10 0LD",
+        subdivision: "ENG",
+      },
+    },
+  ],
+  WallQuotes: [
+    {
+      address: {
+        subdivisions: [
+          { code: "England", name: "England", type: "ADMINISTRATIVE_AREA_LEVEL_1" },
+          { code: "Greater London", name: "Greater London", type: "ADMINISTRATIVE_AREA_LEVEL_2" },
+          { code: "GB", name: "United Kingdom", type: "COUNTRY" },
+        ],
+        city: "London",
+        location: { latitude: 51.4818203, longitude: -0.1815417 },
+        streetAddress: { number: "512", name: "King's Road", apt: "", formattedAddressLine: "512 King's Rd" },
+        formatted: "512 King's Rd, London SW10 0LD, UK",
+        country: "GB",
+        postalCode: "SW10 0LD",
+        subdivision: "ENG",
+      },
+    },
+  ],
   reroofQuotes: [
     {
       details_gutteringType: "",
@@ -1026,7 +1060,24 @@ export const mockCollectionData = {
       details_doorPlacement: "bothEnds",
     },
   ],
-  DismantleQuotes: [{}],
+  DismantleQuotes: [
+    {
+      address: {
+        subdivisions: [
+          { code: "England", name: "England", type: "ADMINISTRATIVE_AREA_LEVEL_1" },
+          { code: "Greater London", name: "Greater London", type: "ADMINISTRATIVE_AREA_LEVEL_2" },
+          { code: "GB", name: "United Kingdom", type: "COUNTRY" },
+        ],
+        city: "London",
+        location: { latitude: 51.4818203, longitude: -0.1815417 },
+        streetAddress: { number: "512", name: "King's Road", apt: "", formattedAddressLine: "512 King's Rd" },
+        formatted: "512 King's Rd, London SW10 0LD, UK",
+        country: "GB",
+        postalCode: "SW10 0LD",
+        subdivision: "ENG",
+      },
+    },
+  ],
   DoorsQuotes: [
     {
       details_numberOfRollerShutterDoorsCustom: "3",
@@ -1572,7 +1623,24 @@ export const mockCollectionData = {
       details_gableIntermediatePostsPresent: "yes",
     },
   ],
-  RainwaterHarvestingQuotes: [{}],
+  RainwaterHarvestingQuotes: [
+    {
+      address: {
+        subdivisions: [
+          { code: "England", name: "England", type: "ADMINISTRATIVE_AREA_LEVEL_1" },
+          { code: "Greater London", name: "Greater London", type: "ADMINISTRATIVE_AREA_LEVEL_2" },
+          { code: "GB", name: "United Kingdom", type: "COUNTRY" },
+        ],
+        city: "London",
+        location: { latitude: 51.4818203, longitude: -0.1815417 },
+        streetAddress: { number: "512", name: "King's Road", apt: "", formattedAddressLine: "512 King's Rd" },
+        formatted: "512 King's Rd, London SW10 0LD, UK",
+        country: "GB",
+        postalCode: "SW10 0LD",
+        subdivision: "ENG",
+      },
+    },
+  ],
 };
 
 export const supplierDistanceInput = [
