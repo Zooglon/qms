@@ -35,3 +35,20 @@ jest.mock(
   }),
   { virtual: true }
 );
+
+jest.mock(
+  "wix-web-module",
+  () => ({
+    webMethod: jest.fn(),
+    Permissions: jest.fn(),
+  }),
+  { virtual: true }
+);
+
+jest.mock(
+  "wix-data.v2",
+  () => ({
+    collections: jest.fn(),
+  }),
+  { virtual: true }
+);
