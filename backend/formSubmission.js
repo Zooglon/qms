@@ -6,6 +6,8 @@
 import wixData from "wix-data";
 import { triggeredEmails, contacts } from "wix-crm-backend";
 import { fetch } from "wix-fetch";
+import { Permissions, webMethod } from "wix-web-module";
+import { collections } from "wix-data.v2";
 
 let TEST_MODE = false;
 
@@ -516,109 +518,40 @@ export const sortSuppliersByDistance = (suppliers, quoteLatLng) => {
     .sort((a, b) => a.distance - b.distance);
 };
 
+const formatField = (field) => {
+  return typeof field === "string" ? field.replace(/([a-z])([A-Z])/g, (_, lower, upper) => `${lower} ${upper}`) : field;
+};
+
 const stringifyForm = (form, name) => {
-  const formatField = (f) => (typeof f === "string" ? f.replace(/([a-z])([A-Z])/g, `$1 $2`) : f);
+  const formTypeObj = {
+    MonoPitch: monoPitchFormFields,
+    Concrete: concreteSlabFormFields,
+    ConcreteSlab: concreteSlabFormFields,
+    MezzanineFloor: mezzanineFloorFormFields,
+    RoundHouse: roundHouseFormFields,
+    PortalFrame: portalFrameFormFields,
+    Polytunnel: polytunnelFormFields,
+  }[name];
 
-  const formDetails = [];
-  const formWalls = [];
-  const formRoof = [];
-  const formCladding = [];
-  const formDoors = [];
-  const formFloor = [];
-  const formMezzanineFloor = [];
-  const formContact = [];
+  const { formDetails, formWalls, formRoof, formCladding, formDoors, formFloor, formMezzanineFloor, formContact } =
+    formTypeObj || {};
 
-  const formTypeObj =
-    name === "Mono Pitch"
-      ? monoPitchFormFields
-      : name === "Concrete"
-      ? concreteSlabFormFields
-      : name === "Concrete Slab"
-      ? concreteSlabFormFields
-      : name === "Mezzanine Floor"
-      ? mezzanineFloorFormFields
-      : name === "Round House"
-      ? roundHouseFormFields
-      : name === "Portal Frame"
-      ? portalFrameFormFields
-      : name === "Polytunnel"
-      ? polytunnelFormFields
-      : {};
-
-  TEST_MODE && console.log(`Used ${name} to select form template ${JSON.stringify(formTypeObj)}`);
-  const lowerFirst = (s) => (s && String(s[0]).toLowerCase() + String(s).slice(1)) || "";
-  let orphanedFields = [];
-  // Iterate over form fields and populate template form objects
-  Object.entries(form).map((field) => {
-    let key = lowerFirst(field[0].replace(/.+_/gi, ""));
-    let value;
-
-    if (key.toLowerCase() === "address") {
-      value = field[1].formatted ?? JSON.stringify(field[1]);
-    } else if (key.toLowerCase() === "concreteaream2") {
-      value =
-        formatField(field[1] + "m²")
-          .slice(0, 1)
-          .toUpperCase() + field[1].slice(1);
-    } else if (typeof field[1] === "string") {
-      value = formatField(field[1]).slice(0, 1).toUpperCase() + field[1].slice(1);
-    } else {
-      value = field[1];
-    }
-
-    if (formTypeObj.formDetails && Object.keys(formTypeObj.formDetails).includes(key)) {
-      formTypeObj.formDetails[`${key}`] = value;
-    } else if (formTypeObj.formWalls && Object.keys(formTypeObj.formWalls).includes(key)) {
-      formTypeObj.formWalls[`${key}`] = value;
-    } else if (formTypeObj.formRoof && Object.keys(formTypeObj.formRoof).includes(key)) {
-      formTypeObj.formRoof[`${key}`] = value;
-    } else if (formTypeObj.formCladding && Object.keys(formTypeObj.formCladding).includes(key)) {
-      formTypeObj.formCladding[`${key}`] = value;
-    } else if (formTypeObj.formDoors && Object.keys(formTypeObj.formDoors).includes(key)) {
-      formTypeObj.formDoors[`${key}`] = value;
-    } else if (formTypeObj.formFloor && Object.keys(formTypeObj.formFloor).includes(key)) {
-      formTypeObj.formFloor[`${key}`] = value;
-    } else if (formTypeObj.formMezzanineFloor && Object.keys(formTypeObj.formMezzanineFloor).includes(key)) {
-      formTypeObj.formMezzanineFloor[`${key}`] = value;
-    } else if (formTypeObj.formContact && Object.keys(formTypeObj.formContact).includes(key)) {
-      formTypeObj.formContact[`${key}`] = value;
-    } else {
-      TEST_MODE && console.log(`Missing form template field for ${key} - ${value}`);
-      orphanedFields.push(`${key} - ${value}`);
-    }
-  });
-  console.log("Orphaned fields:", orphanedFields);
-
-  [
-    [formTypeObj.formDetails, formDetails],
-    [formTypeObj.formWalls, formWalls],
-    [formTypeObj.formRoof, formRoof],
-    [formTypeObj.formCladding, formCladding],
-    [formTypeObj.formDoors, formDoors],
-    [formTypeObj.formFloor, formFloor],
-    [formTypeObj.formMezzanineFloor, formMezzanineFloor],
-    [formTypeObj.formContact, formContact],
-  ].forEach((obj) => {
-    if (obj[0]) {
-      Object.entries(obj[0]).forEach(([key, value]) => {
-        if (value) {
-          obj[1].push(`\n\n${formatField(key.slice(0, 1).toUpperCase() + key.slice(1))} -\n${value}`);
-        }
-      });
-    }
-  });
-
-  console.log("Form stringified... returning....");
+  const formatSection = (section, formSection) => {
+    return Object.entries(formSection)
+      .filter(([, value]) => value)
+      .map(([key, value]) => `${formatField(key.slice(0, 1).toUpperCase() + key.slice(1))} - ${formatField(value)}`)
+      .join("\n• ");
+  };
 
   return {
-    ...(formDetails.length > 0 && { ["Form Details"]: formDetails.join("") }),
-    ...(formWalls.length > 0 && { ["Form Walls"]: formWalls.join("") }),
-    ...(formRoof.length > 0 && { ["Form Roof"]: formRoof.join("") }),
-    ...(formCladding.length > 0 && { ["Form Cladding"]: formCladding.join("") }),
-    ...(formDoors.length > 0 && { ["Form Doors"]: formDoors.join("") }),
-    ...(formFloor.length > 0 && { ["Form Floor"]: formFloor.join("") }),
-    ...(formMezzanineFloor.length > 0 && { ["Form MezzanineFloor"]: formMezzanineFloor.join("") }),
-    ["Form Contact"]: formContact.length > 0 ? formContact.join("") : "No contact details given",
+    "Form Details": formDetails && formatSection(formDetails, form),
+    "Form Walls": formWalls && formatSection(formWalls, form),
+    "Form Roof": formRoof && formatSection(formRoof, form),
+    "Form Cladding": formCladding && formatSection(formCladding, form),
+    "Form Doors": formDoors && formatSection(formDoors, form),
+    "Form Floor": formFloor && formatSection(formFloor, form),
+    "Form Mezzanine Floor": formMezzanineFloor && formatSection(formMezzanineFloor, form),
+    "Form Contact": formatSection(formContact, form) || "No contact details given",
   };
 };
 
@@ -683,6 +616,54 @@ const handleErrors = async (msg) => {
 
     throw new Error(msg);
   }
+};
+
+const saveToDb = async (formName, formGuid, suppliers) => {
+  console.log("Check vals - ", formName, formGuid, suppliers);
+  const updatedDataCollection = {
+    _id: "QuotationDB",
+    fields: [
+      {
+        key: "formName",
+        displayName: formName,
+        type: "TEXT",
+      },
+      {
+        key: "formGuid",
+        displayName: formGuid,
+        type: "TEXT",
+      },
+      // {
+      //   key: "sentSuppliersList",
+      //   displayName: suppliers,
+      //   type: "ARRAY_STRING",
+      // },
+    ],
+    revision: "2",
+    permissions: {
+      read: "SITE_MEMBER",
+      insert: "SITE_MEMBER_AUTHOR",
+      update: "SITE_MEMBER_AUTHOR",
+      remove: "SITE_MEMBER_AUTHOR",
+    },
+  };
+
+  console.log("SavetoDB fired... sending...");
+
+  const updateCollection = webMethod(Permissions.Anyone, async (updatedDataCollection) => {
+    try {
+      const updateDataCollectionResponse = await collections.updateDataCollection(updatedDataCollection);
+      console.log("fetch made...");
+      return updateDataCollectionResponse;
+    } catch (error) {
+      handleErrors(`Failed to update quote collection: ${error}`);
+    }
+  });
+
+  const res = await updateCollection(updatedDataCollection);
+
+  console.log("RES...", res);
+  return res;
 };
 
 async function sendSupplierEmail(supplier, options, collection) {
@@ -1626,12 +1607,18 @@ export const invoke = async ({ payload }) => {
 
     const stringifiedForm = stringifyForm(completedForm, formName);
 
+    // Not corruntly working...
+    // await saveToDb(formName, formGuid, ["Supplier1", "Supplier2"]);
+    // return {};
+
     // TEST_MODE && console.log("Stringified Form", stringifiedForm);
 
     const emailOptions = {
       submittedName: completedForm.firstName + " " + completedForm.lastName,
+      submittedEmail: formObject.email,
       submittedType: `New ${formName === "Concrete Slab" ? "Concrete Project" : formName}`,
       //   submittedDistance: Math.trunc(ssl[i].dist / 1000),
+      buildingSize: "20m x 3m x 1m",
       submittedDistance: 40,
       ...(stringifiedForm["Form Details"] && { formDetails: stringifiedForm["Form Details"] }),
       ...(stringifiedForm["Form Details"] && { formDetails: stringifiedForm["Form Details"] }),
@@ -1664,6 +1651,7 @@ export const invoke = async ({ payload }) => {
         }`
       );
       try {
+        // await saveToDb(formName, formGuid, suppliers);
         await sendSupplierEmail(supplier, emailOptions, {
           formGuid: formGuid,
           formCollection: collection,
