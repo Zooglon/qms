@@ -197,23 +197,31 @@ const monoPitchFormFields = {
 
 const concreteSlabFormFields = {
   formDetails: {
-    formGuid: undefined,
-    sitePrepared: undefined,
-    quoteForQuantitySurveyor: undefined,
-    concreteThickness: undefined,
-    concreteThicknessCustom: undefined,
-    interiorExteriorPlacement: undefined,
-    concreteAreaM2: undefined,
-    siteVisualsImageVideo: undefined,
-    finishedAreaUsage: undefined,
-    finishedAreaUsageOther: undefined,
-    concreteReinforcementOptions: undefined,
-    concreteSlabAdditionalNotes: undefined,
-    concreteSlabFinishOptions: undefined,
-    patternFinish: undefined,
-    patternFinishCustom: undefined,
-    powerFloatFinish: undefined,
-    areaMapformDetails: undefined,
+    Thickness: undefined,
+    Reinforcement: undefined,
+    "Dig Out": undefined,
+    "Photo/Video": undefined,
+    "Map of Area": undefined,
+    Placement: undefined,
+    Usage: undefined,
+    Finish: undefined,
+    // formGuid: undefined,
+    // sitePrepared: undefined,
+    // quoteForQuantitySurveyor: undefined,
+    // concreteThickness: undefined,
+    // concreteThicknessCustom: undefined,
+    // interiorExteriorPlacement: undefined,
+    // concreteAreaM2: undefined,
+    // siteVisualsImageVideo: undefined,
+    // finishedAreaUsage: undefined,
+    // finishedAreaUsageOther: undefined,
+    // concreteReinforcementOptions: undefined,
+    // concreteSlabAdditionalNotes: undefined,
+    // concreteSlabFinishOptions: undefined,
+    // patternFinish: undefined,
+    // patternFinishCustom: undefined,
+    // powerFloatFinish: undefined,
+    // areaMapformDetails: undefined,
   },
   formContact: {
     firstName: undefined,
@@ -522,7 +530,7 @@ const formatField = (field) => {
   return typeof field === "string" ? field.replace(/([a-z])([A-Z])/g, (_, lower, upper) => `${lower} ${upper}`) : field;
 };
 
-const stringifyForm = (form, name) => {
+export const stringifyForm = (form, name) => {
   const formTypeObj = {
     MonoPitch: monoPitchFormFields,
     Concrete: concreteSlabFormFields,
@@ -536,23 +544,63 @@ const stringifyForm = (form, name) => {
   const { formDetails, formWalls, formRoof, formCladding, formDoors, formFloor, formMezzanineFloor, formContact } =
     formTypeObj || {};
 
-  const formatSection = (section, formSection) => {
+  // const formatField = (f) => (typeof f === "string" ? f.replace(/([a-z])([A-Z])/g, `$1 $2`) : f);
+  // let key = lowerFirst(field[0].replace(/.+_/gi, ""));
+
+  const formatSection = (formSection, dot) => {
     return Object.entries(formSection)
       .filter(([, value]) => value)
-      .map(([key, value]) => `${formatField(key.slice(0, 1).toUpperCase() + key.slice(1))} - ${formatField(value)}`)
-      .join("\n• ");
+      .map(([key, value]) => {
+        let val = key.toLowerCase() === "address" ? value.formatted ?? JSON.stringify(value) : value;
+        let formattedVal = `${formatField(val)}`;
+
+        return `${dot ? "• " : ""}${formatField(
+          key.replace(/.+_/gi, "").slice(0, 1).toUpperCase() + key.replace(/.+_/gi, "").slice(1)
+        )} - ${formattedVal.slice(0, 1).toUpperCase() + formattedVal.slice(1)}`;
+      })
+      .join("\n");
   };
 
-  return {
-    "Form Details": formDetails && formatSection(formDetails, form),
-    "Form Walls": formWalls && formatSection(formWalls, form),
-    "Form Roof": formRoof && formatSection(formRoof, form),
-    "Form Cladding": formCladding && formatSection(formCladding, form),
-    "Form Doors": formDoors && formatSection(formDoors, form),
-    "Form Floor": formFloor && formatSection(formFloor, form),
-    "Form Mezzanine Floor": formMezzanineFloor && formatSection(formMezzanineFloor, form),
-    "Form Contact": formatSection(formContact, form) || "No contact details given",
-  };
+  let formString;
+
+  if (formTypeObj) {
+    formString = {
+      "Form Details": formDetails && formatSection(form, false),
+      "Form Walls": formWalls && formatSection(form, false),
+      "Form Roof": formRoof && formatSection(form, false),
+      "Form Cladding": formCladding && formatSection(form, false),
+      "Form Doors": formDoors && formatSection(form, false),
+      "Form Floor": formFloor && formatSection(form, false),
+      "Form Mezzanine Floor": formMezzanineFloor && formatSection(form, false),
+      "Form Contact": formatSection(form, false) || "No contact details given",
+    };
+  } else {
+    const { firstName, lastName, companyName, company, email, emailAddress, phoneNumber, address, ...otherFields } =
+      form;
+
+    formString = {
+      "Form Contact":
+        formatSection(
+          {
+            firstName,
+            lastName,
+            companyName,
+            company,
+            email,
+            emailAddress,
+            phoneNumber,
+            address,
+          },
+          false
+        ) || "No contact details given",
+      Fields: formatSection(otherFields, true),
+    };
+  }
+
+  // Remove sections with no data
+  const filteredFormString = Object.fromEntries(Object.entries(formString).filter(([, value]) => value));
+
+  return filteredFormString;
 };
 
 const getCollectionData = async (collection, filterField, filter, lmt) => {
@@ -674,6 +722,24 @@ async function sendSupplierEmail(supplier, options, collection) {
     },
   };
   const emailId = "new_form_submission";
+
+  const concreteEmailId = "concreteEmail";
+  const concreteVariables = {
+    submittedDistance: "Distance: ",
+    buildingSize: "Size: ",
+    thickness: "Thickness: ",
+    reinforcement: "Reinforcement: ",
+    dig_out: "Dig Out: ",
+    photo_video: "Photo/Video: ",
+    area_map: "Map of Area: ",
+    placement: "Placement: ",
+    usage: "Usage: ",
+    finish: "Finish: ",
+    submittedName: "Name: ",
+    submittedEmail: "Email: ",
+    submittedPhone: "Phone: ",
+  };
+
   const contactId = supplier.contactId;
 
   console.log("Email sent to:", emailId, contactId, "with: ", emailOptions);
@@ -731,13 +797,20 @@ const getLatLng = (addressField, guid) => {
 
 export const prepareFormData = (rawFormData) => {
   let formObject = {};
+  let fields = {};
 
-  // strip out everything but field names
   const fieldId = rawFormData.formId ?? null;
   for (let [key, value] of Object.entries(rawFormData)) {
     const regex = new RegExp(fieldId ? `.*${fieldId}\:{1}` : /(.*:)/, "g");
+    if (key.startsWith("field:")) {
+      const formattedKay = key.replace(regex, "");
+      if (!formattedKay.startsWith("_")) {
+        fields[formattedKay] = value;
+      }
+    }
     formObject[key.replace(regex, "")] = value;
   }
+
   // Format form name
   const formName = formObject.formName
     ? formObject.formName
@@ -747,13 +820,15 @@ export const prepareFormData = (rawFormData) => {
     : "Unknown form name";
 
   const formGuid = formObject.formGuid;
-  const address = formObject.address && formObject.address.formatted;
+  const address = formObject.address;
+  const latLng = { lat: formObject.address.location.latitude, lng: formObject.address.location.longitude };
+  const email = formObject.email;
 
-  if (!address || !formName || !formGuid) {
+  if (!address || !formName || !formGuid || !email) {
     handleErrors(`Form incomplete or missing fields:${" " + address}${" " + formName}${" " + formGuid}`);
   }
-
-  return { ...formObject, formName, formGuid, address };
+  console.log("Fields", fields);
+  return { fields, formName, formGuid, address, latLng, email };
 };
 
 export const getCollection = (formName) => {
@@ -1584,17 +1659,24 @@ export const invoke = async ({ payload }) => {
   console.log("Fired");
 
   const formObject = prepareFormData(payload);
-  const { formName, formGuid } = formObject;
+  const { formName, formGuid, address, fields } = formObject;
   const collection = getCollection(formName);
 
   console.log("FORMOBJECT", formObject, "\n", `formName: ${formName}`, "\n", `formGuid: ${formGuid}`);
 
   if (formGuid && formName) {
-    const completedForm = await getFormDetailsFromCollection(collection, formGuid);
+    let completedForm = await getFormDetailsFromCollection(collection, formGuid);
+    const combinedFormFields = { ...completedForm, ...fields };
+    completedForm = Object.keys(combinedFormFields).reduce((acc, key) => {
+      if (!acc.hasOwnProperty(key)) {
+        acc[key] = combinedFormFields[key];
+      }
+      return acc;
+    }, {});
 
     console.log("COMPLETED FORM:\n", completedForm);
 
-    const suppliers = await getSuppliers({ ...completedForm, formName: formName });
+    const suppliers = await getSuppliers({ ...completedForm, ...address, formName: formName });
 
     console.log("Selected suppliers:", suppliers);
 
@@ -1616,12 +1698,11 @@ export const invoke = async ({ payload }) => {
     const emailOptions = {
       submittedName: completedForm.firstName + " " + completedForm.lastName,
       submittedEmail: formObject.email,
+      submittedEmail: formObject.phone ?? "no phone number provided",
       submittedType: `New ${formName === "Concrete Slab" ? "Concrete Project" : formName}`,
       //   submittedDistance: Math.trunc(ssl[i].dist / 1000),
       buildingSize: "20m x 3m x 1m",
       submittedDistance: 40,
-      ...(stringifiedForm["Form Details"] && { formDetails: stringifiedForm["Form Details"] }),
-      ...(stringifiedForm["Form Details"] && { formDetails: stringifiedForm["Form Details"] }),
       ...(stringifiedForm["Form Details"] && { formDetails: stringifiedForm["Form Details"] }),
       ...(stringifiedForm["Form Walls"] && { formWalls: stringifiedForm["Form Walls"] }),
       ...(stringifiedForm["Form Roof"] && { formRoof: stringifiedForm["Form Roof"] }),
@@ -1629,13 +1710,7 @@ export const invoke = async ({ payload }) => {
       ...(stringifiedForm["Form Doors"] && { formDoors: stringifiedForm["Form Doors"] }),
       ...(stringifiedForm["Form Floor"] && { formFloor: stringifiedForm["Form Floor"] }),
       ...(stringifiedForm["Form Contact"] && { formContact: stringifiedForm["Form Contact"] }),
-      // formDetails: stringifiedForm["Form Details"],
-      // formWalls: stringifiedForm["Form Walls"],
-      // formRoof: stringifiedForm["Form Roof"],
-      // formCladding: stringifiedForm["Form Cladding"],
-      // formDoors: stringifiedForm["Form Doors"],
-      // formFloor: stringifiedForm["Form Floor"],
-      // formContact: stringifiedForm["Form Contact"],
+      ...(stringifiedForm["Fields"] && { formDetails: stringifiedForm["Fields"] }),
     };
 
     TEST_MODE && console.log("Email built...", emailOptions);
