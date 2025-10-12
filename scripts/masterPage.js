@@ -73,7 +73,7 @@ export function getFormFields(formName) {
     },
     {
       form: "concrete",
-      formContainer: "concreteSlabForm",
+      formContainer: "concreteForm",
       errorMsg: "submitFailed-concreteSlab",
       submitBtn: "submitButton-concreteSlab",
       guidField: "formGUID-field-concreteSlab",
