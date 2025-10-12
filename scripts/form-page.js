@@ -4,8 +4,8 @@ import { openLightbox } from "wix-window-frontend";
 import { getFormOptions } from "public/formFunctions";
 import wixLocationFrontend from "wix-location-frontend";
 
-let version = "000005";
-let formName = "polytunnel";
+let version = "000007";
+let formName = "concrete";
 
 let mapCreds;
 let measurementUnits;
@@ -33,7 +33,6 @@ const setFormFields = (formName) => {
 };
 
 // Elements on all forms
-
 const pitchCalcBtn = $w("#pitchCalcBtn");
 const convertCalcBtn = $w("#convertCalcBtn");
 const progressBar = $w("#progressBar");
@@ -47,7 +46,7 @@ const resetBtns = [
   $w("#buildQuoteHeaderBtn"),
   $w("#buildQuoteFooterBtn"),
 ];
-const formBackBtns = [...$w("#quoteFormBackBtn").children];
+const formBackBtns = $w("#quoteFormBackBtn").parent.children;
 const formPageAnchor = $w("#homepageForm");
 
 // State Elements
@@ -69,17 +68,20 @@ const setupForm = (formName) => {
 };
 
 const setFormState = (dataset) => {
-  console.log("dataset", dataset);
   if (dataset) {
     DEBUG_MODE && console.log("Form name:", formName);
     DEBUG_MODE && console.log("Selected Form fields:", formFields);
     formFields.imageElement.src = formState.image;
     formFields.imageElement.alt = formState.quoteTitle;
     DEBUG_MODE && console.log("Setting form name to:", `New ${formState.title} quote`);
-    formTitleElement.text = `New ${formState.title} quote`;
+    formTitleElement.text = `New ${formState.title.replace("Slab", "")} quote`;
 
     DEBUG_MODE && console.log("Loading form...", formName);
-    datasetSet(formState.dataset);
+    try {
+      datasetSet(formState.dataset);
+    } catch (error) {
+      console.error("Error loading form from dataset:", error);
+    }
     // loadForm(formName);
     if (mapCreds) {
       // prepareMap(mapCreds);
@@ -92,15 +94,14 @@ const setFormState = (dataset) => {
 };
 
 $w.onReady(async function () {
-  console.log(`Site loading v.${version}...`);
+  console.log(`Form ${formName} loading v.${version}...`);
 
-  console.log(`Form ${formName} loading...`);
   setupForm(formName);
-
   quotesDataset = await quotesDatasetElement.getItems(0, 30);
 
   quoteDatasetElement.onReady(() => {
     formState = quotesDataset.items.find((qs) => qs.quoteFormId.toLowerCase().includes(formName));
+    if (!formState) console.error("Error locating form state data for this form");
     DEBUG_MODE && console.log("Form state:", formState);
     activeDataset = { id: "quoteDataset", element: quoteDatasetElement };
     setFormState(activeDataset);
@@ -112,30 +113,6 @@ $w.onReady(async function () {
   mapCreds = await getMapCreds();
   console.log(`${formName} page loaded`);
 });
-
-// Functions
-// const loadForm = (formName) => {
-//   const fillableFormFields = getForm(false);
-//   const allFormFields = getForm(true);
-
-//   DEBUG_MODE &&
-//     console.log(
-//       `Form ${formName} loaded...
-//     Dataset set to ${activeDataset.id}...
-//     ${fillableFormFields.length} fillable fields,
-//     ${allFormFields.length} total fields`
-//     );
-
-//   // update progress bar
-//   progressBar.value = 0;
-
-//   fillableFormFields.forEach((field) => {
-//     field.onChange((ev) => handleFormChange(field, ev));
-//   });
-
-//   pitchCalcBtn.onClick(async () => await openLightbox("pitch-calculator"));
-//   convertCalcBtn.onClick(async () => await openLightbox("conversion-calculator"));
-// };
 
 const setupUserCheck = (selectedForm) => {
   console.log("Captcha collasped - ", selectedForm.captcha.collapsed);
@@ -189,7 +166,7 @@ const datasetSet = (dataset) => {
 
   // Add dataset in
   DEBUG_MODE && console.log(`Setting dataset '${dataset}'...`);
-  activeDataset = { id: dataset, element: quoteDatasetElement };
+  // activeDataset = { id: dataset, element: quoteDatasetElement };
   DEBUG_MODE && console.log("Set active dataset", dataset);
 
   const formGuid = crypto.randomUUID();
@@ -291,11 +268,12 @@ const capitaliseFirst = (s) => (s && String(s[0]).toUpperCase() + String(s).slic
 const getForm = (isAllFields) => {
   let form = [];
   setupUserCheck(formFields);
-  console.log("Pre getforms", formFields);
+  console.log("Pre find", formFields.formContainer.children);
   const getFormStack = formFields.formContainer.children.find((s) => {
-    const searchVal = `formStack-${formName}Form`;
+    console.log("Searching for match -", `formStack-${formName.replace("concrete", "concreteSlab")}Form`);
+    const searchVal = `formStack-${formName.replace("concrete", "concreteSlab")}Form`;
     const match = s.id.toLowerCase() === searchVal.toLowerCase();
-    console.log("Checking element:", s.id, " matches ", `formStack-${formName}Form -`, match);
+    console.log("Match found?", match);
     return match;
   });
   getFormStack.children.map((field) => {
