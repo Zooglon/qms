@@ -4,7 +4,7 @@
   "description": "<h1>Quote My Shed</h1>",
   "main": "index.js",
   "scripts": {
-    "test": "jest"
+    "test": "env TEST_MODE=true jest"
   },
   "keywords": [],
   "author": "",
