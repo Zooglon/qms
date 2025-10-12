@@ -1,15 +1,14 @@
 import { getMapCreds, getFormFields } from "./masterPage";
 import { openLightbox } from "wix-window-frontend";
-import { captchaAuth } from "backend/captchaModule";
+// import { captchaAuth } from "backend/captchaModule";
 import { getFormOptions } from "public/formFunctions";
 import wixLocationFrontend from "wix-location-frontend";
 
-let version = "000004";
+let version = "000005";
 let formName = "polytunnel";
 
 let mapCreds;
 let measurementUnits;
-let areaCalcObj = {};
 let completedFields = [];
 const DEBUG_MODE = true;
 
@@ -93,7 +92,7 @@ const setFormState = (dataset) => {
 };
 
 $w.onReady(async function () {
-  console.log(`Site loading...`);
+  console.log(`Site loading v.${version}...`);
 
   console.log(`Form ${formName} loading...`);
   setupForm(formName);
@@ -111,7 +110,7 @@ $w.onReady(async function () {
   });
 
   mapCreds = await getMapCreds();
-  console.log(`Site loaded - ${version}`);
+  console.log(`${formName} page loaded`);
 });
 
 // Functions
@@ -177,7 +176,7 @@ const setupUserCheck = (selectedForm) => {
 const datasetSet = (dataset) => {
   DEBUG_MODE && console.log("Loading form...", formName);
   const fillableFormFields = getForm(false);
-  datasetSet(formState.dataset);
+  // datasetSet(formState.dataset);
 
   DEBUG_MODE &&
     console.log(`Form ${formName} loaded...
