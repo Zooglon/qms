@@ -2541,3 +2541,42 @@ export const concreteSlabCollectionResponse = {
   details_concreteReinforcementOptions: "structuralFibresAndsteelReinforcingBarsMesh",
   details_finishedAreaUsageOther: "Other usage",
 };
+
+export const stringifyFormInput = {
+  details_patternFinishCustom: "Mosaic pattern",
+  details_quoteForQuantitySurveyor: "yes",
+  details_InteriorExteriorPlacement: "exterior",
+  firstName: "test",
+  details_concreteAreaM2: "36",
+  "link-concrete-slab-quotes-formGuid": "55936b1c-28cf-4b02-a376-b6601b330ea4",
+  details_quoteRadiusKm: 30,
+  details_concreteThickness: "custom",
+  details_sitePrepared: "no",
+  details_concreteThicknessCustom: "114.8mm",
+  details_concreteSlabFinishOptions: "patterned",
+  address: {
+    subdivisions: [
+      { code: "England", name: "England", type: "ADMINISTRATIVE_AREA_LEVEL_1" },
+      { code: "Kent", name: "Kent", type: "ADMINISTRATIVE_AREA_LEVEL_2" },
+      { code: "Teston", name: "Teston", type: "ADMINISTRATIVE_AREA_LEVEL_3" },
+      { code: "GB", name: "United Kingdom", type: "COUNTRY" },
+    ],
+    city: "Teston",
+    location: { latitude: 51.25526, longitude: 0.4421859 },
+    countryFullname: "United Kingdom",
+    streetAddress: { number: "", name: "", apt: "", formattedAddressLine: "Teston" },
+    formatted: "Teston, Maidstone, UK",
+    country: "GB",
+    subdivision: "ENG",
+  },
+  details_concreteSlabAdditionalNotes: "my additional notes input",
+  details_finishedAreaUsage: "Other",
+  details_patternFinish: "custom",
+  details_concreteReinforcementOptions: "structuralFibresAndsteelReinforcingBarsMesh",
+  details_finishedAreaUsageOther: "Other usage",
+};
+
+export const stringifyFormString = {
+  "Form Contact": "First Name - Test\nAddress - Teston, Maidstone, UK",
+  Fields: `• Pattern Finish Custom - Mosaic pattern\n• Quote For Quantity Surveyor - Yes\n• Interior Exterior Placement - Exterior\n• Concrete Area M2 - 36\n• Link-concrete-slab-quotes-form Guid - 55936b1c-28cf-4b02-a376-b6601b330ea4\n• Quote Radius Km - 30\n• Concrete Thickness - Custom\n• Site Prepared - No\n• Concrete Thickness Custom - 114.8mm\n• Concrete Slab Finish Options - Patterned\n• Concrete Slab Additional Notes - My additional notes input\n• Finished Area Usage - Other\n• Pattern Finish - Custom\n• Concrete Reinforcement Options - Structural Fibres Andsteel Reinforcing Bars Mesh\n• Finished Area Usage Other - Other usage`,
+};
