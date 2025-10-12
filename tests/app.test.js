@@ -16,6 +16,8 @@ import {
   solarPanelsRepairForm,
   concreteSlabCollectionResponse,
   mockCollectionData,
+  stringifyFormInput,
+  stringifyFormString,
 } from "./testData.js";
 import {
   prepareFormData,
@@ -30,6 +32,7 @@ import {
   sortSuppliersByDistance,
   getSuppliers,
   invoke,
+  stringifyForm,
 } from "../backend/formSubmission.js";
 
 // Mock wix-data at the top level
@@ -69,14 +72,14 @@ const setupMockCollections = (collectionsData) => {
   });
 };
 
-describe("Form Submission tests - General form submission", () => {
+describe.only("Form Submission tests - General form submission", () => {
   beforeEach(() => {
     jest.clearAllMocks();
     const wixData = require("wix-data");
     wixData.find.mockReset();
   });
 
-  test("Form Submission tests - basic form data", async () => {
+  test.only("Form Submission tests - basic form data", async () => {
     const payloadData = payloadTestData;
     const formObject = prepareFormData(payloadData);
 
@@ -1056,5 +1059,12 @@ describe("General tests", () => {
     expect(formatField("StructuralFibresAndSteelReinfocringBarsMesh")).toBe(
       "Structural Fibres And Steel Reinfocring Bars Mesh"
     );
+  });
+
+  test("Test stringify form function", async () => {
+    const dummyForm = stringifyFormInput;
+    const result = stringifyForm(dummyForm, "Concrete Slab");
+
+    expect(result).toEqual(stringifyFormString);
   });
 });
