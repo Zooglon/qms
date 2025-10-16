@@ -7,7 +7,7 @@
 // be called from multiple locations in your site's code.
 export const getFormOptions = [
   {
-    formName: "concreteSlabForm",
+    formName: "concrete",
     formFields: [
       {
         elementID: "sitePrepared-field-concreteSlab",
@@ -60,7 +60,7 @@ export const getFormOptions = [
     ],
   },
   {
-    formName: "monoPitchForm",
+    formName: "monoPitch",
     formFields: [
       {
         elementID: "buildingType-field-monoPitch",
@@ -1826,7 +1826,7 @@ export const getFormOptions = [
     ],
   },
   {
-    formName: "roundHouseForm",
+    formName: "roundHouse",
     formFields: [
       {
         elementID: "siteRequiresLevelling-field-roundHouse",
@@ -1848,7 +1848,7 @@ export const getFormOptions = [
     ],
   },
   {
-    formName: "portalFrameForm",
+    formName: "portalFrame",
     formFields: [
       {
         elementID: "quoteForLevelling-field-portalFrame",
@@ -3114,7 +3114,7 @@ export const getFormOptions = [
     ],
   },
   {
-    formName: "mezzanineFloorForm",
+    formName: "mezzanineFloor",
     formFields: [
       {
         elementID: "mezzanineOptions-field-mezzanineFloor",
@@ -3195,7 +3195,7 @@ export const getFormOptions = [
     ],
   },
   {
-    formName: "polyTunnelForm",
+    formName: "polyTunnel",
     formFields: [
       {
         elementID: "polytunnelSiteLevel-field-polytunnel",
@@ -3282,7 +3282,7 @@ export const getFormOptions = [
     ],
   },
   {
-    formName: "rainwaterRepairForm",
+    formName: "rainwaterRepair",
     formFields: [
       {
         elementID: "waterPump-field-rainwaterHarvesting",
@@ -3294,7 +3294,7 @@ export const getFormOptions = [
     ],
   },
   {
-    formName: "wallsRepairForm",
+    formName: "wallsRepair",
     formFields: [
       {
         elementID: "wallMaterial-field-wallsRepair",
@@ -3390,7 +3390,7 @@ export const getFormOptions = [
     ],
   },
   {
-    formName: "claddingRepairForm",
+    formName: "claddingRepair",
     formFields: [
       {
         elementID: "claddingTypeMulti-field-claddingRepair",
@@ -3476,7 +3476,7 @@ export const getFormOptions = [
     ],
   },
   {
-    formName: "doorsRepairForm",
+    formName: "doorsRepair",
     formFields: [
       {
         elementID: "doorType-field-doorsRepair",
@@ -3728,7 +3728,7 @@ export const getFormOptions = [
     ],
   },
   {
-    formName: "reroofRepairForm",
+    formName: "reroofRepair",
     formFields: [
       {
         elementID: "oldRoof-field-reroofRepair",
@@ -3893,7 +3893,7 @@ export const getFormOptions = [
     ],
   },
   {
-    formName: "dismantleRepairForm",
+    formName: "dismantleRepair",
     formFields: [
       {
         elementID: "cladding-field-dismantle",
@@ -3944,7 +3944,7 @@ export const getFormOptions = [
     ],
   },
   {
-    formName: "solarRepairForm",
+    formName: "solarRepair",
     formFields: [
       {
         elementID: "roofMaterial-field-solarRepair",
@@ -3959,7 +3959,7 @@ export const getFormOptions = [
     ],
   },
   {
-    formName: "gutteringRepairForm",
+    formName: "gutteringRepair",
     formFields: [
       {
         elementID: "gutteringType-field-guttering",
