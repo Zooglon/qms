@@ -1,11 +1,10 @@
 import { getMapCreds, getFormFields } from "./masterPage";
-import { openLightbox } from "wix-window-frontend";
+import wixLocationFrontend, { openLightbox } from "wix-window-frontend";
 // import { captchaAuth } from "backend/captchaModule";
 import { getFormOptions } from "public/formFunctions";
-import wixLocationFrontend from "wix-location-frontend";
 
-let version = "000007";
-let formName = "concrete";
+let version = "000015";
+let formName = "polytunnel";
 
 let mapCreds;
 let measurementUnits;
@@ -52,6 +51,7 @@ const formPageAnchor = $w("#homepageForm");
 // State Elements
 let formState;
 let activeDataset;
+let allFormFieldsInForm;
 
 // Variables End
 
@@ -60,23 +60,34 @@ let activeDataset;
 const setupForm = (formName) => {
   try {
     formOptions = getFormOptions;
+    DEBUG_MODE && console.log(formOptions.length, "Form options loaded");
     formFields = setFormFields(formName);
     formFields.submitBtn.disable();
+    formFields.toggle.onClick((e) => {
+      if (e.target.checked) {
+        // selectedForm.loadingElement.expand();
+        setTimeout(() => {
+          // selectedForm.loadingElement.collapse();
+          selectedForm.submitBtn.enable();
+        }, 500);
+      } else {
+        selectedForm.submitBtn.disable();
+      }
+    });
   } catch (error) {
     console.error("Error setting up form:", error);
   }
 };
 
 const setFormState = (dataset) => {
+  allFormFieldsInForm = getForm(true);
   if (dataset) {
-    DEBUG_MODE && console.log("Form name:", formName);
-    DEBUG_MODE && console.log("Selected Form fields:", formFields);
+    DEBUG_MODE && console.log("Loading form state for form:", formName);
     formFields.imageElement.src = formState.image;
     formFields.imageElement.alt = formState.quoteTitle;
     DEBUG_MODE && console.log("Setting form name to:", `New ${formState.title} quote`);
     formTitleElement.text = `New ${formState.title.replace("Slab", "")} quote`;
 
-    DEBUG_MODE && console.log("Loading form...", formName);
     try {
       datasetSet(formState.dataset);
     } catch (error) {
@@ -115,7 +126,6 @@ $w.onReady(async function () {
 });
 
 const setupUserCheck = (selectedForm) => {
-  console.log("Captcha collasped - ", selectedForm.captcha.collapsed);
   if (selectedForm && !selectedForm.captcha.collapsed) {
     selectedForm.captcha.onTimeout(() => {
       selectedForm.submitBtn.disable();
@@ -142,7 +152,7 @@ const setupUserCheck = (selectedForm) => {
         setTimeout(() => {
           // selectedForm.loadingElement.collapse();
           selectedForm.submitBtn.enable();
-        }, 1000);
+        }, 500);
       } else {
         selectedForm.submitBtn.disable();
       }
@@ -164,34 +174,58 @@ const datasetSet = (dataset) => {
     field.onChange((ev) => handleFormChange(field, ev));
   });
 
-  // Add dataset in
-  DEBUG_MODE && console.log(`Setting dataset '${dataset}'...`);
-  // activeDataset = { id: dataset, element: quoteDatasetElement };
-  DEBUG_MODE && console.log("Set active dataset", dataset);
-
   const formGuid = crypto.randomUUID();
   const areaDetails = "";
 
   const guidField = formFields.guidField;
   guidField.value = formGuid;
-  activeDataset.element.setFieldValue("formGuid", formGuid);
 
-  activeDataset.element.onBeforeSave(async () => {
-    // activeDataset.element.onBeforeSave(() => {
+  // activeDataset.element.onBeforeSave(async () => {
+  activeDataset.element.onBeforeSave(() => {
     DEBUG_MODE && console.log("Submit form fired...");
     formFields.submitBtn.disable();
     DEBUG_MODE && console.log("Submit Button state -", formFields.submitBtn);
     formLoadingElement(formFields.loadingElement, "start");
+    formFields.submitBtn.collapse();
 
     const showError = (msg) => {
       formFields.errorMsg.text = msg;
       formLoadingElement(formFields.loadingElement, "end");
       formFields.errorMsg.expand();
+      formFields.submitBtn.enable();
+      formFields.submitBtn.expand();
     };
     const hideError = () => formFields.errorMsg.collapse();
 
     const datasetFormFields = getForm(false);
-    datasetFormFields.map((field) => !field.label && console.log("Invalid field -", field));
+
+    // Set form general data
+    activeDataset.element.setFieldValue("formGuid", formGuid);
+    console.log("Completed fields:", JSON.stringify(completedFields));
+    console.log("allFormFieldsInForm", allFormFieldsInForm);
+
+    activeDataset.element.setFieldValue("formResponse", {
+      formName: formName,
+      formGUID: formGuid,
+      fields: JSON.stringify(completedFields),
+    });
+
+    const contactFieldsContainer = allFormFieldsInForm.find((ff) => ff.customClassList.contains("form__contact"));
+    const contactFieldsBlock = contactFieldsContainer.parent.children;
+
+    const firstName = contactFieldsBlock.find((f) => f.id.includes("first"));
+    const lastName = contactFieldsBlock.find((f) => f.id.includes("last"));
+    const company = contactFieldsBlock.find((f) => f.id.includes("company"));
+    const email = contactFieldsBlock.find((f) => f.id.includes("email"));
+    const phone = contactFieldsBlock.find((f) => f.id.includes("phone"));
+    const address = contactFieldsBlock.find((f) => f.id.includes("address"));
+
+    activeDataset.dataset.setFieldValue("firstName", firstName.value);
+    activeDataset.setFieldValue("lastName", lastName.value);
+    activeDataset.setFieldValue("companyName", company.value);
+    activeDataset.setFieldValue("email", email.value);
+    activeDataset.setFieldValue("phoneNumber", Number(phone.value));
+    activeDataset.setFieldValue("address", address.value);
 
     DEBUG_MODE && console.log("Checking validation...");
 
@@ -267,13 +301,9 @@ const capitaliseFirst = (s) => (s && String(s[0]).toUpperCase() + String(s).slic
 
 const getForm = (isAllFields) => {
   let form = [];
-  setupUserCheck(formFields);
-  console.log("Pre find", formFields.formContainer.children);
   const getFormStack = formFields.formContainer.children.find((s) => {
-    console.log("Searching for match -", `formStack-${formName.replace("concrete", "concreteSlab")}Form`);
     const searchVal = `formStack-${formName.replace("concrete", "concreteSlab")}Form`;
     const match = s.id.toLowerCase() === searchVal.toLowerCase();
-    console.log("Match found?", match);
     return match;
   });
   getFormStack.children.map((field) => {
@@ -364,25 +394,26 @@ const handleFormChange = (field, ev) => {
           field.parent.customClassList.contains("form__contact--ab") &&
           field.parent.customClassList.remove("form__contact--ab");
       }
+
+      setupUserCheck(formFields);
     } catch (error) {
-      console.log("Tick error:", error);
+      console.log("contact error:", error);
     }
   }
 
   if (field.id.startsWith("measurementUnits-field")) {
     measurementUnits = field.value === "metric" ? "m" : "ft";
 
-    const formFields = getForm(true);
-    if (formFields.find((f) => f.text && f.text === "units")) {
-      formFields
+    if (allFormFieldsInForm.find((f) => f.text && f.text === "units")) {
+      allFormFieldsInForm
         .filter((ff) => ff.text && ff.text === "units")
         .forEach((ff) => {
           ff.customClassList.add("form__units");
           ff.text = measurementUnits;
           ff.expand();
         });
-    } else if (formFields.find((f) => f.customClassList.contains("form__units"))) {
-      formFields
+    } else if (allFormFieldsInForm.find((f) => f.customClassList.contains("form__units"))) {
+      allFormFieldsInForm
         .filter((ff) => ff.customClassList.contains("form__units"))
         .forEach((ff) => {
           ff.text = measurementUnits;
@@ -391,17 +422,23 @@ const handleFormChange = (field, ev) => {
   }
 
   if (field.id.startsWith("polytunnelWidth-field-polytunnel")) {
-    polytunnelActions();
+    polytunnelActions(fieldVal);
   }
 
-  if (field.value !== "" && !completedFields.includes(field.id)) {
+  if (field.value !== "" && !completedFields.some((cf) => cf.id === field.id)) {
     updateBar(getForm(false), progressBar);
   }
 
-  completedFields.push(field.id);
+  completedFields.push({ id: field.id, label: field.label, value: field.value });
 
-  // if (!!formOptions.find((o) => o.formName === formName)) {
-  const selectedForm = formOptions.find((o) => o.formName === formName);
+  DEBUG_MODE && console.log("formoptions for:", formOptions);
+  const selectedForm = formOptions.find((o) => o.formName.toLowerCase() === formName.toLowerCase());
+
+  DEBUG_MODE && console.log("SelectedForm location:", selectedForm);
+
+  if (!selectedForm) {
+    console.error("ERROR: Form options not found");
+  }
 
   const findMatch = (id, obj) => {
     let matches = [];
@@ -433,6 +470,7 @@ const handleFormChange = (field, ev) => {
   };
 
   const idToSearch = fieldId;
+  DEBUG_MODE && console.log("Searching for follow up fields for field ID:", idToSearch);
   const foundObject = findMatch(idToSearch, selectedForm);
 
   const hideField = (input) => {
@@ -578,31 +616,43 @@ const autoCompleteContactForTesting = (contactFields) => {
 
 // Polytunnel
 
-function polytunnelActions() {
+const polytunnelActions = (fieldVal) => {
+  console.log("Polytunnel actions triggered");
   let polytunnelHeightElement = $w("#polytunnelHeight-text-polytunnel");
   let polytunnelHoopDistance = $w("#polytunnelHoopDistance-text-polytunnel");
+  console.log("Polytunnel actions pre size check");
   if (fieldVal === "4.88m") {
+    console.log("Polytunnel actions 4.88m selected");
     polytunnelHeightElement.text = "8ft 6in";
     polytunnelHoopDistance.text = "27ft 10in";
   } else if (fieldVal === "5.49m") {
+    console.log("Polytunnel actions 5.49m selected");
     polytunnelHeightElement.text = "8ft 6in";
     polytunnelHoopDistance.text = "29ft 6in";
   } else if (fieldVal === "6.4m") {
+    console.log("Polytunnel actions 6.4m selected");
     polytunnelHeightElement.text = "9ft 9in";
     polytunnelHoopDistance.text = "34ft 9in";
   } else if (fieldVal === "7.32m") {
+    console.log("Polytunnel actions 7.32m selected");
     polytunnelHeightElement.text = "10ft";
     polytunnelHoopDistance.text = "37ft 11in";
   } else if (fieldVal === "8.23m") {
+    console.log("Polytunnel actions 8.23m selected");
     polytunnelHeightElement.text = "10ft 5in";
     polytunnelHoopDistance.text = "39ft 4in";
   } else if (fieldVal === "9.15m") {
+    console.log("Polytunnel actions 9.15m selected");
     polytunnelHeightElement.text = "11ft";
     polytunnelHoopDistance.text = "43ft 6in";
   }
+  console.log("Polytunnel actions sizes set");
   polytunnelHeightElement.collapsed && polytunnelHeightElement.expand();
+  console.log("Polytunnel actions height expaneded");
   polytunnelHoopDistance.collapsed && polytunnelHoopDistance.expand();
-}
+  console.log("Polytunnel actions hoop distance expanded");
+  console.log("Polytunnel actions finished");
+};
 
 // Guttering
 // Guttering elements for click tiles
@@ -752,3 +802,6 @@ if (roofPitchPulseTriggers.flat().length >= 1) {
         });
     });
 }
+
+// Google maps as a priority
+// Concrete slab button is down ?
