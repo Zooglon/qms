@@ -1656,7 +1656,7 @@ export const getSuppliers = async (form) => {
 };
 
 export const invoke = async ({ payload }) => {
-  console.log("Fired");
+  console.log("Fired, payload:", payload);
 
   const formObject = prepareFormData(payload);
   const { formName, formGuid, address, fields } = formObject;
@@ -1698,7 +1698,7 @@ export const invoke = async ({ payload }) => {
     const emailOptions = {
       submittedName: completedForm.firstName + " " + completedForm.lastName,
       submittedEmail: formObject.email,
-      submittedEmail: formObject.phone ?? "no phone number provided",
+      submittedPhone: formObject.phone ?? "no phone number provided",
       submittedType: `New ${formName === "Concrete Slab" ? "Concrete Project" : formName}`,
       //   submittedDistance: Math.trunc(ssl[i].dist / 1000),
       buildingSize: "20m x 3m x 1m",
