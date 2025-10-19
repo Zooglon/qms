@@ -56,11 +56,17 @@ let allFormFieldsInForm;
 // Variables End
 
 // Form setup functions
-
 const setupForm = (formName) => {
   try {
     formOptions = getFormOptions;
-    DEBUG_MODE && console.log(formOptions.length, "Form options loaded");
+    formOptions = formOptions.find((o) => o.formName.toLowerCase() === formName.toLowerCase());
+
+    if (!formOptions) {
+      console.error("Error loading form data - could not locate form options");
+    } else {
+      DEBUG_MODE && console.log("Form options loaded successfully");
+    }
+
     formFields = setFormFields(formName);
     formFields.submitBtn.disable();
     formFields.toggle.onClick((e) => {
@@ -204,14 +210,15 @@ const datasetSet = (dataset) => {
     console.log("Completed fields:", JSON.stringify(completedFields));
     console.log("allFormFieldsInForm", allFormFieldsInForm);
 
+    const contactFieldsContainer = allFormFieldsInForm.find((ff) => ff.customClassList.contains("form__contact"));
+    const contactFieldsBlock = contactFieldsContainer.parent.children;
+    const contactFieldIds = contactFieldsBlock.map((f) => f.id);
+
     activeDataset.element.setFieldValue("formResponse", {
       formName: formName,
       formGUID: formGuid,
-      fields: JSON.stringify(completedFields),
+      fields: JSON.stringify(completedFields.filter((f) => !contactFieldIds.includes(f.id))),
     });
-
-    const contactFieldsContainer = allFormFieldsInForm.find((ff) => ff.customClassList.contains("form__contact"));
-    const contactFieldsBlock = contactFieldsContainer.parent.children;
 
     const firstName = contactFieldsBlock.find((f) => f.id.includes("first"));
     const lastName = contactFieldsBlock.find((f) => f.id.includes("last"));
@@ -431,12 +438,7 @@ const handleFormChange = (field, ev) => {
 
   completedFields.push({ id: field.id, label: field.label, value: field.value });
 
-  DEBUG_MODE && console.log("formoptions for:", formOptions);
-  const selectedForm = formOptions.find((o) => o.formName.toLowerCase() === formName.toLowerCase());
-
-  DEBUG_MODE && console.log("SelectedForm location:", selectedForm);
-
-  if (!selectedForm) {
+  if (!formOptions) {
     console.error("ERROR: Form options not found");
   }
 
@@ -471,7 +473,7 @@ const handleFormChange = (field, ev) => {
 
   const idToSearch = fieldId;
   DEBUG_MODE && console.log("Searching for follow up fields for field ID:", idToSearch);
-  const foundObject = findMatch(idToSearch, selectedForm);
+  const foundObject = findMatch(idToSearch, formOptions);
 
   const hideField = (input) => {
     if (!input.elementID) {
