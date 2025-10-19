@@ -113,7 +113,9 @@ div[data-hook="product"] fieldset[data-hook="product-quantity"] {
   color: black;
 }
 
-.formSection .button {
+.formSection .button,
+.formSection .upload-button div[role="button"] {
+  /* .formSection .upload-button > div:has(> div[role="button"]) { */
   width: 250px;
   max-width: 250px;
   height: 50px;
@@ -139,24 +141,6 @@ div[data-hook="product"] fieldset[data-hook="product-quantity"] {
   max-width: 100%;
 }
 
-.formSection .formStack > div,
-.formSection .formStack > div[class*=" form__"]:not(.form__multiSelect) {
-  width: 100%;
-  margin-bottom: 1.5rem;
-}
-
-.formSection .formStack > div:last-child,
-.formSection .formStack > div[class*=" form__"]:last-child {
-  margin-bottom: 0;
-}
-
-.formSection .formStack > div:last-child,
-.formSection .formStack > div[class*=" form__"]:last-child {
-  width: 100%;
-  margin-bottom: 0px;
-  max-width: 100%;
-}
-
 .form__imageSelect .repeater__item:hover {
   transform: scale(1.025);
   transition: transform 0.3s;
@@ -172,7 +156,7 @@ div[data-hook="product"] fieldset[data-hook="product-quantity"] {
 }
 
 .form__input .text-input__input:focus {
-  border: 2px solid var(--mainOrange);
+  border-width: 2px;
 }
 
 .form__areaMeasure .form__input {
@@ -199,30 +183,32 @@ div[data-hook="product"] fieldset[data-hook="product-quantity"] {
   max-width: 350px;
 }
 
-.formStack > div:has(.form__input + .form__units) {
+.formSection .formStack > div:last-child,
+.formSection .formStack > div[class*=" form__"]:last-child {
+  width: 100%;
+  margin-bottom: 0px;
   max-width: 100%;
 }
 
-.formStack > div:has(.form__input + .form__units) > .form__input {
-  width: 75%;
-  max-width: 350px;
-  margin: unset;
+.formStack > div:not(.form__line) {
+  max-width: 500px;
+  width: 100%;
   gap: 0.3rem;
 }
 
-.formStack > div:has(.form__input + .form__units) > .form__units {
-  width: 25%;
-  text-align: left;
-  padding-inline-start: 2rem;
+.formStack > div:not(.form__line) > div[class*=" form__"] {
+  flex-grow: 2;
 }
 
-.formStack .text-input,
-.formStack .text-box,
-.formStack .radio-button-group,
-.formStack .upload-button,
-.formStack .dropdown,
-.formStack .form__areaMeasure {
-  max-width: 94%;
+.formStack > div:not(.form__line) .form__units {
+  /* .formStack > div:has(.form__input + .form__units) { */
+  width: auto;
+  flex-grow: 1;
+  text-align: center;
+}
+
+.formStack > div[class*=" form__"]:not(.form__multiSelect) {
+  margin-bottom: 1.5rem;
 }
 
 .formSection .form__line {
@@ -268,6 +254,13 @@ div[data-hook="product"] fieldset[data-hook="product-quantity"] {
 .form__radio,
 .form__input:not(.text-box) {
   min-height: auto;
+}
+
+.form__radio_vertical div[data-testid="radioGroup"] {
+  flex-direction: column;
+  align-items: flex-start;
+  align-content: flex-start;
+  border: 5px solid red;
 }
 
 .formStack .text-box {
@@ -465,6 +458,10 @@ div[class*=" form__"] input {
     border-top: 2px solid gray;
   }
 
+  .formSection.formStack {
+    padding: 1rem;
+  }
+
   .quoteFormChildContainer {
     width: 100%;
     max-height: 250px;
@@ -472,6 +469,10 @@ div[class*=" form__"] input {
 
   .formSection h1 {
     font-size: var(--font-size-large);
+  }
+
+  .form__input {
+    max-width: 500px;
   }
 
   .form__toolPanel .button__icon {
@@ -488,6 +489,10 @@ div[class*=" form__"] input {
     gap: 30px;
     justify-content: left;
     width: 100%;
+  }
+
+  div[class*=" form__"] input {
+    font-size: var(--font-size-small);
   }
 }
 
