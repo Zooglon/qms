@@ -3,8 +3,11 @@ import wixLocationFrontend, { openLightbox } from "wix-window-frontend";
 // import { captchaAuth } from "backend/captchaModule";
 import { getFormOptions } from "public/formFunctions";
 
-let version = "000015";
 let formName = "polytunnel";
+
+// Google maps as a priority
+
+let version = "000016";
 
 let mapCreds;
 let measurementUnits;
@@ -74,10 +77,10 @@ const setupForm = (formName) => {
         // selectedForm.loadingElement.expand();
         setTimeout(() => {
           // selectedForm.loadingElement.collapse();
-          selectedForm.submitBtn.enable();
+          formFields.submitBtn.enable();
         }, 500);
       } else {
-        selectedForm.submitBtn.disable();
+        formFields.submitBtn.disable();
       }
     });
   } catch (error) {
@@ -123,7 +126,8 @@ $w.onReady(async function () {
     activeDataset = { id: "quoteDataset", element: quoteDatasetElement };
     setFormState(activeDataset);
   });
-  quoteDatasetElement.onError(() => {
+  quoteDatasetElement.onError((ev) => {
+    DEBUG_MODE && console.error("Error in quote dataset:", JSON.stringify(ev));
     throw new Error("Failed to load page data, please try again later.");
   });
 
@@ -166,6 +170,14 @@ const setupUserCheck = (selectedForm) => {
   }
 };
 
+const showError = (fields, msg) => {
+  fields.errorMsg.text = msg;
+  formLoadingElement(fields.loadingElement, "end");
+  fields.errorMsg.expand();
+  fields.submitBtn.enable();
+  fields.submitBtn.expand();
+};
+
 const datasetSet = (dataset) => {
   DEBUG_MODE && console.log("Loading form...", formName);
   const fillableFormFields = getForm(false);
@@ -188,82 +200,87 @@ const datasetSet = (dataset) => {
 
   // activeDataset.element.onBeforeSave(async () => {
   activeDataset.element.onBeforeSave(() => {
-    DEBUG_MODE && console.log("Submit form fired...");
-    formFields.submitBtn.disable();
-    DEBUG_MODE && console.log("Submit Button state -", formFields.submitBtn);
-    formLoadingElement(formFields.loadingElement, "start");
-    formFields.submitBtn.collapse();
+    try {
+      DEBUG_MODE && console.log("Submit form fired...");
+      formFields.submitBtn.disable();
+      DEBUG_MODE && console.log("Submit Button state -", formFields.submitBtn);
+      formLoadingElement(formFields.loadingElement, "start");
+      formFields.submitBtn.collapse();
 
-    const showError = (msg) => {
-      formFields.errorMsg.text = msg;
-      formLoadingElement(formFields.loadingElement, "end");
-      formFields.errorMsg.expand();
-      formFields.submitBtn.enable();
-      formFields.submitBtn.expand();
-    };
-    const hideError = () => formFields.errorMsg.collapse();
+      const hideError = () => formFields.errorMsg.collapse();
 
-    const datasetFormFields = getForm(false);
+      const datasetFormFields = getForm(false);
 
-    // Set form general data
-    activeDataset.element.setFieldValue("formGuid", formGuid);
-    console.log("Completed fields:", JSON.stringify(completedFields));
-    console.log("allFormFieldsInForm", allFormFieldsInForm);
+      // Set form general data
+      activeDataset.element.setFieldValue("formGuid", formGuid);
+      console.log("Completed fields:", JSON.stringify(completedFields));
+      console.log("allFormFieldsInForm", allFormFieldsInForm);
 
-    const contactFieldsContainer = allFormFieldsInForm.find((ff) => ff.customClassList.contains("form__contact"));
-    const contactFieldsBlock = contactFieldsContainer.parent.children;
-    const contactFieldIds = contactFieldsBlock.map((f) => f.id);
+      const contactFieldsContainer = allFormFieldsInForm.find((ff) => ff.customClassList.contains("form__contact"));
+      const contactFieldsBlock = contactFieldsContainer.parent.children;
+      const contactFieldIds = contactFieldsBlock.map((f) => f.id);
 
-    activeDataset.element.setFieldValue("formResponse", {
-      formName: formName,
-      formGUID: formGuid,
-      fields: JSON.stringify(completedFields.filter((f) => !contactFieldIds.includes(f.id))),
-    });
-
-    const firstName = contactFieldsBlock.find((f) => f.id.includes("first"));
-    const lastName = contactFieldsBlock.find((f) => f.id.includes("last"));
-    const company = contactFieldsBlock.find((f) => f.id.includes("company"));
-    const email = contactFieldsBlock.find((f) => f.id.includes("email"));
-    const phone = contactFieldsBlock.find((f) => f.id.includes("phone"));
-    const address = contactFieldsBlock.find((f) => f.id.includes("address"));
-
-    activeDataset.dataset.setFieldValue("firstName", firstName.value);
-    activeDataset.setFieldValue("lastName", lastName.value);
-    activeDataset.setFieldValue("companyName", company.value);
-    activeDataset.setFieldValue("email", email.value);
-    activeDataset.setFieldValue("phoneNumber", Number(phone.value));
-    activeDataset.setFieldValue("address", address.value);
-
-    DEBUG_MODE && console.log("Checking validation...");
-
-    // Handle validation errors
-    const fieldsFailedValidation = fieldsWithValidationErrors(datasetFormFields);
-    DEBUG_MODE && fieldsFailedValidation.length >= 1 && console.log("Validation Failed - ", fieldsFailedValidation);
-    if (fieldsFailedValidation.length >= 1) {
-      let validationMessage = [];
-
-      fieldsFailedValidation.forEach((ffv) => {
-        if (!ffv.value || ffv.value === "") {
-          DEBUG_MODE && console.log("FAILED FIELD - ", ffv.id);
-          validationMessage.push(
-            `"${
-              ffv.label ? (ffv.label.endsWith("?") ? ffv.label.slice(0, ffv.label.length - 1) : ffv.label) : ffv.id
-            }" is a required field`
-          );
-        } else {
-          validationMessage.push(`"${ffv.value}" is not a valid input for ${ffv.label}`);
-        }
+      activeDataset.element.setFieldValue("formResponse", {
+        formName: formName,
+        formGUID: formGuid,
+        fields: JSON.stringify(completedFields),
+        // fields: JSON.stringify(completedFields.filter((f) => !contactFieldIds.includes(f.id))), // for later...
       });
 
-      showError(validationMessage.join(",\n"));
-    } else hideError();
+      const firstName = contactFieldsBlock.find((f) => f.id.includes("first"));
+      const lastName = contactFieldsBlock.find((f) => f.id.includes("last"));
+      const company = contactFieldsBlock.find((f) => f.id.includes("company"));
+      const email = contactFieldsBlock.find((f) => f.id.includes("email"));
+      const phone = contactFieldsBlock.find((f) => f.id.includes("phone"));
+      const address = contactFieldsBlock.find((f) => f.id.includes("address"));
 
-    if (!formFields.captcha.collapsed) {
-    } else if (!formFields.rangeSlider.collapsed) {
-      formFields.submitBtn.enable();
-    } else {
-      DEBUG_MODE && console.log("No captcha or range slider present");
-      formFields.submitBtn.enable();
+      firstName && activeDataset.element.setFieldValue("firstName", firstName.value);
+      lastName && activeDataset.element.setFieldValue("lastName", lastName.value);
+      company && activeDataset.element.setFieldValue("companyName", company.value);
+      email && activeDataset.element.setFieldValue("email", email.value);
+      phone && activeDataset.element.setFieldValue("phoneNumber", phone.value);
+      address && activeDataset.element.setFieldValue("address", address.value);
+
+      DEBUG_MODE && console.log("Checking validation...");
+
+      // Handle validation errors
+      const fieldsFailedValidation = fieldsWithValidationErrors(datasetFormFields);
+      DEBUG_MODE && fieldsFailedValidation.length >= 1 && console.log("Validation Failed - ", fieldsFailedValidation);
+      if (fieldsFailedValidation.length >= 1) {
+        let validationMessage = [];
+
+        fieldsFailedValidation.forEach((ffv) => {
+          if (!ffv.value || ffv.value === "") {
+            DEBUG_MODE && console.log("FAILED FIELD - ", ffv.id);
+            validationMessage.push(
+              `"${
+                ffv.label ? (ffv.label.endsWith("?") ? ffv.label.slice(0, ffv.label.length - 1) : ffv.label) : ffv.id
+              }" is a required field`
+            );
+          } else {
+            validationMessage.push(`"${ffv.value}" is not a valid input for ${ffv.label}`);
+          }
+        });
+
+        showError(formFields, validationMessage.join(",\n"));
+        throw new Error(validationMessage.join(",\n"));
+      } else hideError();
+
+      if (!formFields.captcha.collapsed) {
+      } else if (!formFields.rangeSlider.collapsed) {
+        formFields.submitBtn.enable();
+      } else {
+        DEBUG_MODE && console.log("No captcha or range slider present");
+        formFields.submitBtn.enable();
+      }
+      console.log("Form submitted successfully!");
+      return true;
+    } catch (error) {
+      console.error("Error saving dataset:", error);
+      showError(formFields, "An error occurred while saving your data.");
+      // STOP FORM SUBMITTING...
+      console.log("Encountered an error, aborting submission...");
+      return false;
     }
   });
 
@@ -384,7 +401,8 @@ const handleFormChange = (field, ev) => {
       field.validity && field.validity.valid
     );
 
-  if (ev && ev.target.label === "First Name" && fieldVal === "test") {
+  if (ev && ev.target.label.toLowerCase() === "first name" && fieldVal === "test") {
+    console.log("Auto-completing contact fields for testing...");
     autoCompleteContactForTesting(field.parent);
   }
 
@@ -560,6 +578,7 @@ const handleFormChange = (field, ev) => {
 
 const autoCompleteContactForTesting = (contactFields) => {
   const cInputs = contactFields.children;
+  console.log("Cinputs -", JSON.stringify(cInputs));
 
   const firstName = cInputs.find((f) => f.id.includes("first"));
   const lastName = cInputs.find((f) => f.id.includes("last"));
@@ -804,6 +823,3 @@ if (roofPitchPulseTriggers.flat().length >= 1) {
         });
     });
 }
-
-// Google maps as a priority
-// Concrete slab button is down ?
