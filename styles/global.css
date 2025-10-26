@@ -113,9 +113,12 @@ div[data-hook="product"] fieldset[data-hook="product-quantity"] {
   color: black;
 }
 
+.formSection div:has(.button) {
+  height: 68px;
+}
+
 .formSection .button,
 .formSection .upload-button div[role="button"] {
-  /* .formSection .upload-button > div:has(> div[role="button"]) { */
   width: 250px;
   max-width: 250px;
   height: 50px;
@@ -194,6 +197,21 @@ div[data-hook="product"] fieldset[data-hook="product-quantity"] {
   max-width: 500px;
   width: 100%;
   gap: 0.3rem;
+}
+
+.form__areaMeasure,
+.form__subsection {
+  max-width: 750px !important;
+}
+
+.form__subsection {
+  border: var(--border);
+  padding: 1rem;
+}
+
+.form__subsection h4,
+.form__subsection div:has(> h4) {
+  margin: unset;
 }
 
 .formStack > div:not(.form__line) > div[class*=" form__"] {
@@ -410,6 +428,11 @@ div[class*=" form__"] input {
 
 .form__button--pulse > span {
   animation: pulse 0.8s forwards;
+}
+
+.form__loading {
+  max-width: 25vw;
+  max-height: 25vh;
 }
 
 .form__loading-spin {
