@@ -2542,6 +2542,52 @@ export const concreteSlabCollectionResponse = {
   details_finishedAreaUsageOther: "Other usage",
 };
 
+export const responseStringifyFormInput = {
+  phoneNumber: "07123456789",
+  email: "testuser@test.com",
+  formResponse: {
+    formName: "concrete",
+    formGUID: "a5ed8c10-bf61-4c38-8c77-dd3ecb0ec04e",
+    fields:
+      '[{"id":"sitePrepared-field-concreteSlab","label":"Is the site prepared?","value":"yes"},{"id":"concreteThickness-field-concreteSlab","label":"Concrete thickness","value":"200mm"},{"id":"placement-field-concreteSlab","label":"Placement","value":"exterior"},{"id":"concreteArea-field-concreteSlab","label":"Concrete area (m2)","value":"23"},{"id":"firstName-contactField-concreteSlab","label":"First Name","value":"Test"},{"id":"lastName-contactField-concreteSlab","label":"Last Name","value":"User"},{"id":"companyName-contactField-concreteSlab","label":"Company Name","value":"Test Company Ltd"}]',
+  },
+  details_InteriorExteriorPlacement: "exterior",
+  company: "Test Company Ltd",
+  lastName: "User",
+  firstName: "Test",
+  details_concreteAreaM2: "23",
+  companyName: "Test Company Ltd",
+  details_concreteThickness: "200mm",
+  details_sitePrepared: "yes",
+  address: {
+    subdivisions: [
+      { code: "England", name: "England", type: "ADMINISTRATIVE_AREA_LEVEL_1" },
+      { code: "Kent", name: "Kent", type: "ADMINISTRATIVE_AREA_LEVEL_2" },
+      { code: "Teston", name: "Teston", type: "ADMINISTRATIVE_AREA_LEVEL_3" },
+      { code: "GB", name: "United Kingdom", type: "COUNTRY" },
+    ],
+    city: "Teston",
+    location: { latitude: 51.25526, longitude: 0.4421859 },
+    streetAddress: { number: "", name: "", apt: "", formattedAddressLine: "Teston" },
+    formatted: "Teston, Maidstone, UK",
+    country: "GB",
+    postalCode: "undefined",
+    subdivision: "ENG",
+  },
+  details_patternFinish: "",
+  details_patternFinishCustom: "",
+  details_concreteSlabAdditionalNotes: "",
+  details_powerFloatFinish: "",
+  formGuid: "a5ed8c10-bf61-4c38-8c77-dd3ecb0ec04e",
+  howManyQuotes: "",
+  details_concreteSlabFinishOptions: "",
+  details_quoteForQuantitySurveyor: "",
+  details_finishedAreaUsageOther: "",
+  details_finishedAreaUsage: "",
+  details_concreteReinforcementOptions: "",
+  details_concreteThicknessCustom: "",
+};
+
 export const stringifyFormInput = {
   details_patternFinishCustom: "Mosaic pattern",
   details_quoteForQuantitySurveyor: "yes",
