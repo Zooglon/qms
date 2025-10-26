@@ -494,6 +494,8 @@ const getFormDetailsFromCollection = async (collection, guid) => {
   const formGuid = guid ?? "test";
   const queryCollection = await getCollectionData(collection, "formGuid", formGuid);
 
+  console.log("Form details from collection:", queryCollection);
+
   if (!queryCollection) {
     handleErrors(`Could not locate form ${guid} in collection ${collection}`);
   }
@@ -530,7 +532,54 @@ const formatField = (field) => {
   return typeof field === "string" ? field.replace(/([a-z])([A-Z])/g, (_, lower, upper) => `${lower} ${upper}`) : field;
 };
 
+const formatSection = (formSection, dot) => {
+  return Object.entries(formSection)
+    .filter(([, value]) => value)
+    .map(([key, value]) => {
+      let val = key.toLowerCase() === "address" ? value.formatted ?? JSON.stringify(value) : value;
+      let formattedVal = `${formatField(val)}`;
+
+      return `${dot ? "• " : ""}${formatField(
+        key.replace(/.+_/gi, "").slice(0, 1).toUpperCase() + key.replace(/.+_/gi, "").slice(1)
+      )} - ${formattedVal.slice(0, 1).toUpperCase() + formattedVal.slice(1)}`;
+    })
+    .join("\n");
+};
+
 export const stringifyForm = (form, name) => {
+  const { firstName, lastName, companyName, company, email, emailAddress, phoneNumber, address, ...otherFields } = form;
+
+  let additionalFields = otherFields;
+
+  if (form.formResponse && form.formResponse.fields !== null) {
+    console.log("Form response fields found", typeof form.formResponse.fields);
+
+    const parsedFields = JSON.parse(form.formResponse.fields);
+
+    // Define contact fields to exclude
+    const contactFields = [
+      "First Name",
+      "Last Name",
+      "Company Name",
+      "Company",
+      "Email",
+      "Email Address",
+      "Phone Number",
+      "Address",
+    ];
+
+    // Convert array to key-value pairs and filter out contact fields
+    const keyVals = parsedFields.reduce((acc, field) => {
+      // Only add if the label is not in the contactFields array
+      if (!contactFields.includes(field.label)) {
+        acc[field.label] = field.value;
+      }
+      return acc;
+    }, {});
+
+    additionalFields = keyVals;
+  }
+
   const formTypeObj = {
     MonoPitch: monoPitchFormFields,
     Concrete: concreteSlabFormFields,
@@ -547,59 +596,45 @@ export const stringifyForm = (form, name) => {
   // const formatField = (f) => (typeof f === "string" ? f.replace(/([a-z])([A-Z])/g, `$1 $2`) : f);
   // let key = lowerFirst(field[0].replace(/.+_/gi, ""));
 
-  const formatSection = (formSection, dot) => {
-    return Object.entries(formSection)
-      .filter(([, value]) => value)
-      .map(([key, value]) => {
-        let val = key.toLowerCase() === "address" ? value.formatted ?? JSON.stringify(value) : value;
-        let formattedVal = `${formatField(val)}`;
-
-        return `${dot ? "• " : ""}${formatField(
-          key.replace(/.+_/gi, "").slice(0, 1).toUpperCase() + key.replace(/.+_/gi, "").slice(1)
-        )} - ${formattedVal.slice(0, 1).toUpperCase() + formattedVal.slice(1)}`;
-      })
-      .join("\n");
-  };
-
   let formString;
 
-  if (formTypeObj) {
-    formString = {
-      "Form Details": formDetails && formatSection(form, false),
-      "Form Walls": formWalls && formatSection(form, false),
-      "Form Roof": formRoof && formatSection(form, false),
-      "Form Cladding": formCladding && formatSection(form, false),
-      "Form Doors": formDoors && formatSection(form, false),
-      "Form Floor": formFloor && formatSection(form, false),
-      "Form Mezzanine Floor": formMezzanineFloor && formatSection(form, false),
-      "Form Contact": formatSection(form, false) || "No contact details given",
-    };
-  } else {
-    const { firstName, lastName, companyName, company, email, emailAddress, phoneNumber, address, ...otherFields } =
-      form;
+  // if (formTypeObj) {
+  //   formString = {
+  //     "Form Details": formDetails && formatSection(form, false),
+  //     "Form Walls": formWalls && formatSection(form, false),
+  //     "Form Roof": formRoof && formatSection(form, false),
+  //     "Form Cladding": formCladding && formatSection(form, false),
+  //     "Form Doors": formDoors && formatSection(form, false),
+  //     "Form Floor": formFloor && formatSection(form, false),
+  //     "Form Mezzanine Floor": formMezzanineFloor && formatSection(form, false),
+  //     "Form Contact": formatSection(form, false) || "No contact details given",
+  //   };
+  // } else {
+  formString = {
+    "Form Contact":
+      formatSection(
+        {
+          firstName,
+          lastName,
+          companyName,
+          company,
+          email,
+          emailAddress,
+          phoneNumber,
+          address,
+        },
+        false
+      ) || "No contact details given",
+    Fields: formatSection(additionalFields, true),
+    // };
+  };
 
-    formString = {
-      "Form Contact":
-        formatSection(
-          {
-            firstName,
-            lastName,
-            companyName,
-            company,
-            email,
-            emailAddress,
-            phoneNumber,
-            address,
-          },
-          false
-        ) || "No contact details given",
-      Fields: formatSection(otherFields, true),
-    };
-  }
+  console.log("ADD str", additionalFields, "formatted: ", formatSection(additionalFields, true));
 
   // Remove sections with no data
   const filteredFormString = Object.fromEntries(Object.entries(formString).filter(([, value]) => value));
 
+  TEST_MODE && console.log("Form stringified:", filteredFormString);
   return filteredFormString;
 };
 
@@ -623,23 +658,27 @@ const getCollectionData = async (collection, filterField, filter, lmt) => {
   //     return items.map(i => i.supplierType);
   //   });
 
-  const queryResponse = await wixData
-    .query(collection)
-    .eq(filterField, filter)
-    .limit(limit)
-    .find()
-    .then((results) => results.items);
+  try {
+    const queryResponse = await wixData
+      .query(collection)
+      .eq(filterField, filter)
+      .limit(limit)
+      .find()
+      .then((results) => results.items);
 
-  if (!queryResponse.length) {
-    handleErrors(`Could not locate collection ${collection}`);
-    console.log("No data found in collection", collection);
-    return;
+    if (!queryResponse.length) {
+      handleErrors(`Could not locate collection ${collection}`);
+      console.log("No data found in collection", collection);
+      return;
+    }
+    TEST_MODE &&
+      console.log(
+        `Returning ${queryResponse.length} ${queryResponse.length > 0 ? "items" : "item"} from collection ${collection}`
+      );
+    return queryResponse;
+  } catch (error) {
+    handleErrors(`Error querying data from ${collection}: ${error}`);
   }
-  TEST_MODE &&
-    console.log(
-      `Returning ${queryResponse.length} ${queryResponse.length > 0 ? "items" : "item"} from collection ${collection}`
-    );
-  return queryResponse;
 };
 
 const handleErrors = async (msg) => {
@@ -795,6 +834,23 @@ const getLatLng = (addressField, guid) => {
   }
 };
 
+export const matchFormName = (formNameString, formNamesList) => {
+  if (!formNameString || typeof formNameString !== "string") {
+    return "unknown";
+  }
+
+  // Normalize the input string for comparison
+  let normalisedInput = formNameString.toLowerCase().replace(/\s+/g, "");
+
+  const matchedForm = formNamesList.find((formName) => {
+    const normalisedFormName = formName.toLowerCase().replace(/\s+/g, "");
+    return normalisedInput.includes(normalisedFormName) || normalisedFormName.includes(normalisedInput);
+  });
+
+  // qmsStoreCollections;
+  return matchedForm || "unknown";
+};
+
 export const prepareFormData = (rawFormData) => {
   let formObject = {};
   let fields = {};
@@ -815,25 +871,33 @@ export const prepareFormData = (rawFormData) => {
   const formName = formObject.formName
     ? formObject.formName
         .replace("Home - submit into ", "")
+        .slice(formObject.formName.indexOf("submit into ") + 12)
         .replace(" Quotes collection", "")
         .replace(" Form collection", "")
     : "Unknown form name";
 
   const formGuid = formObject.formGuid;
-  const address = formObject.address;
-  const latLng = { lat: formObject.address.location.latitude, lng: formObject.address.location.longitude };
+  const address = formObject.address ?? undefined;
+  const latLng = !address
+    ? undefined
+    : { lat: formObject.address.location.latitude, lng: formObject.address.location.longitude };
   const email = formObject.email;
 
-  if (!address || !formName || !formGuid || !email) {
-    handleErrors(`Form incomplete or missing fields:${" " + address}${" " + formName}${" " + formGuid}`);
+  if (!formName || !formGuid || !email) {
+    handleErrors(`Form incomplete or missing fields:${" " + formName}${" " + formGuid}`);
   }
   console.log("Fields", fields);
+  console.log("FormName", formName);
+  console.log("FormGuid", formGuid);
   return { fields, formName, formGuid, address, latLng, email };
 };
 
 export const getCollection = (formName) => {
   let typeString = formName.replace(/\s/g, "");
   let typeRegExp = new RegExp(typeString, "gi");
+
+  const matchedName = matchFormName(formName, qmsStoreCollections);
+
   return qmsStoreCollections.find((i) => {
     return !!i.match(typeRegExp);
   });
@@ -1662,10 +1726,20 @@ export const invoke = async ({ payload }) => {
   const { formName, formGuid, address, fields } = formObject;
   const collection = getCollection(formName);
 
-  console.log("FORMOBJECT", formObject, "\n", `formName: ${formName}`, "\n", `formGuid: ${formGuid}`);
+  console.log(
+    "FORMOBJECT",
+    formObject,
+    "\n",
+    `formName: ${formName}`,
+    "\n",
+    `formGuid: ${formGuid}`,
+    "\n",
+    `collection: ${collection}`
+  );
 
   if (formGuid && formName) {
     let completedForm = await getFormDetailsFromCollection(collection, formGuid);
+    let contactAddress = address ?? completedForm.address;
     const combinedFormFields = { ...completedForm, ...fields };
     completedForm = Object.keys(combinedFormFields).reduce((acc, key) => {
       if (!acc.hasOwnProperty(key)) {
@@ -1676,7 +1750,7 @@ export const invoke = async ({ payload }) => {
 
     console.log("COMPLETED FORM:\n", completedForm);
 
-    const suppliers = await getSuppliers({ ...completedForm, ...address, formName: formName });
+    const suppliers = await getSuppliers({ ...completedForm, ...contactAddress, formName: formName });
 
     console.log("Selected suppliers:", suppliers);
 
@@ -1693,7 +1767,7 @@ export const invoke = async ({ payload }) => {
     // await saveToDb(formName, formGuid, ["Supplier1", "Supplier2"]);
     // return {};
 
-    // TEST_MODE && console.log("Stringified Form", stringifiedForm);
+    console.log("Stringified Form", stringifiedForm);
 
     const emailOptions = {
       submittedName: completedForm.firstName + " " + completedForm.lastName,
@@ -1703,17 +1777,17 @@ export const invoke = async ({ payload }) => {
       //   submittedDistance: Math.trunc(ssl[i].dist / 1000),
       buildingSize: "20m x 3m x 1m",
       submittedDistance: 40,
-      ...(stringifiedForm["Form Details"] && { formDetails: stringifiedForm["Form Details"] }),
-      ...(stringifiedForm["Form Walls"] && { formWalls: stringifiedForm["Form Walls"] }),
-      ...(stringifiedForm["Form Roof"] && { formRoof: stringifiedForm["Form Roof"] }),
-      ...(stringifiedForm["Form Cladding"] && { formCladding: stringifiedForm["Form Cladding"] }),
-      ...(stringifiedForm["Form Doors"] && { formDoors: stringifiedForm["Form Doors"] }),
-      ...(stringifiedForm["Form Floor"] && { formFloor: stringifiedForm["Form Floor"] }),
-      ...(stringifiedForm["Form Contact"] && { formContact: stringifiedForm["Form Contact"] }),
+      // ...(stringifiedForm["Form Details"] && { formDetails: stringifiedForm["Form Details"] }),
+      // ...(stringifiedForm["Form Walls"] && { formWalls: stringifiedForm["Form Walls"] }),
+      // ...(stringifiedForm["Form Roof"] && { formRoof: stringifiedForm["Form Roof"] }),
+      // ...(stringifiedForm["Form Cladding"] && { formCladding: stringifiedForm["Form Cladding"] }),
+      // ...(stringifiedForm["Form Doors"] && { formDoors: stringifiedForm["Form Doors"] }),
+      // ...(stringifiedForm["Form Floor"] && { formFloor: stringifiedForm["Form Floor"] }),
       ...(stringifiedForm["Fields"] && { formDetails: stringifiedForm["Fields"] }),
+      ...(stringifiedForm["Form Contact"] && { formContact: stringifiedForm["Form Contact"] }),
     };
 
-    TEST_MODE && console.log("Email built...", emailOptions);
+    console.log("Email built...", emailOptions);
     if (suppliers.length === 0) console.log("No suppliers found!");
     for (const supplier of suppliers) {
       console.log("supplier", supplier);
