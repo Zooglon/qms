@@ -18,6 +18,7 @@ import {
   mockCollectionData,
   stringifyFormInput,
   stringifyFormString,
+  responseStringifyFormInput,
 } from "./testData.js";
 import {
   prepareFormData,
@@ -79,7 +80,7 @@ describe.only("Form Submission tests - General form submission", () => {
     wixData.find.mockReset();
   });
 
-  test.only("Form Submission tests - basic form data", async () => {
+  test("Form Submission tests - basic form data", async () => {
     const payloadData = payloadTestData;
     const formObject = prepareFormData(payloadData);
 
@@ -96,22 +97,23 @@ describe.only("Form Submission tests - General form submission", () => {
     expect(formObject.address).toBe("Teston, Maidstone, UK");
   });
 
-  test("Form Submission tests - collection data found", async () => {
+  test.only("Form Submission tests - collection data found", async () => {
     // Is correct collection identified?
-    expect(getCollection("Cladding Quotes")).toBe("CladdingQuotes"),
-      expect(getCollection("Concrete Slab Quotes")).toBe("ConcreteSlabQuotes"),
-      expect(getCollection("Dismantle Quotes")).toBe("DismantleQuotes"),
-      expect(getCollection("Doors Quotes")).toBe("DoorsQuotes"),
-      expect(getCollection("Guttering Quotes")).toBe("GutteringQuotes"),
-      expect(getCollection("Mezzanine Floor Form")).toBe("MezzanineFloorForm"),
-      expect(getCollection("MonoPitch Quotes")).toBe("MonoPitchQuotes"),
-      expect(getCollection("Polytunnel Quotes")).toBe("PolytunnelQuotes"),
-      expect(getCollection("PortalFrame Quotes")).toBe("PortalFrameQuotes"),
-      expect(getCollection("Rainwater Harvesting Quotes")).toBe("RainwaterHarvestingQuotes"),
-      expect(getCollection("reroof Quotes")).toBe("reroofQuotes"),
-      expect(getCollection("Round HouseForm")).toBe("RoundHouseForm"),
-      expect(getCollection("Solar Panels Quotes")).toBe("SolarPanelsQuotes"),
-      expect(getCollection("Wall Quotes")).toBe("WallQuotes");
+    expect(getCollection("Concrete Slab")).toBe("ConcreteSlabQuotes");
+    expect(getCollection("Cladding Quotes")).toBe("CladdingQuotes");
+    expect(getCollection("Concrete Slab Quotes")).toBe("ConcreteSlabQuotes");
+    expect(getCollection("Dismantle Quotes")).toBe("DismantleQuotes");
+    expect(getCollection("Doors Quotes")).toBe("DoorsQuotes");
+    expect(getCollection("Guttering Quotes")).toBe("GutteringQuotes");
+    expect(getCollection("Mezzanine Floor Form")).toBe("MezzanineFloorForm");
+    expect(getCollection("MonoPitch Quotes")).toBe("MonoPitchQuotes");
+    expect(getCollection("Polytunnel Quotes")).toBe("PolytunnelQuotes");
+    expect(getCollection("PortalFrame Quotes")).toBe("PortalFrameQuotes");
+    expect(getCollection("Rainwater Harvesting Quotes")).toBe("RainwaterHarvestingQuotes");
+    expect(getCollection("reroof Quotes")).toBe("reroofQuotes");
+    expect(getCollection("Round HouseForm")).toBe("RoundHouseForm");
+    expect(getCollection("Solar Panels Quotes")).toBe("SolarPanelsQuotes");
+    expect(getCollection("Wall Quotes")).toBe("WallQuotes");
   });
 
   test("Form Submission tests - form is stringified successfully", async () => {
@@ -1045,7 +1047,7 @@ describe("Form Submission tests - Other behaviour", () => {
   });
 });
 
-describe("General tests", () => {
+describe.only("General tests", () => {
   test("General tests passed", async () => {
     const myarray = [[], [], [], [], "$w('#buildQuoteHeaderBtn')", "$w('#buildQuoteFooterBtn')"];
 
@@ -1061,10 +1063,14 @@ describe("General tests", () => {
     );
   });
 
-  test("Test stringify form function", async () => {
+  test.only("Test stringify form function", async () => {
     const dummyForm = stringifyFormInput;
+    const dummyForm2 = responseStringifyFormInput;
     const result = stringifyForm(dummyForm, "Concrete Slab");
+    const result2 = stringifyForm(dummyForm2, "Concrete Slab");
 
+    console.log("RESULT2", result);
     expect(result).toEqual(stringifyFormString);
+    expect(result2).toEqual(stringifyFormString);
   });
 });
