@@ -7,16 +7,16 @@ let formName = "polytunnel";
 
 // Google maps as a priority
 
-let version = "000016";
+let version = "000017";
 
 let mapCreds;
 let measurementUnits;
-let completedFields = [];
 const DEBUG_MODE = true;
 
 // Variables Start
-let formOptions = [];
 let formFields;
+let formOptions = [];
+let formStructure = []; // provides question order for form | type - { elementId: string, label: string, value: any, order: number }
 
 const setFormFields = (formName) => {
   const formOption = getFormFields(formName);
@@ -133,6 +133,7 @@ $w.onReady(async function () {
 
   mapCreds = await getMapCreds();
   console.log(`${formName} page loaded`);
+  console.log(`${formName} form Structure: ${JSON.stringify(formStructure)}`);
 });
 
 const setupUserCheck = (selectedForm) => {
@@ -213,7 +214,7 @@ const datasetSet = (dataset) => {
 
       // Set form general data
       activeDataset.element.setFieldValue("formGuid", formGuid);
-      console.log("Completed fields:", JSON.stringify(completedFields));
+      console.log("Completed fields:", JSON.stringify(formStructure));
       console.log("allFormFieldsInForm", allFormFieldsInForm);
 
       const contactFieldsContainer = allFormFieldsInForm.find((ff) => ff.customClassList.contains("form__contact"));
@@ -223,7 +224,7 @@ const datasetSet = (dataset) => {
       activeDataset.element.setFieldValue("formResponse", {
         formName: formName,
         formGUID: formGuid,
-        fields: JSON.stringify(completedFields),
+        fields: JSON.stringify(formStructure),
         // fields: JSON.stringify(completedFields.filter((f) => !contactFieldIds.includes(f.id))), // for later...
       });
 
@@ -303,7 +304,7 @@ convertCalcBtn.onClick(async () => await openLightbox("conversion-calculator"));
 
 // Resets form and form state
 const resetForm = () => {
-  completedFields = [];
+  formStructure = [];
   formPageAnchor.scrollTo();
 };
 
@@ -330,7 +331,20 @@ const getForm = (isAllFields) => {
     const match = s.id.toLowerCase() === searchVal.toLowerCase();
     return match;
   });
+
+  let orderNumber = 0;
   getFormStack.children.map((field) => {
+    const getAllFields = (formArray, fieldRef) => {
+      if (fieldRef.type === "$w.Box") {
+        fieldRef.children.map((ce) => getAllFields(formArray, ce));
+      } else {
+        formArray.push(fieldRef);
+        if (!formStructure.some((f) => f.elementId === fieldRef.id)) {
+          formStructure.push({ elementId: fieldRef.id, label: fieldRef.label, value: null, order: orderNumber });
+          orderNumber++;
+        }
+      }
+    };
     getAllFields(form, field);
   });
 
@@ -361,14 +375,6 @@ const nonInputFields = [
   "$w.Repeater",
 ];
 const filterOutNonInputFields = (array) => array.filter((f) => !nonInputFields.includes(f.type));
-
-const getAllFields = (fieldsArray, element) => {
-  if (element.type === "$w.Box") {
-    element.children.map((ce) => getAllFields(fieldsArray, ce));
-  } else {
-    fieldsArray.push(element);
-  }
-};
 
 const formLoadingElement = (loadingElem, state) => {
   const arrowsSvg = loadingElem.children.filter((c) => c.type.toLowerCase() === "$w.vectorimage")[0];
@@ -450,11 +456,17 @@ const handleFormChange = (field, ev) => {
     polytunnelActions(fieldVal);
   }
 
-  if (field.value !== "" && !completedFields.some((cf) => cf.id === field.id)) {
-    updateBar(getForm(false), progressBar);
+  const elementInFormStructure = formStructure.find((fs) => fs.elementId === field.id);
+
+  if (elementInFormStructure) {
+    elementInFormStructure.value = field.value;
+  } else {
+    console.error("ERROR: Field not found in form", field.id, field.label);
   }
 
-  completedFields.push({ id: field.id, label: field.label, value: field.value });
+  if (field.value !== "" && !elementInFormStructure.value === null) {
+    updateBar(getForm(false), progressBar);
+  }
 
   if (!formOptions) {
     console.error("ERROR: Form options not found");
