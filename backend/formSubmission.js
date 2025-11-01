@@ -552,26 +552,30 @@ export const stringifyForm = (form, name) => {
   let additionalFields = otherFields;
 
   if (form.formResponse && form.formResponse.fields !== null) {
-    console.log("Form response fields found", typeof form.formResponse.fields);
+    let parsedFields = JSON.parse(form.formResponse.fields).sort((a, b) => a.order - b.order);
 
-    const parsedFields = JSON.parse(form.formResponse.fields);
+    console.log("Form Response Fields (Sorted):", parsedFields);
+    parsedFields = parsedFields.filter((field) => field.value !== null && field.value !== "");
+    console.log("Form Response Fields (remove empties):", parsedFields);
 
     // Define contact fields to exclude
     const contactFields = [
-      "First Name",
-      "Last Name",
-      "Company Name",
-      "Company",
-      "Email",
-      "Email Address",
-      "Phone Number",
-      "Address",
+      "first name",
+      "last name",
+      "company name",
+      "company",
+      "email",
+      "email address",
+      "phone number",
+      "phonenumber",
+      "phone",
+      "address",
     ];
 
     // Convert array to key-value pairs and filter out contact fields
     const keyVals = parsedFields.reduce((acc, field) => {
       // Only add if the label is not in the contactFields array
-      if (!contactFields.includes(field.label)) {
+      if (!contactFields.includes(field.label.toLowerCase())) {
         acc[field.label] = field.value;
       }
       return acc;
@@ -639,45 +643,58 @@ export const stringifyForm = (form, name) => {
 };
 
 const getCollectionData = async (collection, filterField, filter, lmt) => {
-  TEST_MODE &&
-    console.log(
-      `Getting ${!filterField && !filter ? "all" : ""} ${
-        filterField && filter ? "with filter " + filterField + "=" + filter : ""
-      }`
-    );
-
   let limit = lmt ?? 100;
+  let options = {
+    suppressAuth: true,
+  };
 
-  // const queryResponse = await wixData
-  //   .query(collection)
-  //   .isNotEmpty("supplierType")
-  //   .limit(limit)
-  //   .find()
-  //   .then((results) => {
-  // const items = results.items;
-  //     return items.map(i => i.supplierType);
-  //   });
+  if (!filterField && !filter) {
+    try {
+      const queryResponse = await wixData
+        .query(collection)
+        .limit(limit)
+        .find(options)
+        .then((results) => results.items);
 
-  try {
-    const queryResponse = await wixData
-      .query(collection)
-      .eq(filterField, filter)
-      .limit(limit)
-      .find()
-      .then((results) => results.items);
-
-    if (!queryResponse.length) {
-      handleErrors(`Could not locate collection ${collection}`);
-      console.log("No data found in collection", collection);
-      return;
+      if (!queryResponse.length) {
+        handleErrors(`Could not locate collection ${collection}`);
+        console.log("No data found in collection", collection);
+        return;
+      }
+      TEST_MODE &&
+        console.log(
+          `Returning ${queryResponse.length} ${
+            queryResponse.length > 0 ? "items" : "item"
+          } from collection ${collection}`
+        );
+      return queryResponse;
+    } catch (error) {
+      handleErrors(`Error querying data from ${collection}: ${error}`);
     }
-    TEST_MODE &&
-      console.log(
-        `Returning ${queryResponse.length} ${queryResponse.length > 0 ? "items" : "item"} from collection ${collection}`
-      );
-    return queryResponse;
-  } catch (error) {
-    handleErrors(`Error querying data from ${collection}: ${error}`);
+  } else {
+    try {
+      const queryResponse = await wixData
+        .query(collection)
+        .eq(filterField, filter)
+        .limit(limit)
+        .find(options)
+        .then((results) => results.items);
+
+      if (!queryResponse.length) {
+        handleErrors(`Could not locate collection ${collection}`);
+        console.log("No data found in collection", collection);
+        return;
+      }
+      TEST_MODE &&
+        console.log(
+          `Returning ${queryResponse.length} ${
+            queryResponse.length > 0 ? "items" : "item"
+          } from collection ${collection}`
+        );
+      return queryResponse;
+    } catch (error) {
+      handleErrors(`Error querying data from ${collection}: ${error}`);
+    }
   }
 };
 
@@ -809,7 +826,7 @@ async function sendSupplierEmail(supplier, options, collection) {
   }
 }
 
-const getLatLng = (addressField, guid) => {
+const getLatLng = (addressField) => {
   if (addressField.location.latitude && addressField.location.longitude) {
     return {
       lat: addressField.location.latitude,
@@ -830,7 +847,7 @@ const getLatLng = (addressField, guid) => {
 
     return res;
   } else {
-    handleErrors(`No location or postcode provided for form ${guid} - ${JSON.stringify(addressField)}`);
+    return null;
   }
 };
 
@@ -1020,9 +1037,9 @@ export const buildingSizes = (formFields) => {
   // Always return metric metre measurements
   const units = getFieldValue(formFields, "measurementUnits") === "metric" ? "m" : "ft";
   const length = getFieldValue(formFields, "polytunnelLength") || getFieldValue(formFields, "buildingLength");
-  const width = getFieldValue(formFields, "buildingWidth");
+  const width = getFieldValue(formFields, "polytunnelWidth") || getFieldValue(formFields, "buildingWidth");
   const height = getFieldValue(formFields, "buildingHeight");
-  console.log("buildingSizes", { length, width, height, units });
+
   const format = (val) =>
     typeof val === "string"
       ? val.includes("ft")
@@ -1058,11 +1075,9 @@ const checkFormForAsbestos = (formAnswers) => {
 };
 
 export const filterSuppliers = (suppliers, supplierTypesInForm, formAnswers) => {
-  console.log("Start", suppliers.length, " suppliers");
+  console.log("Filtering", suppliers.length, " suppliers");
   const quoteContainsAsbestos = checkFormForAsbestos(formAnswers);
-  const quoteLatLng = getLatLng(formAnswers.address, formAnswers.Guid);
   const quoteBuildingDimensions = buildingSizes(formAnswers);
-
   if (quoteContainsAsbestos) {
     console.log("Contains asbestos?");
     suppliers = suppliers.filter((supplier) => supplier.handlesAsbestos);
@@ -1095,13 +1110,6 @@ export const filterSuppliers = (suppliers, supplierTypesInForm, formAnswers) => 
       ),
     }));
 
-  console.log("MAIN CHECk", mainBuildingSuppliers);
-
-  console.log(
-    "NONDIMEN CHECk",
-    nonDimensionSupplierTypes.filter((i) => i.suppliers.length > 0)
-  );
-
   const dimensionSupplierTypes = supplierTypesInForm
     .filter((s) => s.hasMinMaxDimensions)
     .map((type) => ({
@@ -1129,11 +1137,6 @@ export const filterSuppliers = (suppliers, supplierTypesInForm, formAnswers) => 
       }),
     }));
 
-  console.log(
-    "DIMEN CHECk",
-    dimensionSupplierTypes.filter((i) => i.suppliers.length > 0)
-  );
-
   const sortedSuppliersByDistance = [
     ...nonDimensionSupplierTypes,
     ...dimensionSupplierTypes,
@@ -1142,7 +1145,7 @@ export const filterSuppliers = (suppliers, supplierTypesInForm, formAnswers) => 
     .filter((s) => s.suppliers.length > 0)
     .map((s) => ({
       ...s.type,
-      suppliers: sortSuppliersByDistance(s.suppliers, quoteLatLng),
+      suppliers: sortSuppliersByDistance(s.suppliers, { lat: formAnswers.lat, lng: formAnswers.lng }),
     }));
 
   // // Return type -
@@ -1215,465 +1218,9 @@ export const getSuppliers = async (form) => {
 
   // get with collection - SupplierTypes
 
-  // const supplierTypeList = await getCollectionData("SupplierTypes", "createdOn", "2025-08-07T11:52:56Z");
+  const supplierTypeList = await getCollectionData("SupplierTypes", null, null, 100);
 
-  const supplierTypeList = [
-    {
-      supplierType: "demolitionWalls",
-      baseType: "demolitionWalls",
-      newBuildings: false,
-      repairReplace: true,
-      hasMinMaxDimensions: false,
-    },
-    {
-      supplierType: "demolitionCladding",
-      baseType: "demolitionCladding",
-      newBuildings: false,
-      repairReplace: true,
-      hasMinMaxDimensions: false,
-    },
-    {
-      supplierType: "quantitySurveyorInstall",
-      baseType: "quantitySurveyor",
-      newBuildings: true,
-      repairReplace: false,
-      hasMinMaxDimensions: false,
-    },
-    {
-      supplierType: "concreteBlockInstall",
-      baseType: "concreteBlock",
-      newBuildings: true,
-      repairReplace: false,
-      hasMinMaxDimensions: false,
-    },
-    {
-      supplierType: "roofSupplyAndInstall",
-      baseType: "roof",
-      newBuildings: true,
-      repairReplace: false,
-      hasMinMaxDimensions: true,
-    },
-    {
-      supplierType: "roofRepairSupply",
-      baseType: "roofRepair",
-      newBuildings: false,
-      repairReplace: true,
-      hasMinMaxDimensions: true,
-    },
-    {
-      supplierType: "steelFabricatorSupplyAndInstall",
-      baseType: "steelFabricator",
-      newBuildings: true,
-      repairReplace: false,
-      hasMinMaxDimensions: true,
-    },
-    {
-      supplierType: "solarPanelSupply",
-      baseType: "solarPanel",
-      newBuildings: true,
-      repairReplace: false,
-      hasMinMaxDimensions: false,
-    },
-    {
-      supplierType: "polytunnelSupplyAndInstall",
-      baseType: "polytunnel",
-      newBuildings: true,
-      repairReplace: false,
-      hasMinMaxDimensions: true,
-    },
-    {
-      supplierType: "polytunnelSupply",
-      baseType: "polytunnel",
-      newBuildings: true,
-      repairReplace: false,
-      hasMinMaxDimensions: true,
-    },
-    {
-      supplierType: "demolitionRoof",
-      baseType: "demolitionRoof",
-      newBuildings: false,
-      repairReplace: true,
-      hasMinMaxDimensions: false,
-    },
-    {
-      supplierType: "concreteWallRepairSupplyAndInstall",
-      baseType: "concreteWallRepair",
-      newBuildings: false,
-      repairReplace: true,
-      hasMinMaxDimensions: false,
-    },
-    {
-      supplierType: "massConcreteSupplyAndInstall",
-      baseType: "massConcrete",
-      newBuildings: true,
-      repairReplace: false,
-      hasMinMaxDimensions: false,
-    },
-    {
-      supplierType: "roofInstall",
-      baseType: "roof",
-      newBuildings: true,
-      repairReplace: false,
-      hasMinMaxDimensions: true,
-    },
-    {
-      supplierType: "concreteBlockSupply",
-      baseType: "concreteBlock",
-      newBuildings: true,
-      repairReplace: false,
-      hasMinMaxDimensions: false,
-    },
-    {
-      supplierType: "steelErectorSupplyAndInstall",
-      baseType: "steelErector",
-      newBuildings: true,
-      repairReplace: false,
-      hasMinMaxDimensions: true,
-    },
-    {
-      supplierType: "solarPanelInstall",
-      baseType: "solarPanel",
-      newBuildings: true,
-      repairReplace: false,
-      hasMinMaxDimensions: false,
-    },
-    {
-      supplierType: "cattleSheetDoorSupplyAndInstall",
-      baseType: "cattleSheetDoor",
-      newBuildings: true,
-      repairReplace: false,
-      hasMinMaxDimensions: false,
-    },
-    {
-      supplierType: "quantitySurveyorSupply",
-      baseType: "quantitySurveyor",
-      newBuildings: true,
-      repairReplace: false,
-      hasMinMaxDimensions: false,
-    },
-    {
-      supplierType: "polytunnelInstall",
-      baseType: "polytunnel",
-      newBuildings: true,
-      repairReplace: false,
-      hasMinMaxDimensions: true,
-    },
-    {
-      supplierType: "concreteBlockSupplyAndInstall",
-      baseType: "concreteBlock",
-      newBuildings: true,
-      repairReplace: false,
-      hasMinMaxDimensions: false,
-    },
-    {
-      supplierType: "demolitionStructures",
-      baseType: "demolitionStructures",
-      newBuildings: false,
-      repairReplace: true,
-      hasMinMaxDimensions: false,
-    },
-    {
-      supplierType: "concreteFloorSupplyAndInstall",
-      baseType: "concreteFloor",
-      newBuildings: true,
-      repairReplace: false,
-      hasMinMaxDimensions: false,
-    },
-    {
-      supplierType: "groundWorkerSupply",
-      baseType: "groundWorker",
-      newBuildings: true,
-      repairReplace: false,
-      hasMinMaxDimensions: false,
-    },
-    {
-      supplierType: "steelErectorSupply",
-      baseType: "steelErector",
-      newBuildings: true,
-      repairReplace: false,
-      hasMinMaxDimensions: true,
-    },
-    {
-      supplierType: "rainwaterHarvestingSupply",
-      baseType: "rainwaterHarvesting",
-      newBuildings: true,
-      repairReplace: false,
-      hasMinMaxDimensions: false,
-    },
-    {
-      supplierType: "claddingRepairInstall",
-      baseType: "claddingRepair",
-      newBuildings: false,
-      repairReplace: true,
-      hasMinMaxDimensions: false,
-    },
-    {
-      supplierType: "concretePanelSupply",
-      baseType: "concretePanel",
-      newBuildings: true,
-      repairReplace: false,
-      hasMinMaxDimensions: false,
-    },
-    {
-      supplierType: "roofRepairSupplyAndInstall",
-      baseType: "roofRepair",
-      newBuildings: false,
-      repairReplace: true,
-      hasMinMaxDimensions: true,
-    },
-    {
-      supplierType: "cattleSheetDoorSupply",
-      baseType: "cattleSheetDoor",
-      newBuildings: true,
-      repairReplace: false,
-      hasMinMaxDimensions: false,
-    },
-    {
-      supplierType: "claddingRepairSupplyAndInstall",
-      baseType: "claddingRepair",
-      newBuildings: false,
-      repairReplace: true,
-      hasMinMaxDimensions: false,
-    },
-    {
-      supplierType: "rainwaterHarvestingSupplyAndInstall",
-      baseType: "rainwaterHarvesting",
-      newBuildings: true,
-      repairReplace: false,
-      hasMinMaxDimensions: false,
-    },
-    {
-      supplierType: "gutteringSupplyAndInstall",
-      baseType: "guttering",
-      newBuildings: true,
-      repairReplace: false,
-      hasMinMaxDimensions: false,
-    },
-    {
-      supplierType: "gutteringRepairInstall",
-      baseType: "gutteringRepair",
-      newBuildings: false,
-      repairReplace: true,
-      hasMinMaxDimensions: false,
-    },
-    {
-      supplierType: "claddingRepairSupply",
-      baseType: "claddingRepair",
-      newBuildings: false,
-      repairReplace: true,
-      hasMinMaxDimensions: false,
-    },
-    {
-      supplierType: "roofSupply",
-      baseType: "roof",
-      newBuildings: true,
-      repairReplace: false,
-      hasMinMaxDimensions: true,
-    },
-    {
-      supplierType: "solarPanelSupplyAndInstall",
-      baseType: "solarPanel",
-      newBuildings: true,
-      repairReplace: false,
-      hasMinMaxDimensions: false,
-    },
-    {
-      supplierType: "concreteFloorSupply",
-      baseType: "concreteFloor",
-      newBuildings: true,
-      repairReplace: false,
-      hasMinMaxDimensions: false,
-    },
-    {
-      supplierType: "concreteWallRepairSupply",
-      baseType: "concreteWallRepair",
-      newBuildings: false,
-      repairReplace: true,
-      hasMinMaxDimensions: false,
-    },
-    {
-      supplierType: "claddingSupplyAndInstall",
-      baseType: "cladding",
-      newBuildings: true,
-      repairReplace: false,
-      hasMinMaxDimensions: false,
-    },
-    {
-      supplierType: "groundWorkerInstall",
-      baseType: "groundWorker",
-      newBuildings: true,
-      repairReplace: false,
-      hasMinMaxDimensions: false,
-    },
-    {
-      supplierType: "concretePanelInstall",
-      baseType: "concretePanel",
-      newBuildings: true,
-      repairReplace: false,
-      hasMinMaxDimensions: false,
-    },
-    {
-      supplierType: "gutteringRepairSupply",
-      baseType: "gutteringRepair",
-      newBuildings: false,
-      repairReplace: true,
-      hasMinMaxDimensions: false,
-    },
-    {
-      supplierType: "gutteringRepairSupplyAndInstall",
-      baseType: "gutteringRepair",
-      newBuildings: false,
-      repairReplace: true,
-      hasMinMaxDimensions: false,
-    },
-    {
-      supplierType: "massConcreteInstall",
-      baseType: "massConcrete",
-      newBuildings: true,
-      repairReplace: false,
-      hasMinMaxDimensions: false,
-    },
-    {
-      supplierType: "rainwaterHarvestingInstall",
-      baseType: "rainwaterHarvesting",
-      newBuildings: true,
-      repairReplace: false,
-      hasMinMaxDimensions: false,
-    },
-    {
-      supplierType: "doorSupplyAndInstall",
-      baseType: "door",
-      newBuildings: true,
-      repairReplace: false,
-      hasMinMaxDimensions: false,
-    },
-    {
-      supplierType: "massConcreteSupply",
-      baseType: "massConcrete",
-      newBuildings: true,
-      repairReplace: false,
-      hasMinMaxDimensions: false,
-    },
-    {
-      supplierType: "gutteringSupply",
-      baseType: "guttering",
-      newBuildings: true,
-      repairReplace: false,
-      hasMinMaxDimensions: false,
-    },
-    {
-      supplierType: "doorSupply",
-      baseType: "door",
-      newBuildings: true,
-      repairReplace: false,
-      hasMinMaxDimensions: false,
-    },
-    {
-      supplierType: "groundWorkerSupplyAndInstall",
-      baseType: "groundWorker",
-      newBuildings: true,
-      repairReplace: false,
-      hasMinMaxDimensions: false,
-    },
-    {
-      supplierType: "steelFabricatorInstall",
-      baseType: "steelFabricator",
-      newBuildings: true,
-      repairReplace: false,
-      hasMinMaxDimensions: true,
-    },
-    {
-      supplierType: "steelErectorInstall",
-      baseType: "steelErector",
-      newBuildings: true,
-      repairReplace: false,
-      hasMinMaxDimensions: true,
-    },
-    {
-      supplierType: "concretePanelSupplyAndInstall",
-      baseType: "concretePanel",
-      newBuildings: true,
-      repairReplace: false,
-      hasMinMaxDimensions: false,
-    },
-    {
-      supplierType: "concreteFloorInstall",
-      baseType: "concreteFloor",
-      newBuildings: true,
-      repairReplace: false,
-      hasMinMaxDimensions: false,
-    },
-    {
-      supplierType: "steelFabricatorSupply",
-      baseType: "steelFabricator",
-      newBuildings: true,
-      repairReplace: false,
-      hasMinMaxDimensions: true,
-    },
-    {
-      supplierType: "doorInstall",
-      baseType: "door",
-      newBuildings: true,
-      repairReplace: false,
-      hasMinMaxDimensions: false,
-    },
-    {
-      supplierType: "demolitionConcrete",
-      baseType: "demolitionConcrete",
-      newBuildings: false,
-      repairReplace: true,
-      hasMinMaxDimensions: false,
-    },
-    {
-      supplierType: "cattleSheetDoorInstall",
-      baseType: "cattleSheetDoor",
-      newBuildings: true,
-      repairReplace: false,
-      hasMinMaxDimensions: false,
-    },
-    {
-      supplierType: "roofRepairInstall",
-      baseType: "roofRepair",
-      newBuildings: false,
-      repairReplace: true,
-      hasMinMaxDimensions: true,
-    },
-    {
-      supplierType: "claddingSupply",
-      baseType: "cladding",
-      newBuildings: true,
-      repairReplace: false,
-      hasMinMaxDimensions: false,
-    },
-    {
-      supplierType: "gutteringInstall",
-      baseType: "guttering",
-      newBuildings: true,
-      repairReplace: false,
-      hasMinMaxDimensions: false,
-    },
-    {
-      supplierType: "quantitySurveyorSupplyAndInstall",
-      baseType: "quantitySurveyor",
-      newBuildings: true,
-      repairReplace: false,
-      hasMinMaxDimensions: false,
-    },
-    {
-      supplierType: "concreteWallRepairInstall",
-      baseType: "concreteWallRepair",
-      newBuildings: false,
-      repairReplace: true,
-      hasMinMaxDimensions: false,
-    },
-    {
-      supplierType: "claddingInstall",
-      baseType: "cladding",
-      newBuildings: true,
-      repairReplace: false,
-      hasMinMaxDimensions: false,
-    },
-  ];
+  console.log("supplierTypeList", supplierTypeList);
 
   // PT 1 - Get all supplier types
   const supplierTypesInForm = getAllSupplierTypesInForm(supplierTypeList, form);
@@ -1686,7 +1233,7 @@ export const getSuppliers = async (form) => {
     .hasSome("quoteTypesProvided", supplierTypesInForm)
     .eq("isActive", true)
     .limit(1000)
-    .find()
+    .find({ suppressAuth: true })
     .then((results) => results.items);
 
   console.log("Suppliers returned: ", suppliers);
@@ -1748,9 +1295,17 @@ export const invoke = async ({ payload }) => {
       return acc;
     }, {});
 
+    const quoteLatLng = getLatLng(completedForm.address);
+
+    if (!quoteLatLng) {
+      handleErrors(`No location or postcode provided for form ${formGuid} - ${JSON.stringify(completedForm.address)}`);
+    }
+
     console.log("COMPLETED FORM:\n", completedForm);
 
-    const suppliers = await getSuppliers({ ...completedForm, ...contactAddress, formName: formName });
+    const buildingSize = buildingSizes(completedForm);
+
+    const suppliers = await getSuppliers({ ...completedForm, ...contactAddress, formName: formName, quoteLatLng });
 
     console.log("Selected suppliers:", suppliers);
 
@@ -1769,28 +1324,41 @@ export const invoke = async ({ payload }) => {
 
     console.log("Stringified Form", stringifiedForm);
 
-    const emailOptions = {
-      submittedName: completedForm.firstName + " " + completedForm.lastName,
-      submittedEmail: formObject.email,
-      submittedPhone: formObject.phone ?? "no phone number provided",
-      submittedType: `New ${formName === "Concrete Slab" ? "Concrete Project" : formName}`,
-      //   submittedDistance: Math.trunc(ssl[i].dist / 1000),
-      buildingSize: "20m x 3m x 1m",
-      submittedDistance: 40,
-      // ...(stringifiedForm["Form Details"] && { formDetails: stringifiedForm["Form Details"] }),
-      // ...(stringifiedForm["Form Walls"] && { formWalls: stringifiedForm["Form Walls"] }),
-      // ...(stringifiedForm["Form Roof"] && { formRoof: stringifiedForm["Form Roof"] }),
-      // ...(stringifiedForm["Form Cladding"] && { formCladding: stringifiedForm["Form Cladding"] }),
-      // ...(stringifiedForm["Form Doors"] && { formDoors: stringifiedForm["Form Doors"] }),
-      // ...(stringifiedForm["Form Floor"] && { formFloor: stringifiedForm["Form Floor"] }),
-      ...(stringifiedForm["Fields"] && { formDetails: stringifiedForm["Fields"] }),
-      ...(stringifiedForm["Form Contact"] && { formContact: stringifiedForm["Form Contact"] }),
-    };
+    console.log(
+      "Building Length:",
+      buildingSize.length,
+      typeof buildingSize.length,
+      "Building Width:",
+      buildingSize.width,
+      typeof buildingSize.width,
+      "Building Height:",
+      buildingSize.height,
+      typeof buildingSize.height
+    );
 
-    console.log("Email built...", emailOptions);
     if (suppliers.length === 0) console.log("No suppliers found!");
     for (const supplier of suppliers) {
       console.log("supplier", supplier);
+      const emailOptions = {
+        submittedName: completedForm.firstName + " " + completedForm.lastName,
+        submittedEmail: formObject.email,
+        submittedPhone: formObject.phone ?? "no phone number provided",
+        submittedType: `New ${formName === "Concrete Slab" ? "Concrete Project" : formName}`,
+        buildingSize: `${buildingSize.length}${buildingSize.units} x ${buildingSize.width}${buildingSize.units} ${
+          buildingSize.height ? " x " + buildingSize.height + buildingSize.units : ""
+        }`,
+        submittedDistance: Math.trunc(supplier.distanceInMetres / 1000),
+        // ...(stringifiedForm["Form Details"] && { formDetails: stringifiedForm["Form Details"] }),
+        // ...(stringifiedForm["Form Walls"] && { formWalls: stringifiedForm["Form Walls"] }),
+        // ...(stringifiedForm["Form Roof"] && { formRoof: stringifiedForm["Form Roof"] }),
+        // ...(stringifiedForm["Form Cladding"] && { formCladding: stringifiedForm["Form Cladding"] }),
+        // ...(stringifiedForm["Form Doors"] && { formDoors: stringifiedForm["Form Doors"] }),
+        // ...(stringifiedForm["Form Floor"] && { formFloor: stringifiedForm["Form Floor"] }),
+        ...(stringifiedForm["Fields"] && { formDetails: stringifiedForm["Fields"] }),
+        ...(stringifiedForm["Form Contact"] && { formContact: stringifiedForm["Form Contact"] }),
+      };
+
+      console.log("Email built...", emailOptions);
 
       const secondarySuppliers = ["steelFabricator", "solarPanel", "quantitySurveyor", "groundWorker"];
 
