@@ -113,12 +113,9 @@ div[data-hook="product"] fieldset[data-hook="product-quantity"] {
   color: black;
 }
 
-.formSection div:has(.button) {
-  height: 68px;
-}
-
 .formSection .button,
-.formSection .upload-button div[role="button"] {
+.formSection .upload-button div[role="button"],
+.formSection .upload-button div[type="button"] {
   width: 250px;
   max-width: 250px;
   height: 50px;
@@ -206,6 +203,7 @@ div[data-hook="product"] fieldset[data-hook="product-quantity"] {
 
 .form__subsection {
   border: var(--border);
+  border-radius: var(--borderRadius);
   padding: 1rem;
 }
 
@@ -476,13 +474,17 @@ div[class*=" form__"] input {
 
 /* Mobile (max-width: 750px) */
 @media screen and (max-width: 750px) {
-  #quoteFormContainer {
+  .quoteFormContainer {
     padding-top: 1rem;
     border-top: 2px solid gray;
   }
 
   .formSection.formStack {
     padding: 1rem;
+  }
+
+  .formSection.formStack input:active {
+    font-size: var(--font-size-large);    
   }
 
   .quoteFormChildContainer {
