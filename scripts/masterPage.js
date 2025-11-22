@@ -37,6 +37,7 @@ export function getFormFields(formName) {
     // New building
     {
       form: "mezzaninefloor",
+      formType: "MezzanineFloorForm",
       formContainer: "mezzanineFloorForm",
       errorMsg: "submitFailed-mezzanineFloor",
       submitBtn: "submitButton-mezzanineFloor",
@@ -49,6 +50,7 @@ export function getFormFields(formName) {
     },
     {
       form: "monopitch",
+      formType: "MonoPitchQuotes",
       formContainer: "monoPitchForm",
       errorMsg: "submitFailed-monoPitch",
       submitBtn: "submitButton-monoPitch",
@@ -61,6 +63,7 @@ export function getFormFields(formName) {
     },
     {
       form: "portalframe",
+      formType: "PortalFrameQuotes",
       formContainer: "portalFrameForm",
       errorMsg: "submitFailed-portalFrame",
       submitBtn: "submitButton-portalFrame",
@@ -73,6 +76,7 @@ export function getFormFields(formName) {
     },
     {
       form: "concrete",
+      formType: "ConcreteQuotes",
       formContainer: "concreteForm",
       errorMsg: "submitFailed-concreteSlab",
       submitBtn: "submitButton-concreteSlab",
@@ -85,6 +89,7 @@ export function getFormFields(formName) {
     },
     {
       form: "roundhouse",
+      formType: "RoundHouseForm",
       formContainer: "roundHouseForm",
       errorMsg: "submitFailed-roundHouse",
       submitBtn: "submitButton-roundHouse",
@@ -97,6 +102,7 @@ export function getFormFields(formName) {
     },
     {
       form: "polytunnel",
+      formType: "PolytunnelQuotes",
       formContainer: "polytunnelForm",
       errorMsg: "submitFailed-polytunnel",
       submitBtn: "submitButton-polytunnel",
@@ -110,6 +116,7 @@ export function getFormFields(formName) {
     // Repair/Replace
     {
       form: "wallsRepair",
+      formType: "WallQuotes",
       formContainer: "wallsRepairForm",
       errorMsg: "submitFailed-wallsRepair",
       submitBtn: "submitButton-wallsRepair",
@@ -122,6 +129,7 @@ export function getFormFields(formName) {
     },
     {
       form: "gutteringRepair",
+      formType: "GutteringQuotes",
       formContainer: "gutteringRepairForm",
       errorMsg: "submitFailed-gutteringRepair",
       submitBtn: "submitButton-gutteringRepair",
@@ -134,6 +142,7 @@ export function getFormFields(formName) {
     },
     {
       form: "solarRepair",
+      formType: "SolarPanelsQuotes",
       formContainer: "solarRepairForm",
       errorMsg: "submitFailed-solarRepair",
       submitBtn: "submitButton-solarRepair",
@@ -146,6 +155,7 @@ export function getFormFields(formName) {
     },
     {
       form: "dismantleRepair",
+      formType: "DismantleQuotes",
       formContainer: "dismantleRepairForm",
       errorMsg: "submitFailed-dismantleRepair",
       submitBtn: "submitButton-dismantleRepair",
@@ -158,6 +168,7 @@ export function getFormFields(formName) {
     },
     {
       form: "rainwaterRepair",
+      formType: "RainwaterHarvestingQuotes",
       formContainer: "rainwaterRepairForm",
       errorMsg: "submitFailed-rainwaterRepair",
       submitBtn: "submitButton-rainwaterRepair",
@@ -170,6 +181,7 @@ export function getFormFields(formName) {
     },
     {
       form: "doorsRepair",
+      formType: "DoorsQuotes",
       formContainer: "doorsRepairForm",
       errorMsg: "submitFailed-doorsRepair",
       submitBtn: "submitButton-doorsRepair",
@@ -182,6 +194,7 @@ export function getFormFields(formName) {
     },
     {
       form: "reroofRepair",
+      formType: "reroofQuotes",
       formContainer: "reroofRepairForm",
       errorMsg: "submitFailed-reroofRepair",
       submitBtn: "submitButton-reroofRepair",
@@ -194,6 +207,7 @@ export function getFormFields(formName) {
     },
     {
       form: "claddingRepair",
+      formType: "CladdingQuotes",
       formContainer: "claddingRepairForm",
       errorMsg: "submitFailed-claddingRepair",
       submitBtn: "submitButton-claddingRepair",
