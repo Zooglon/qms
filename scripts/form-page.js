@@ -7,7 +7,7 @@ let formName = "polytunnel";
 
 // Google maps as a priority
 
-let version = "000017";
+let version = "000020";
 
 let mapCreds;
 let measurementUnits;
@@ -21,7 +21,8 @@ let formStructure = []; // provides question order for form | type - { elementId
 const setFormFields = (formName) => {
   const formOption = getFormFields(formName);
   return {
-    formType: formOption.form,
+    form: formOption.form,
+    formType: formOption.formType,
     formContainer: $w(`#${formOption.formContainer}`),
     errorMsg: $w(`#${formOption.errorMsg}`),
     submitBtn: $w(`#${formOption.submitBtn}`),
@@ -172,11 +173,13 @@ const setupUserCheck = (selectedForm) => {
 };
 
 const showError = (fields, msg) => {
+  console.log("Show error fun started");
   fields.errorMsg.text = msg;
   formLoadingElement(fields.loadingElement, "end");
   fields.errorMsg.expand();
-  fields.submitBtn.enable();
+  fields.submitBtn.collapse();
   fields.submitBtn.expand();
+  console.log("Error got to here...");
 };
 
 const datasetSet = (dataset) => {
@@ -199,8 +202,12 @@ const datasetSet = (dataset) => {
   const guidField = formFields.guidField;
   guidField.value = formGuid;
 
-  // activeDataset.element.onBeforeSave(async () => {
   activeDataset.element.onBeforeSave(() => {
+    if (guidField.value.length <= 4) {
+      console.error("Form GUID is missing. Please contact us");
+      return false;
+    }
+
     try {
       DEBUG_MODE && console.log("Submit form fired...");
       formFields.submitBtn.disable();
@@ -214,19 +221,28 @@ const datasetSet = (dataset) => {
 
       // Set form general data
       activeDataset.element.setFieldValue("formGuid", formGuid);
-      console.log("Completed fields:", JSON.stringify(formStructure));
-      console.log("allFormFieldsInForm", allFormFieldsInForm);
+      activeDataset.element.setFieldValue("formType", formFields.formType);
+      // console.log("Completed fields:", JSON.stringify(formStructure));
+      // console.log("allFormFieldsInForm", allFormFieldsInForm);
 
       const contactFieldsContainer = allFormFieldsInForm.find((ff) => ff.customClassList.contains("form__contact"));
+      console.log("contactFieldsContainer", contactFieldsContainer);
       const contactFieldsBlock = contactFieldsContainer.parent.children;
+      console.log("contactFieldsBlock", contactFieldsBlock);
       const contactFieldIds = contactFieldsBlock.map((f) => f.id);
+
+      const fieldsString = JSON.stringify(formStructure);
+      console.log("fieldsString", fieldsString);
+      console.log("All fields in form", allFormFieldsInForm);
 
       activeDataset.element.setFieldValue("formResponse", {
         formName: formName,
         formGUID: formGuid,
-        fields: JSON.stringify(formStructure),
+        fields: formStructure,
         // fields: JSON.stringify(completedFields.filter((f) => !contactFieldIds.includes(f.id))), // for later...
       });
+
+      console.log("Form response -", JSON.stringify(formStructure));
 
       const firstName = contactFieldsBlock.find((f) => f.id.includes("first"));
       const lastName = contactFieldsBlock.find((f) => f.id.includes("last"));
@@ -407,7 +423,7 @@ const handleFormChange = (field, ev) => {
       field.validity && field.validity.valid
     );
 
-  if (ev && ev.target.label.toLowerCase() === "first name" && fieldVal === "test") {
+  if (ev.target.label && ev.target.label.toLowerCase() === "first name" && fieldVal === "test") {
     console.log("Auto-completing contact fields for testing...");
     autoCompleteContactForTesting(field.parent);
   }
