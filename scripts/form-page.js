@@ -1,5 +1,6 @@
 import { getMapCreds, getFormFields } from "./masterPage";
-import wixLocationFrontend, { openLightbox } from "wix-window-frontend";
+import { openLightbox } from "wix-window-frontend";
+import wixLocation from "wix-location";
 // import { captchaAuth } from "backend/captchaModule";
 import { getFormOptions } from "public/formFunctions";
 
@@ -325,7 +326,7 @@ const resetForm = () => {
 };
 
 resetBtns.flat().forEach((rb) => rb.onClick(() => resetForm()));
-formBackBtns.flat().forEach((bb) => bb.onClick((ev) => wixLocationFrontend.to("/")));
+formBackBtns.flat().forEach((bb) => bb.onClick((ev) => wixLocation.to("/")));
 
 // onClick funtions end
 
