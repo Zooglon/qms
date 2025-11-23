@@ -508,6 +508,10 @@ div[class*=" form__"] input {
     justify-content: space-between;
   }
 
+  .form__checkboxes div[data-testid="items"] > label {
+  width: 45%;
+}
+
   .form__dualInputBox {
     display: flex;
     flex-direction: column;
