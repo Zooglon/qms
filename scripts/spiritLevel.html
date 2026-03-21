@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Spirit Level</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;600;700&display=swap');
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --green: #135837;
+      --orange: #ED6A20;
+      --red: #ff1744;
+      --grey: #D9D9D9;
+      --bg: transparent;
+      --darkGrey: #6B6B6B;
+    }
+
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: var(--bg);
+      font-family: 'Nunito Sans', sans-serif;
+      color: #e6edf3;
+      touch-action: none;
+    }
+
+    .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      padding: 24px;
+      gap: 28px;
+    }
+
+    /* ── Title ── */
+    .title {
+      font-size: 16px;
+      letter-spacing: 4px;
+      font-weight: 700;
+      color: black;
+      font-family: 'Nunito Sans', sans-serif;
+    }
+
+    /* ── Tube ── */
+    .tube-wrapper {
+      position: relative;
+      width: 100%;
+      max-width: 340px;
+    }
+
+    .tube {
+      position: relative;
+      height: 64px;
+      border-radius: 32px;
+      background: var(--grey);
+      border: 2px solid var(--darkGrey);
+      box-shadow:
+        inset 0 4px 12px var(--grey),
+        inset 0 -2px 4px var(--darkGrey);
+      overflow: hidden;
+    }
+
+    /* tick marks */
+    .tube::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(90deg,
+          transparent 0px,
+          transparent 18px,
+          rgba(255, 255, 255, 0.06) 18px,
+          rgba(255, 255, 255, 0.06) 19px);
+    }
+
+    /* center zone */
+    .tube-center {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      width: 70px;
+      height: 44px;
+      border-radius: 22px;
+      border: 1.5px solid var(--green);
+      opacity: 0.35;
+      pointer-events: none;
+    }
+
+    /* center line */
+    .tube-line {
+      position: absolute;
+      left: 50%;
+      top: 8px;
+      bottom: 8px;
+      width: 1px;
+      background: var(--green);
+      opacity: 0.3;
+      pointer-events: none;
+    }
+
+    /* bubble */
+    .bubble {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      background: radial-gradient(circle at 35% 35%,
+          rgba(255, 255, 255, 0.55) 0%,
+          rgba(0, 230, 118, 0.85) 40%,
+          rgba(0, 180, 90, 0.7) 100%);
+      box-shadow:
+        0 0 18px rgba(0, 230, 118, 0.5),
+        inset 0 2px 4px rgba(255, 255, 255, 0.3);
+      transition: left 0.08s linear, background 0.3s ease, box-shadow 0.3s ease;
+      pointer-events: none;
+    }
+
+    .bubble.warning {
+      background: radial-gradient(circle at 35% 35%,
+          rgba(255, 255, 255, 0.5) 0%,
+          rgba(255, 171, 0, 0.9) 40%,
+          rgba(200, 120, 0, 0.8) 100%);
+      box-shadow: 0 0 18px rgba(255, 171, 0, 0.5), inset 0 2px 4px rgba(255, 255, 255, 0.3);
+    }
+
+    .bubble.danger {
+      background: radial-gradient(circle at 35% 35%,
+          rgba(255, 255, 255, 0.4) 0%,
+          rgba(255, 23, 68, 0.9) 40%,
+          rgba(180, 0, 40, 0.8) 100%);
+      box-shadow: 0 0 18px rgba(255, 23, 68, 0.5), inset 0 2px 4px rgba(255, 255, 255, 0.3);
+    }
+
+    /* ── Angle display ── */
+    .angle-display {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .angle-value {
+      font-size: 64px;
+      font-weight: 600;
+      line-height: 1;
+      letter-spacing: -2px;
+      font-family: 'Nunito Sans', sans-serif;
+      color: black;
+    }
+
+    .angle-value.warning {
+      color: black;
+    }
+
+    .angle-value.danger {
+      color: black;
+    }
+
+    .angle-unit {
+      font-size: 13px;
+      color: #8b949e;
+      letter-spacing: 2px;
+      font-family: 'Nunito Sans', sans-serif;
+    }
+
+    /* ── Status bar ── */
+    .status {
+      font-size: 11px;
+      letter-spacing: 3px;
+      padding: 6px 20px;
+      border-radius: 20px;
+      border: 1px solid currentColor;
+      transition: color 0.3s, border-color 0.3s;
+      color: var(--green);
+    }
+
+    .status.warning {
+      color: var(--orange);
+    }
+
+    .status.danger {
+      color: var(--red);
+    }
+
+    /* ── Permission button ── */
+    .permission-screen {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+      text-align: center;
+    }
+
+    .permission-screen p {
+      font-size: 14px;
+      color: black;
+      max-width: 260px;
+      line-height: 1.6;
+      font-family: 'Nunito Sans', sans-serif;
+      letter-spacing: 1px;
+    }
+
+    .btn {
+      font-family: 'Nunito Sans', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      padding: 14px 36px;
+      border-radius: 4px;
+      border: none;
+      background: var(--orange);
+      border-radius: 6px;
+      color: #ffffff;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+
+    .btn:active {
+      opacity: 0.7;
+    }
+
+    /* ── Cross-hair overlay (for level confirmation) ── */
+    .level-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 10px var(--green);
+      transition: background 0.3s, box-shadow 0.3s;
+    }
+
+    .level-dot.warning {
+      background: var(--orange);
+      box-shadow: 0 0 10px var(--orange);
+    }
+
+    .level-dot.danger {
+      background: var(--red);
+      box-shadow: 0 0 10px var(--red);
+    }
+
+    /* ── Scan line effect ── */
+    @keyframes scanline {
+      0% {
+        transform: translateY(-100%);
+      }
+
+      100% {
+        transform: translateY(200%);
+      }
+    }
+
+    .scanline {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 60px;
+      background: linear-gradient(transparent, rgba(0, 230, 118, 0.03), transparent);
+      animation: scanline 4s linear infinite;
+      pointer-events: none;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="scanline"></div>
+
+  <div class="container" id="app">
+    <!-- Permission screen shown on iOS -->
+    <div class="permission-screen" id="permissionScreen" style="display:none">
+      <div class="title">Spirit Level</div>
+      <p>Tap to activate the gyroscope sensor and measure angles.</p>
+      <button class="btn" id="permBtn">Activate Sensor</button>
+      <p>Developer log - </p>
+      <p id="devLog"></p>
+    </div>
+
+    <!-- Main level UI -->
+    <div id="levelUI"
+      style="display:none; width:100%; display:flex; flex-direction:column; align-items:center; gap:28px">
+
+      <div class="tube-wrapper">
+        <div class="tube">
+          <div class="tube-line"></div>
+          <div class="tube-center"></div>
+          <div class="bubble" id="bubble"></div>
+        </div>
+      </div>
+
+      <div class="angle-display">
+        <div class="angle-value" id="angleVal">0.0</div>
+        <div class="angle-unit">DEGREES</div>
+      </div>
+
+      <div class="level-dot" id="levelDot"></div>
+
+      <div class="status" id="statusLabel">LEVEL</div>
+    </div>
+  </div>
+
+  <script>
+    const bubble = document.getElementById('bubble');
+    const angleVal = document.getElementById('angleVal');
+    const statusLabel = document.getElementById('statusLabel');
+    const levelDot = document.getElementById('levelDot');
+    const levelUI = document.getElementById('levelUI');
+    const permScreen = document.getElementById('permissionScreen');
+    const permBtn = document.getElementById('permBtn');
+
+    // Tube travel range in px (bubble can move ±this from center)
+    const TRAVEL = 120;
+
+    let smoothed = 0;
+
+    function applyAngle(gamma) {
+      // gamma: tilt left/right, -90 to +90
+      // We use it directly as the "angle of the right edge"
+      // Clamp display to ±90
+      const raw = Math.max(-90, Math.min(90, gamma));
+      // Smooth it
+      smoothed = smoothed * 0.7 + raw * 0.3;
+
+      const deg = smoothed;
+      const absDeg = Math.abs(deg);
+
+      // Move bubble: at 0° → center, at ±45° → edge
+      const ratio = Math.max(-1, Math.min(1, deg / 45));
+      const px = ratio * TRAVEL;
+
+      // Position bubble left% 
+      const tubeWidth = bubble.parentElement.offsetWidth;
+      const center = tubeWidth / 2;
+      bubble.style.left = (center + px) + 'px';
+
+      // Angle text
+      angleVal.textContent = (deg >= 0 ? '+' : '') + deg.toFixed(1);
+
+      // Color state
+      let state = 'ok';
+      if (absDeg > 5 && absDeg <= 20) state = 'warning';
+      else if (absDeg > 20) state = 'danger';
+
+      bubble.className = 'bubble' + (state === 'ok' ? '' : ' ' + state);
+      angleVal.className = 'angle-value' + (state === 'ok' ? '' : ' ' + state);
+      statusLabel.className = 'status' + (state === 'ok' ? '' : ' ' + state);
+      levelDot.className = 'level-dot' + (state === 'ok' ? '' : ' ' + state);
+
+      statusLabel.textContent = absDeg <= 2
+        ? 'LEVEL'
+        : absDeg <= 20
+          ? 'TILTED ' + (deg > 0 ? 'RIGHT' : 'LEFT')
+          : 'NOT LEVEL';
+    }
+
+    function startListening() {
+      window.addEventListener('deviceorientation', (e) => {
+        if (e.gamma !== null) applyAngle(e.gamma);
+      });
+      permScreen.style.display = 'none';
+      levelUI.style.display = 'flex';
+    }
+
+    // iOS 13+ requires explicit permission
+    if (typeof DeviceOrientationEvent !== 'undefined' &&
+      typeof DeviceOrientationEvent.requestPermission === 'function') {
+      permScreen.style.display = 'flex';
+      levelUI.style.display = 'none';
+
+      // allow="gyroscope; accelerometer" needed for iphone - iframe is sandboxed in Wix
+
+      permBtn.addEventListener('click', () => {
+        DeviceOrientationEvent.requestPermission()
+          .then(state => {
+            document.getElementById('devLog').textContent = state;
+            if (state === 'granted') startListening();
+            else permBtn.textContent = 'Permission Denied';
+          })
+          .catch(err => {
+            document.getElementById('devLog').textContent = 'Error requesting permission: ' + err;
+            console.error(err)
+          });
+      });
+    } else {
+      // Android / desktop — no permission needed
+      startListening();
+    }
+  </script>
+</body>
+
+</html>
