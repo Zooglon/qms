@@ -183,6 +183,10 @@ div[data-hook="product"] fieldset[data-hook="product-quantity"] {
   max-width: 350px;
 }
 
+.formSection.formStack {
+  align-self: unset!important; 
+}
+
 .formSection .formStack > div:last-child,
 .formSection .formStack > div[class*=" form__"]:last-child {
   width: 100%;
@@ -275,8 +279,7 @@ div[data-hook="product"] fieldset[data-hook="product-quantity"] {
 .form__radio_vertical div[data-testid="radioGroup"] {
   flex-direction: column;
   align-items: flex-start;
-  align-content: flex-start;
-  border: 5px solid red;
+  align-content: flex-start;  
 }
 
 .formStack .text-box {
@@ -320,14 +323,13 @@ div[data-hook="product"] fieldset[data-hook="product-quantity"] {
   fill: var(--mainPurple) !important;
 }
 
-.form__radio [data-testid="radioGroup"] > label {
-  flex: 1 1 30%;
-  max-width: 48%;
+.form__checkboxes .checkbox__label, .form__checkboxes .wix-checkbox__label {
+  font-size: var(--font-size-small);
 }
 
-.form__radio__triple [data-testid="radioGroup"] > label {
-  flex: 1 1 29%;
-  max-width: 32%;
+.form__radio [data-testid="radioGroup"] > label, .form__radio__triple [data-testid="radioGroup"] > label {
+  flex: 1 1 30%;
+  max-width: 48%;
 }
 
 .form__radio__multiple [data-testid="radioGroup"] > label {
@@ -504,10 +506,6 @@ div[class*=" form__"] input {
     transform: scale(0.8);
   }
 
-  .form__radio [data-testid="radioGroup"] {
-    justify-content: space-between;
-  }
-
   .form__checkboxes div[data-testid="items"] > label {
   width: 45%;
 }
@@ -522,18 +520,43 @@ div[class*=" form__"] input {
 
   div[class*=" form__"] input {
     font-size: var(--font-size-small);
+  }  
+
+  .spirit-level-container {
+    display: block;
+  }
+
+  .pitch-calc-container {
+    display: none;
   }
 }
 
 /* Tablet (max-width: 1000px) */
-@media screen and (max-width: 1000px) {
+@media screen and (min-width: 751px) and (max-width: 1000px) {
   .formSection h1 {
     font-size: clamp(32px, 1.5rem, 32px);
+  }
+
+  .spirit-level-container {
+    display: none;
+  }
+
+  .pitch-calc-container {
+    display: block;
   }
 }
 
 /* Desktop (min-width: 750px) */
 @media screen and (min-width: 750px) {
+
+  .spirit-level-container {
+    display: none;
+  }
+
+  .pitch-calc-container {
+    display: block;
+  }
+
   .responsiveStack {
     height: 0px;
     opacity: 0;
