@@ -1044,14 +1044,32 @@ export const getFormOptions = [
             required: true,
             showOptions: [
               {
-                elementID: "roofCantileverSize-field-monoPitch",
-                optionValue: "yes",
-                required: true,
-              },
-              {
                 elementID: "roofCantileverSide-field-monoPitch",
                 optionValue: "yes",
                 required: true,
+                showOptions: [
+                  {
+                    elementID: "roofCantileverSize-field-monoPitch",
+                    optionValue: "highSide",
+                    required: true,
+                  },
+                  {
+                    elementID: "roofCantileverSize-field-monoPitch",
+                    optionValue: "lowSide",
+                    required: true,
+                  },
+                  {
+                    elementID: "roofCantileverSizeHigh-field-monoPitch",
+                    optionValue: "bothSides",
+                    required: true,
+                  },
+                  {
+                    elementID: "roofCantileverSizeLow-field-monoPitch",
+                    optionValue: "bothSides",
+                    required: true,
+                  },
+                ],
+
               },
             ],
           },
@@ -2468,9 +2486,26 @@ export const getFormOptions = [
         elementID: "cantilever-field-portalFrame",
         showOptions: [
           {
-            elementID: "cantileverSize-field-portalFrame",
+            elementID: "cantileverSides-field-portalFrame",
             optionValue: "yes",
             required: true,
+            showOptions: [
+              {
+                elementID: "cantileverSize-field-portalFrame",
+                optionValue: "oneSide",
+                required: true,
+              },
+              {
+                elementID: "cantileverSizeHigh-field-portalFrame",
+                optionValue: "bothSides",
+                required: true,
+              },
+              {
+                elementID: "cantileverSizeLow-field-portalFrame",
+                optionValue: "bothSides",
+                required: true,
+              },
+            ]
           },
           {
             elementID: "roofRidgeCaps-field-portalFrame",
