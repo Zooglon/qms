@@ -4,1382 +4,542 @@
  */
 
 import wixData from "wix-data";
-import { triggeredEmails, contacts } from "wix-crm-backend";
-import { fetch } from "wix-fetch";
-import { Permissions, webMethod } from "wix-web-module";
-import { collections } from "wix-data.v2";
+import { triggeredEmails } from "wix-crm-backend";
 
-let TEST_MODE = false;
+// ─── Config ──────────────────────────────────────────────────────────────────
 
-const qmsStoreCollections = [
-  "CladdingQuotes",
-  "ConcreteSlabQuotes",
-  "DismantleQuotes",
-  "DoorsQuotes",
-  "GutteringQuotes",
-  "MezzanineFloorForm",
-  "MonoPitchQuotes",
-  "PolytunnelQuotes",
-  "PortalFrameQuotes",
-  "RainwaterHarvestingQuotes",
-  "reroofQuotes",
-  "RoundHouseForm",
-  "SolarPanelsQuotes",
-  "WallQuotes",
-  "MyTestCollection",
-];
+const TEST_MODE = false;
 
-const monoPitchFormFields = {
-  formDetails: {
-    quoteForInstallation: undefined,
-    quoteForLevelling: undefined,
-    steelOptions: undefined,
-    buildingType: undefined,
-    usage: undefined,
-    internalsStable: undefined,
-    internalsHorseCow: undefined,
-    internalsCustom: undefined,
-    measurementUnits: undefined,
-    buildingLength: undefined,
-    buildingWidth: undefined,
-    buildingHeight: undefined,
-    buildingHeightHighSideToEaves: undefined,
-    buildingHeightLowSideToEaves: undefined,
-    bayWidth: undefined,
-    postDimensionA: undefined,
-    postDimensionB: undefined,
-    postDimensionC: undefined,
-    roofPitch: undefined,
-    additionalNotes: undefined,
-    siteVisuals: undefined,
-    alternativeDesign: undefined,
-  },
-  formWalls: {
-    willTheBuildingHaveWalls: undefined,
-    howManySidesHaveWalls: undefined,
-    wallMaterial: undefined,
-    wallPanelHeight: undefined,
-    wallPanelHeightCustom: undefined,
-    wallHowManyPanelsHigh: undefined,
-    wallBrickBlockHeightM: undefined,
-    wallPanelThickness: undefined,
-    wallPanelThicknessCustom: undefined,
-  },
-  formRoof: {
-    roofPurlins: undefined,
-    roofMaterial: undefined,
-    roofColour: undefined,
-    compositeThickness: undefined,
-    boxProfileOption: undefined,
-    boxProfileFinishTop: undefined,
-    boxProfileFinishUnderneath: undefined,
-    corrugatedSheetOption: undefined,
-    corrugatedSheetFinish: undefined,
-    roofColourFibreCement: undefined,
-    roofLights: undefined,
-    roofLightsPerBay: undefined,
-    roofLightsPerBayCustom: undefined,
-    roofHasCantilever: undefined,
-    cantileverSize: undefined,
-    cantileverSide: undefined,
-    roofRidgeCaps: undefined,
-    solarPanels: undefined,
-    solarPanelsInTheFuture: undefined,
-    solarPanelCoverage: undefined,
-    solarPanelCoverageCustom: undefined,
-    solarPanelQuoteFromProvider: undefined,
-  },
-  formCladding: {
-    buildingHasCladding: undefined,
-    claddingType: undefined,
-    claddingColour: undefined,
-    claddingWidthWindbreaker: undefined,
-    claddingHeightWindbreaker: undefined,
-    claddingWallWidthWindbreaker: undefined,
-    claddingColourWindbreaker: undefined,
-    claddingCompositeThickness: undefined,
-    claddingTimberBoardType: undefined,
-    claddingBoxProfileType: undefined,
-    claddingCorrugatedSheetType: undefined,
-    claddingHeight: undefined,
-    claddingTecsFixings: undefined,
-    guttering: undefined,
-    matchExistingGuttering: undefined,
-    gutteringTypeShape: undefined,
-    gutteringSideAmm: undefined,
-    gutteringSideBmm: undefined,
-    gutteringSideCmm: undefined,
-    gutteringSideDmm: undefined,
-    gutteringSideEmm: undefined,
-    gutteringSideFmm: undefined,
-    gutteringSideGmm: undefined,
-    gutteringAngle2degrees: undefined,
-    gutteringAngle1degrees: undefined,
-    gutteringColour: undefined,
-    gutteringDownpipeSize: undefined,
-    gutteringRainwaterCatchment: undefined,
-    gutteringRainwaterCatchmentTankSize: undefined,
-  },
-  formDoors: {
-    rollerDoors: undefined,
-    rollerDoorLocation: undefined,
-    numberOfRollerDoorsGableEnd: undefined,
-    numberOfRollerDoorsUnderEaves: undefined,
-    rollerDoorWidthUnderEavesM: undefined,
-    rollerDoorWidthGableEndM: undefined,
-    rollerDoorHeightGableEndM: undefined,
-    rollerDoorHeightUnderEavesM: undefined,
-    rollerDoorBirdBrush: undefined,
-    rollerDoorRubberFloorSeal: undefined,
-    rollerDoorPowerFeed: undefined,
-    personnelDoors: undefined,
-    numberOfPersonnelDoors: undefined,
-    personnelDoorWidth: undefined,
-    personnelDoorsAreFireDoors: undefined,
-    numberOfFireEscapeDoors: undefined,
-    flatSheetDoor: undefined,
-    flatSheetDoorPlacement: undefined,
-    flatSheetDoorUnderEavesPosition: undefined,
-    numberOfFlatSheetDoorsUnderEaves: undefined,
-    numberOfFlatSheetDoorsGableEnd: undefined,
-    flatSheetDoorUnderEavesWidth: undefined,
-    flatSheetDoorGableEndWidth: undefined,
-    flatSheetDoorUnderEavesHeight: undefined,
-    flatSheetDoorGableEndHeight: undefined,
-    flatSheetDoorOption: undefined,
-    flatSheetDoorColour: undefined,
-  },
-  formFloor: {
-    concretedFloor: undefined,
-    concretedFloorQuote: undefined,
-    floorUsage: undefined,
-    floorUsageCustom: undefined,
-    floorReinforcement: undefined,
-    floorFinish: undefined,
-    floorFinishPattern: undefined,
-    floorFinishPowerFloat: undefined,
-    floorPatternCustom: undefined,
-    quoteForConcretingFloor: undefined,
-    additionalNotesFloor: undefined,
-    floorVisuals: undefined,
-  },
-  formMezzanineFloor: {
-    buildingHasMezzanineFloor: undefined,
-    quoteFromSupplier: undefined,
-    mezzanineFloorCoverage: undefined,
-    freestanding: undefined,
-    bayWidth: undefined,
-    mezzanineFloorNumberOfBaysCovered: undefined,
-    bayWidthOther: undefined,
-    spanOptions: undefined,
-    height: undefined,
-    steelOptions: undefined,
-    purlins: undefined,
-    options: undefined,
-    mezzanineFloorUsage: undefined,
-    usageOther: undefined,
-    handRails: undefined,
-    access: undefined,
-    forkliftBay: undefined,
-    additionalNotes: undefined,
-  },
-  formContact: {
-    // howManyQuotes: undefined,
-    // details_quoteRadiusKm: undefined,
-    firstName: undefined,
-    lastName: undefined,
-    companyName: undefined,
-    email: undefined,
-    phoneNumber: undefined,
-    address: undefined,
-  },
-};
+// ─── CMS Helper ──────────────────────────────────────────────────────────────
 
-const concreteSlabFormFields = {
-  formDetails: {
-    Thickness: undefined,
-    Reinforcement: undefined,
-    "Dig Out": undefined,
-    "Photo/Video": undefined,
-    "Map of Area": undefined,
-    Placement: undefined,
-    Usage: undefined,
-    Finish: undefined,
-    // formGuid: undefined,
-    // sitePrepared: undefined,
-    // quoteForQuantitySurveyor: undefined,
-    // concreteThickness: undefined,
-    // concreteThicknessCustom: undefined,
-    // interiorExteriorPlacement: undefined,
-    // concreteAreaM2: undefined,
-    // siteVisualsImageVideo: undefined,
-    // finishedAreaUsage: undefined,
-    // finishedAreaUsageOther: undefined,
-    // concreteReinforcementOptions: undefined,
-    // concreteSlabAdditionalNotes: undefined,
-    // concreteSlabFinishOptions: undefined,
-    // patternFinish: undefined,
-    // patternFinishCustom: undefined,
-    // powerFloatFinish: undefined,
-    // areaMapformDetails: undefined,
-  },
-  formContact: {
-    firstName: undefined,
-    lastName: undefined,
-    company: undefined,
-    email: undefined,
-    phoneNumber: undefined,
-    address: undefined,
-  },
-};
+/**
+ * Query a Wix CMS collection with optional filters and limit.
+ * Each filter object must have { filterField, filterValue, operator? }
+ * where operator is a valid wixData query method e.g. "eq", "hasSome".
+ */
+export const queryCMS = async (collectionName, filters = [], limit = 100) => {
+  let query = wixData.query(collectionName);
 
-let portalFrameFormFields = {
-  formDetails: {
-    quoteForLevellingSite: undefined,
-    siteImagesVideos: undefined,
-    quoteForInstallation: undefined,
-    shedUsage: undefined,
-    shedUsageInternals: undefined,
-    shedUsageOther: undefined,
-    measurementUnits: undefined,
-    buildingLength: undefined,
-    buildingWidth: undefined,
-    buildingHeight: undefined,
-    buildingBayWidth: undefined,
-    steelOptions: undefined,
-    buildingType: undefined,
-    existingPostDimensionA: undefined,
-    existingPostDimensionB: undefined,
-    existingPostDimensionC: undefined,
-    roofPitch: undefined,
-    roofPitchCustom: undefined,
-    additionalNotes: undefined,
-    alternativeDesign: undefined,
-  },
-  formWalls: {
-    buildingHasWalls: undefined,
-    howManySidesHaveWalls: undefined,
-    wallMaterial: undefined,
-    wallBrickBlockHeightM: undefined,
-    wallPanelHeight: undefined,
-    wallPanelHeightCustom: undefined,
-    wallPanelThickness: undefined,
-    wallPanelThicknessCustom: undefined,
-    wallHeightNumberOfPanels: undefined,
-  },
-  formRoof: {
-    purlins: undefined,
-    cantilever: undefined,
-    cantileverSize: undefined,
-    roofMaterial: undefined,
-    fiberCementColour: undefined,
-    roofColour: undefined,
-    roofCompositeThickness: undefined,
-    roofBoxProfileFinish: undefined,
-    roofBoxProfileFinishUnderneath: undefined,
-    roofBoxProfileOption: undefined,
-    roofCorrugatedSheetFinish: undefined,
-    roofCorrugatedSheetOption: undefined,
-    roofLights: undefined,
-    roofLightsPerBay: undefined,
-    roofLightsPerBayCustom: undefined,
-    ridgeCaps: undefined,
-    solarPanels: undefined,
-    solarPanelsInTheFuture: undefined,
-    solarPanelsCoverage: undefined,
-    solarPanelCoverageCustom: undefined,
-    solarPanelQuoteFromProvider: undefined,
-  },
-  formDoors: {
-    rollerDoors: undefined,
-    rollerDoorLocation: undefined,
-    numberOfRollerDoors: undefined,
-    numberOfRollerDoorsCustom: undefined,
-    numberOfRollerDoorsGableEnd: undefined,
-    numberOfRollerDoorsUnderEaves: undefined,
-    rollerDoorwayWidthUnderEavesMm: undefined,
-    rollerDoorwayWidthGableEndMm: undefined,
-    rollerDoorwayHeightUnderEavesMm: undefined,
-    rollerDoorwayHeightUnderEavesM: undefined,
-    rollerDoorBirdBrush: undefined,
-    rollerDoorRubberFloorSeal: undefined,
-    rollerDoorPowerFeed: undefined,
-    flatSheetDoor: undefined,
-    flatSheetDoorPlacement: undefined,
-    flatSheetDoorUnderEavesPostition: undefined,
-    numberOfDoorsUnderEavesFlatSheet: undefined,
-    numberOfDoorsGableEndFlatSheet: undefined,
-    eavesDoorWidthFlatSheet: undefined,
-    flatSheetEavesDoorHeight: undefined,
-    gableEndDoorWidthFlatSheet: undefined,
-    flatSheetGableDoorHeight: undefined,
-    flatSheetDoorOption: undefined,
-    doorColourFlatSheet: undefined,
-    personnelDoors: undefined,
-    personnelDoorWidth: undefined,
-    numberOfPersonnelDoors: undefined,
-    numberOfPersonnelDoorsDouble: undefined,
-    fireDoors: undefined,
-    numberOfFireDoors: undefined,
-  },
-  formCladding: {
-    buildingHasCladding: undefined,
-    claddingMaterial: undefined,
-    claddingColour: undefined,
-    claddingCompositeThickness: undefined,
-    claddingTimberBoardTypes: undefined,
-    claddingBoxProfileType: undefined,
-    claddingCorrugatedSheetFinish: undefined,
-    claddingHeight: undefined,
-    claddingWidthWindbreaker: undefined,
-    claddingHeightWindbreaker: undefined,
-    claddingWallWindbreaker: undefined,
-    claddingTecsFixings: undefined,
-    guttering: undefined,
-    gutteringOutlets: undefined,
-    matchExistingGuttering: undefined,
-    gutteringTypeShape: undefined,
-    gutteringSideAmm: undefined,
-    gutteringSideBmm: undefined,
-    gutteringSideCmm: undefined,
-    gutteringSideDmm: undefined,
-    gutteringSideEmm: undefined,
-    gutteringSideFmm: undefined,
-    gutteringSideGmm: undefined,
-    gutteringAngle2degrees: undefined,
-    gutteringAngle1degrees: undefined,
-    gutteringColour: undefined,
-    gutteringDownpipe: undefined,
-    gutteringRainwaterCatchment: undefined,
-    gutteringRainwaterCatchmentTank: undefined,
-  },
-  formFloor: {
-    concreteFloor: undefined,
-    quoteForConcreteFloor: undefined,
-    floorUsage: undefined,
-    floorUsageOther: undefined,
-    floorReinforcementOptions: undefined,
-    floorFinish: undefined,
-    floorFinishPattern: undefined,
-    floorFinishPatternCustom: undefined,
-    floorPowerFloat: undefined,
-    additionalNotesFloor: undefined,
-  },
-  formMezzanineFloor: {
-    buildingHasMezzanineFloor: undefined,
-    quoteFromSupplier: undefined,
-    freestanding: undefined,
-    bayWidth: undefined,
-    mezzanineFloorCoverage: undefined,
-    spanOptions: undefined,
-    height: undefined,
-    steelOptions: undefined,
-    purlins: undefined,
-    options: undefined,
-    usage: undefined,
-    handRails: undefined,
-    access: undefined,
-    forkliftBay: undefined,
-    additionalNotes: undefined,
-  },
-  formContact: {
-    quoteRadiusKm: undefined,
-    howManyQuotes: undefined,
-    firstName: undefined,
-    lastName: undefined,
-    companyName: undefined,
-    email: undefined,
-    phoneNumber: undefined,
-    address: undefined,
-  },
-};
-
-const roundHouseFormFields = {
-  formDetails: {
-    roundHouseSize: undefined,
-    animalHandlingInternals: undefined,
-    siteRequiresLevelling: undefined,
-    quoteForLevellingSite: undefined,
-    usage: undefined,
-  },
-  formContact: {
-    firstName: undefined,
-    lastName: undefined,
-    companyName: undefined,
-    email: undefined,
-    phoneNumber: undefined,
-    address: undefined,
-  },
-};
-
-const mezzanineFloorFormFields = {
-  formDetails: {
-    quoteForInstallation: undefined,
-    quoteForLevellingSite: undefined,
-    mezzanineOption: undefined,
-    mainPostDimensionA: undefined,
-    mainPostDimensionB: undefined,
-    mainPostDimensionC: undefined,
-    gableIntermediatePostsPresent: undefined,
-    gablePostDimensionA: undefined,
-    gablePostDimensionB: undefined,
-    gablePostDimensionC: undefined,
-    measurementUnits: undefined,
-    buildingLength: undefined,
-    buildingWidth: undefined,
-    buildingHeight: undefined,
-    bayWidth: undefined,
-    bayWidthOther: undefined,
-    mezzanineSpanOptions: undefined,
-    mezzanineFloorHeightSupportPosts: undefined,
-    steelOptions: undefined,
-    mezzaninePurlins: undefined,
-    mezzanineFloorOptions: undefined,
-    handRails: undefined,
-    floorAccess: undefined,
-    forkliftBay: undefined,
-    additionalNotes: undefined,
-    floorImageVideoUpload: undefined,
-    quoteRadiusKm: undefined,
-  },
-  formContact: {
-    howManyQuotes: undefined,
-    firstName: undefined,
-    lastName: undefined,
-    companyName: undefined,
-    email: undefined,
-    phoneNumber: undefined,
-    address: undefined,
-  },
-};
-
-const polytunnelFormFields = {
-  formDetails: {
-    siteNeedsLevelling: undefined,
-    quoteForLevelling: undefined,
-    polytunnelWidth: undefined,
-    polytunnelLength: undefined,
-    polytunnelCovering: undefined,
-    doors: undefined,
-    doorPlacement: undefined,
-    guttering: undefined,
-    gutteringBothSides: undefined,
-    anchoring: undefined,
-    quoteRadiusKm: undefined,
-    polytunnelUsage: undefined,
-  },
-  formContact: {
-    howManyQuotes: undefined,
-    firstName: undefined,
-    lastName: undefined,
-    companyName: undefined,
-    email: undefined,
-    phoneNumber: undefined,
-    address: undefined,
-  },
-};
-
-const getFormDetailsFromCollection = async (collection, guid) => {
-  const fieldsToIgnore = [
-    "howManyQuotesWouldYouLikeToReceive",
-    "formId",
-    "formGuid",
-    "howManyQuotes",
-    "_id",
-    "_owner",
-    "_createdDate",
-    "_updatedDate",
-  ];
-
-  const formGuid = guid ?? "test";
-  const queryCollection = await getCollectionData(collection, "formGuid", formGuid);
-
-  console.log("Form details from collection:", queryCollection);
-
-  if (!queryCollection) {
-    handleErrors(`Could not locate form ${guid} in collection ${collection}`);
-  }
-
-  const filteredCollectionData = Object.fromEntries(
-    Object.entries(queryCollection[0]).filter(([k, v]) => v !== null && v !== "" && !fieldsToIgnore.includes(k))
-  );
-  return filteredCollectionData;
-};
-
-export const sortSuppliersByDistance = (suppliers, quoteLatLng) => {
-  const distanceInMetres = (lng1, lat1, lng2, lat2) => {
-    const er = 6371e3;
-    const l1 = (lat1 * Math.PI) / 180;
-    const l2 = (lat2 * Math.PI) / 180;
-    const clat = ((lat2 - lat1) * Math.PI) / 180;
-    const clng = ((lng2 - lng1) * Math.PI) / 180;
-
-    const a =
-      Math.sin(clat / 2) * Math.sin(clat / 2) + Math.cos(l1) * Math.cos(l2) * Math.sin(clng / 2) * Math.sin(clng / 2);
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    // distance in metres
-    const d = er * c;
-    return d;
-  };
-
-  // Return x nearest suppliers
-  return suppliers
-    .map((s) => ({ ...s, distance: distanceInMetres(quoteLatLng.lat, quoteLatLng.lng, s.latitude, s.longitude) }))
-    .sort((a, b) => a.distance - b.distance);
-};
-
-const formatField = (field) => {
-  return typeof field === "string" ? field.replace(/([a-z])([A-Z])/g, (_, lower, upper) => `${lower} ${upper}`) : field;
-};
-
-const formatSection = (formSection, dot) => {
-  return Object.entries(formSection)
-    .filter(([, value]) => value)
-    .map(([key, value]) => {
-      let val = key.toLowerCase() === "address" ? value.formatted ?? JSON.stringify(value) : value;
-      let formattedVal = `${formatField(val)}`;
-
-      return `${dot ? "• " : ""}${formatField(
-        key.replace(/.+_/gi, "").slice(0, 1).toUpperCase() + key.replace(/.+_/gi, "").slice(1)
-      )} - ${formattedVal.slice(0, 1).toUpperCase() + formattedVal.slice(1)}`;
-    })
-    .join("\n");
-};
-
-export const stringifyForm = (form, name) => {
-  const { firstName, lastName, companyName, company, email, emailAddress, phoneNumber, address, ...otherFields } = form;
-
-  let additionalFields = otherFields;
-
-  if (form.formResponse && form.formResponse.fields !== null) {
-    let parsedFields = JSON.parse(form.formResponse.fields).sort((a, b) => a.order - b.order);
-
-    console.log("Form Response Fields (Sorted):", parsedFields);
-    parsedFields = parsedFields.filter((field) => field.value !== null && field.value !== "");
-    console.log("Form Response Fields (remove empties):", parsedFields);
-
-    // Define contact fields to exclude
-    const contactFields = [
-      "first name",
-      "last name",
-      "company name",
-      "company",
-      "email",
-      "email address",
-      "phone number",
-      "phonenumber",
-      "phone",
-      "address",
-    ];
-
-    // Convert array to key-value pairs and filter out contact fields
-    const keyVals = parsedFields.reduce((acc, field) => {
-      // Only add if the label is not in the contactFields array
-      if (!contactFields.includes(field.label.toLowerCase())) {
-        acc[field.label] = field.value;
-      }
-      return acc;
-    }, {});
-
-    additionalFields = keyVals;
-  }
-
-  const formTypeObj = {
-    MonoPitch: monoPitchFormFields,
-    Concrete: concreteSlabFormFields,
-    ConcreteSlab: concreteSlabFormFields,
-    MezzanineFloor: mezzanineFloorFormFields,
-    RoundHouse: roundHouseFormFields,
-    PortalFrame: portalFrameFormFields,
-    Polytunnel: polytunnelFormFields,
-  }[name];
-
-  const { formDetails, formWalls, formRoof, formCladding, formDoors, formFloor, formMezzanineFloor, formContact } =
-    formTypeObj || {};
-
-  // const formatField = (f) => (typeof f === "string" ? f.replace(/([a-z])([A-Z])/g, `$1 $2`) : f);
-  // let key = lowerFirst(field[0].replace(/.+_/gi, ""));
-
-  let formString;
-
-  // if (formTypeObj) {
-  //   formString = {
-  //     "Form Details": formDetails && formatSection(form, false),
-  //     "Form Walls": formWalls && formatSection(form, false),
-  //     "Form Roof": formRoof && formatSection(form, false),
-  //     "Form Cladding": formCladding && formatSection(form, false),
-  //     "Form Doors": formDoors && formatSection(form, false),
-  //     "Form Floor": formFloor && formatSection(form, false),
-  //     "Form Mezzanine Floor": formMezzanineFloor && formatSection(form, false),
-  //     "Form Contact": formatSection(form, false) || "No contact details given",
-  //   };
-  // } else {
-  formString = {
-    "Form Contact":
-      formatSection(
-        {
-          firstName,
-          lastName,
-          companyName,
-          company,
-          email,
-          emailAddress,
-          phoneNumber,
-          address,
-        },
-        false
-      ) || "No contact details given",
-    Fields: formatSection(additionalFields, true),
-    // };
-  };
-
-  console.log("ADD str", additionalFields, "formatted: ", formatSection(additionalFields, true));
-
-  // Remove sections with no data
-  const filteredFormString = Object.fromEntries(Object.entries(formString).filter(([, value]) => value));
-
-  TEST_MODE && console.log("Form stringified:", filteredFormString);
-  return filteredFormString;
-};
-
-const getCollectionData = async (collection, filterField, filter, lmt) => {
-  let limit = lmt ?? 100;
-  let options = {
-    suppressAuth: true,
-  };
-
-  if (!filterField && !filter) {
-    try {
-      const queryResponse = await wixData
-        .query(collection)
-        .limit(limit)
-        .find(options)
-        .then((results) => results.items);
-
-      if (!queryResponse.length) {
-        handleErrors(`Could not locate collection ${collection}`);
-        console.log("No data found in collection", collection);
-        return;
-      }
-      TEST_MODE &&
-        console.log(
-          `Returning ${queryResponse.length} ${
-            queryResponse.length > 0 ? "items" : "item"
-          } from collection ${collection}`
-        );
-      return queryResponse;
-    } catch (error) {
-      handleErrors(`Error querying data from ${collection}: ${error}`);
-    }
-  } else {
-    try {
-      const queryResponse = await wixData
-        .query(collection)
-        .eq(filterField, filter)
-        .limit(limit)
-        .find(options)
-        .then((results) => results.items);
-
-      if (!queryResponse.length) {
-        handleErrors(`Could not locate collection ${collection}`);
-        console.log("No data found in collection", collection);
-        return;
-      }
-      TEST_MODE &&
-        console.log(
-          `Returning ${queryResponse.length} ${
-            queryResponse.length > 0 ? "items" : "item"
-          } from collection ${collection}`
-        );
-      return queryResponse;
-    } catch (error) {
-      handleErrors(`Error querying data from ${collection}: ${error}`);
+  for (const { filterField, filterValue, operator = "eq" } of filters) {
+    if (filterField && filterValue !== undefined) {
+      query = query[operator](filterField, filterValue);
     }
   }
+
+  const results = await query.limit(limit).find({ suppressAuth: true });
+
+  if (results.items.length === 0) console.log(`No items found in collection: ${collectionName}`);
+
+  return results.items;
 };
+
+// ─── Error Handling ───────────────────────────────────────────────────────────
 
 const handleErrors = async (msg) => {
-  if (TEST_MODE) {
-    throw new Error(msg);
-  } else {
-    const getAdminDetails = await getCollectionData("QMSTeam", "role", "DEVELOPER", 100);
+  if (TEST_MODE) throw new Error(msg);
 
-    console.log("Sending error notification - ", msg);
-
-    for (const admin of getAdminDetails) {
-      try {
-        triggeredEmails.emailMember("adminErrorAlert", admin._id, {
-          variables: {
-            errorMessage: JSON.stringify(msg),
-          },
-        });
-      } catch (error) {
-        console.log(`Error could not find QMS Team collection`);
-      }
-    }
-
-    throw new Error(msg);
-  }
-};
-
-const saveToDb = async (formName, formGuid, suppliers) => {
-  console.log("Check vals - ", formName, formGuid, suppliers);
-  const updatedDataCollection = {
-    _id: "QuotationDB",
-    fields: [
-      {
-        key: "formName",
-        displayName: formName,
-        type: "TEXT",
-      },
-      {
-        key: "formGuid",
-        displayName: formGuid,
-        type: "TEXT",
-      },
-      // {
-      //   key: "sentSuppliersList",
-      //   displayName: suppliers,
-      //   type: "ARRAY_STRING",
-      // },
-    ],
-    revision: "2",
-    permissions: {
-      read: "SITE_MEMBER",
-      insert: "SITE_MEMBER_AUTHOR",
-      update: "SITE_MEMBER_AUTHOR",
-      remove: "SITE_MEMBER_AUTHOR",
-    },
-  };
-
-  console.log("SavetoDB fired... sending...");
-
-  const updateCollection = webMethod(Permissions.Anyone, async (updatedDataCollection) => {
-    try {
-      const updateDataCollectionResponse = await collections.updateDataCollection(updatedDataCollection);
-      console.log("fetch made...");
-      return updateDataCollectionResponse;
-    } catch (error) {
-      handleErrors(`Failed to update quote collection: ${error}`);
-    }
-  });
-
-  const res = await updateCollection(updatedDataCollection);
-
-  console.log("RES...", res);
-  return res;
-};
-
-async function sendSupplierEmail(supplier, options, collection) {
-  const emailOptions = {
-    variables: {
-      supplierName: supplier.supplierName,
-      ...options,
-    },
-  };
-  const emailId = "new_form_submission";
-
-  const concreteEmailId = "concreteEmail";
-  const concreteVariables = {
-    submittedDistance: "Distance: ",
-    buildingSize: "Size: ",
-    thickness: "Thickness: ",
-    reinforcement: "Reinforcement: ",
-    dig_out: "Dig Out: ",
-    photo_video: "Photo/Video: ",
-    area_map: "Map of Area: ",
-    placement: "Placement: ",
-    usage: "Usage: ",
-    finish: "Finish: ",
-    submittedName: "Name: ",
-    submittedEmail: "Email: ",
-    submittedPhone: "Phone: ",
-  };
-
-  const contactId = supplier.contactId;
-
-  console.log("Email sent to:", emailId, contactId, "with: ", emailOptions);
-  // Send email to supplier
+  // In production: email developers, then still throw so execution stops
   try {
-    if (TEST_MODE) {
-    } else {
-      await triggeredEmails.emailContact(emailId, contactId, emailOptions);
-
-      console.log(`Email was sent to contact ${supplier.supplierName}`);
-      // update supplier CMS with id of quotes sent
-      const collectionData = await getCollectionData("SupplierList", "_id", supplier._id);
-      if (collectionData.length > 0) {
-        let supplier = collectionData[0];
-        if (Array.isArray(supplier.quotesSent) && supplier.quotesSent.length > 0) {
-          let supplierQuotes = supplier.quotesSent ?? [];
-          supplierQuotes.push(collection.formGuid);
-          supplier.quotesSent = supplierQuotes;
-          wixData.update(collection, supplier);
-          console.log(`Contact ${supplier.supplierName} quote list updated with form ${collection.formGuid}`);
-        }
-      }
-    }
-  } catch (error) {
-    handleErrors(
-      `Error sending email to supplier ${supplier.supplierName}: ${supplier.emailAddress}, details-\n${error}`
-    );
-  }
-}
-
-const getLatLng = (addressField) => {
-  if (addressField.location.latitude && addressField.location.longitude) {
-    return {
-      lat: addressField.location.latitude,
-      lng: addressField.location.longitude,
-    };
-  } else if (addressField.postcode) {
-    const url = `https://api.postcodes.io/postcodes/${addressField.postcode}`;
-    const res = fetch(url, { method: "get" })
-      .then((httpResponse) => {
-        if (httpResponse.ok) {
-          return httpResponse.json();
-        } else {
-          return Promise.reject("Error, failed to fetched valid postcode");
-        }
-      })
-      .then((json) => ({ lat: json.result.latitude, lng: json.result.longitude }))
-      .catch((err) => console.log(err));
-
-    return res;
-  } else {
-    return null;
-  }
-};
-
-export const matchFormName = (formNameString, formNamesList) => {
-  if (!formNameString || typeof formNameString !== "string") {
-    return "unknown";
-  }
-
-  // Normalize the input string for comparison
-  let normalisedInput = formNameString.toLowerCase().replace(/\s+/g, "");
-
-  const matchedForm = formNamesList.find((formName) => {
-    const normalisedFormName = formName.toLowerCase().replace(/\s+/g, "");
-    return normalisedInput.includes(normalisedFormName) || normalisedFormName.includes(normalisedInput);
-  });
-
-  // qmsStoreCollections;
-  return matchedForm || "unknown";
-};
-
-export const prepareFormData = (rawFormData) => {
-  let formObject = {};
-  let fields = {};
-
-  const fieldId = rawFormData.formId ?? null;
-  for (let [key, value] of Object.entries(rawFormData)) {
-    const regex = new RegExp(fieldId ? `.*${fieldId}\:{1}` : /(.*:)/, "g");
-    if (key.startsWith("field:")) {
-      const formattedKay = key.replace(regex, "");
-      if (!formattedKay.startsWith("_")) {
-        fields[formattedKay] = value;
-      }
-    }
-    formObject[key.replace(regex, "")] = value;
-  }
-
-  // Format form name
-  const formName = formObject.formName
-    ? formObject.formName
-        .replace("Home - submit into ", "")
-        .slice(formObject.formName.indexOf("submit into ") + 12)
-        .replace(" Quotes collection", "")
-        .replace(" Form collection", "")
-    : "Unknown form name";
-
-  const formGuid = formObject.formGuid;
-  const address = formObject.address ?? undefined;
-  const latLng = !address
-    ? undefined
-    : { lat: formObject.address.location.latitude, lng: formObject.address.location.longitude };
-  const email = formObject.email;
-
-  if (!formName || !formGuid || !email) {
-    handleErrors(`Form incomplete or missing fields:${" " + formName}${" " + formGuid}`);
-  }
-  console.log("Fields", fields);
-  console.log("FormName", formName);
-  console.log("FormGuid", formGuid);
-  return { fields, formName, formGuid, address, latLng, email };
-};
-
-export const getCollection = (formName) => {
-  let typeString = formName.replace(/\s/g, "");
-  let typeRegExp = new RegExp(typeString, "gi");
-
-  const matchedName = matchFormName(formName, qmsStoreCollections);
-
-  return qmsStoreCollections.find((i) => {
-    return !!i.match(typeRegExp);
-  });
-};
-
-export const getFieldValue = (form, field, searchByValue) => {
-  let retVal = Object.entries(form).find(([key, value]) => key.toLowerCase().includes(field.toLowerCase()));
-
-  if (!retVal && searchByValue) {
-    retVal = Object.entries(form).find(([key, value]) => value.toLowerCase().includes(field.toLowerCase()));
-  }
-
-  return retVal ? retVal[1] : null;
-};
-
-export const getAllSupplierTypesInForm = (supplierList, formAnswers) => {
-  const requiredSupplierTypes = new Set();
-
-  Object.entries(formAnswers).forEach(([fieldKey, fieldValue]) => {
-    if (
-      fieldValue === "yes" ||
-      fieldValue === true ||
-      fieldKey.toLowerCase().includes("supply") ||
-      fieldKey.toLowerCase().includes("quote") ||
-      typeof fieldValue !== "object"
-    ) {
-      const normalizedFieldKey = fieldKey.toLowerCase().replace(/[^a-z]/g, "");
-      const normalizedFieldValue =
-        typeof fieldValue !== "string" ? `${fieldValue}` : fieldValue.toLowerCase().replace(/[^a-z]/g, "");
-      // console.log("normalised fieldKey", fieldKey, "normalised fieldValue", fieldValue);
-
-      supplierList.forEach((supplierListChild) => {
-        if (
-          normalizedFieldKey.includes(supplierListChild.supplierType.toLowerCase()) ||
-          normalizedFieldValue.includes(supplierListChild.supplierType.toLowerCase())
-        ) {
-          requiredSupplierTypes.add(supplierListChild.supplierType);
-        } else if (
-          normalizedFieldKey.includes(supplierListChild.baseType.toLowerCase()) ||
-          normalizedFieldValue.includes(supplierListChild.baseType.toLowerCase())
-        ) {
-          requiredSupplierTypes.add(supplierListChild.baseType);
-        }
+    const admins = await queryCMS("QMSTeam", [{ filterField: "role", filterValue: "DEVELOPER" }]);
+    for (const admin of admins) {
+      await triggeredEmails.emailMember("adminErrorAlert", admin._id, {
+        variables: { errorMessage: JSON.stringify(msg) },
       });
     }
-  });
-
-  const supplierTypesNeeded = Array.from(requiredSupplierTypes);
-
-  return [...supplierTypesNeeded, formAnswers.formName];
-};
-
-const asbestosQuestionPatterns = [
-  "containasbestos",
-  "containsasbestos",
-  "haveasbestos",
-  "hasasbestos",
-  "madeofasbestos",
-  "asbestospresent",
-  "asbestosispresent",
-  "asbestosin",
-  "withasbestos",
-  "includingasbestos",
-  "asbestos",
-];
-
-const asbestosQuestionAntiPatterns = [
-  "doesnotcontainasbestos",
-  "doesntcontainasbestos",
-  "doesntcontainsasbestos",
-  "noasbestos",
-  "hasasbestos",
-  "notmadeofasbestos",
-  "noasbestospresent",
-  "noasbestosispresent",
-  "noasbestosin",
-  "notwithasbestos",
-  "notincludingasbestos",
-];
-
-export const checkQuestionForAsbestos = (questionString, questionKey = "") => {
-  const normalizedQuestion = questionString.toLowerCase().replace(/\s/g, "");
-  const normalizedKey = questionKey.toLowerCase();
-
-  // Check if the question text contains asbestos patterns
-  const questionContainsAsbestos = asbestosQuestionPatterns.some((pattern) => normalizedQuestion.includes(pattern));
-
-  // Check if the question key contains 'asbestos'
-  const keyContainsAsbestos = normalizedKey.includes("asbestos");
-
-  return questionContainsAsbestos || keyContainsAsbestos;
-};
-export const checkAnswerForAsbestos = (answerString) => {
-  if (answerString.toLowerCase() === "asbestos") return true;
-
-  const pattern = asbestosQuestionPatterns.some((p) => answerString.toLowerCase().replace(/\s/g, "").includes(p));
-  const antiPattern = asbestosQuestionAntiPatterns.some((p) => {
-    return answerString.toLowerCase().replace(/\s/g, "").includes(p);
-  });
-
-  return !pattern && !antiPattern ? pattern : true;
-};
-
-export const getAllFieldsWith = (form, field, searchByValue) => {
-  let retVal = Object.entries(form).filter(([key, value]) => key.toLowerCase().includes(field.toLowerCase()));
-
-  if (searchByValue) {
-    const hasMatchingValue = Object.entries(form).filter(([key, value]) => {
-      if (typeof value !== "object" || value === null) {
-        let val = String(value).toLowerCase();
-        return val.toLowerCase().includes(field.toLowerCase());
-      } else return false;
-    });
-    retVal = hasMatchingValue;
+  } catch (err) {
+    console.error("Could not send admin error alert:", err);
   }
 
-  return retVal ? retVal.map((r) => ({ field: r[0], value: r[1] })) : null;
+  throw new Error(msg);
 };
-export const buildingSizes = (formFields) => {
-  // Always return metric metre measurements
-  const units = getFieldValue(formFields, "measurementUnits") === "metric" ? "m" : "ft";
-  const length = getFieldValue(formFields, "polytunnelLength") || getFieldValue(formFields, "buildingLength");
-  const width = getFieldValue(formFields, "polytunnelWidth") || getFieldValue(formFields, "buildingWidth");
-  const height = getFieldValue(formFields, "buildingHeight");
 
-  const format = (val) =>
-    typeof val === "string"
-      ? val.includes("ft")
-        ? Number((Number(val.replace("ft", "")) * 0.3048).toFixed(2))
-        : Number(val.replace("m", ""))
-      : Number(val);
+// ─── Email ────────────────────────────────────────────────────────────────────
+
+async function sendSupplierEmail(emailId, contact, emailVariables) {
+  if (TEST_MODE) {
+    console.log("TEST MODE – would send email to:", contact.contactName, "variables:", emailVariables);
+        return;
+  }
+  await triggeredEmails.emailContact(emailId, contact.contactId, emailVariables);
+  console.log(`Email sent to: ${contact.contactName}`);
+}
+
+// ─── Form Preparation ────────────────────────────────────────────────────────
+
+/**
+ * Recursively searches an object for `latitude` and `longitude` properties.
+ * Used as a fallback when address.location is not present at the top level.
+ */
+const findLatLng = (obj, depth = 0) => {
+  if (!obj || typeof obj !== "object" || depth > 5) return { lat: null, lng: null };
+  if (typeof obj.latitude === "number" && typeof obj.longitude === "number") {
+    return { lat: obj.latitude, lng: obj.longitude };
+  }
+  for (const value of Object.values(obj)) {
+    if (value && typeof value === "object") {
+      const result = findLatLng(value, depth + 1);
+      if (result.lat !== null) return result;
+    }
+  }
+  return { lat: null, lng: null };
+};
+
+/**
+ * Strips the Wix form field prefix (e.g. "field:comp-abc123:") from payload keys.
+ *
+ * Two payload formats exist:
+ *   1. Flat keys:        { firstName: "...", formName: "...", address: {...} }
+ *   2. Prefixed keys:    { "field:comp-xyz:firstName": "...", formName: "..." }
+ */
+
+export const formatFormName = (formObject) => {
+  // Parse the verbose formName Wix sends: "Home - submit into Portal Frame Quotes collection"
+  const rawFormName = formObject.formName ?? "";
+  const submitIndex = rawFormName.indexOf("submit into ");
+  const formName = submitIndex !== -1
+    ? rawFormName.slice(submitIndex + 12).replace(/ (Quotes|Form) collection$/i, "").trim()
+    : rawFormName.trim() || "Unknown form";
+
+  return formName;
+}
+
+export const prepareFormData = (rawPayload) => {
+  const formObject = {};
+  const fieldId = rawPayload.formId ?? null;
+  const prefixRegex = new RegExp(fieldId ? `.*${fieldId}:` : ".*:", "g");
+
+  for (const [key, value] of Object.entries(rawPayload)) {
+    const cleanKey = key.replace(prefixRegex, "");
+    if (!cleanKey.startsWith("_")) formObject[cleanKey] = value;
+  }
+
+  const formName = formatFormName(formObject);
+  const address = formObject.address ?? null;
+  const { lat, lng } = address?.location?.latitude
+    ? { lat: address.location.latitude, lng: address.location.longitude }
+    : findLatLng(formObject);
 
   return {
-    length: length ? format(length) : null,
-    width: width ? format(width) : null,
-    height: height ? format(height) : null,
-    units: units ?? null,
+    ...formObject,
+    formName,
+    formGuid: formObject.formGuid ?? null,
+    address,
+    lat,
+    lng,
+    email: formObject.email ?? null,
   };
 };
 
-export const lowerFirst = (s) => (s && String(s[0]).toLowerCase() + String(s).slice(1)) || "";
+// ─── Collection Name Lookup ───────────────────────────────────────────────────
 
-// Helper function to check if form contains asbestos
-const checkFormForAsbestos = (formAnswers) => {
-  // Check field names that contain 'asbestos' and have positive values
-  const asbestosFieldsWithPositiveValues = getAllFieldsWith(formAnswers, "asbestos", false).filter((field) => {
-    const hasAsbestosInKey = checkQuestionForAsbestos(field.field);
-    const hasPositiveValue = field.value === "yes" || field.value === "true" || field.value === true;
-    return hasAsbestosInKey && hasPositiveValue;
-  });
+/**
+ * Fuzzy-matches a human-readable form name (e.g. "Portal Frame") to the correct
+ * Wix CMS collection name (e.g. "PortalFrameQuotes").
+ */
+export const findCollectionName = (formName) => {
+  const collectionsInCms = [
+    "CladdingQuotes", "ConcreteQuotes", "DismantleQuotes", "DoorsQuotes",
+    "GutteringQuotes", "MezzanineFloorForm", "MonoPitchQuotes", "PolytunnelQuotes",
+    "PortalFrameQuotes", "RainwaterHarvestingQuotes", "ReroofQuotes",
+    "RoundHouseForm", "SolarPanelsQuotes", "WallQuotes",
+  ];
 
-  // Check field values that contain 'asbestos' and indicate presence
-  const asbestosInFieldValues = getAllFieldsWith(formAnswers, "asbestos", true).filter((field) =>
-    checkAnswerForAsbestos(field.value)
-  );
+  const normalize = (str) =>
+    str.toLowerCase()
+      .replace(/quotes?|form|collection|submit|into/g, "")
+      .replace(/[^a-z0-9]/g, " ")
+      .trim()
+      .split(/\s+/)
+      .filter((t) => t.length > 2);
 
-  return asbestosFieldsWithPositiveValues.length > 0 || asbestosInFieldValues.length > 0;
+  const formTokens = normalize(formName);
+
+  const best = collectionsInCms
+    .map((collection) => {
+      const collectionTokens = normalize(collection);
+      const score = formTokens.filter((ft) =>
+        collectionTokens.some((ct) => ct.includes(ft) || ft.includes(ct))
+      ).length;
+      return { collection, score };
+    })
+    .reduce((a, b) => (b.score > a.score ? b : a));
+
+  return best.score > 0 ? best.collection : null;
 };
 
-export const filterSuppliers = (suppliers, supplierTypesInForm, formAnswers) => {
-  console.log("Filtering", suppliers.length, " suppliers");
-  const quoteContainsAsbestos = checkFormForAsbestos(formAnswers);
-  const quoteBuildingDimensions = buildingSizes(formAnswers);
-  if (quoteContainsAsbestos) {
-    console.log("Contains asbestos?");
-    suppliers = suppliers.filter((supplier) => supplier.handlesAsbestos);
+// ─── Building Dimensions ─────────────────────────────────────────────────────
+
+export const getFieldValue = (form, field) => {
+  const entry = Object.entries(form).find(([key]) =>
+    key.toLowerCase().includes(field.toLowerCase())
+  );
+  return entry ? entry[1] : null;
+};
+
+/**
+ * Extracts and normalises building dimensions to metres.
+ * Handles both metric ("20m") and imperial ("20ft") string values.
+ */
+export const buildingSizes = (formFields) => {
+  const toMetres = (val) => {
+    if (val === null || val === undefined) return null;
+    if (typeof val === "number") return val;
+    if (typeof val === "string") {
+      return val.includes("ft")
+        ? Number((parseFloat(val) * 0.3048).toFixed(2))
+        : parseFloat(val) || null;
+    }
+    return null;
+  };
+
+
+  const get = (field) => getFieldValue(formFields, field);
+  const units = get("measurementUnits") === "metric" ? "m" : "ft";
+  const roundhouseSize = get("roundhouseSize");
+
+  if (roundhouseSize) {
+    return {
+      size: toMetres(roundhouseSize),
+      units: 'm'
+    }
   }
 
-  const containsSubstring = (str, substring) => {
-    const escapeRegExp = (string) => {
-      return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-    };
-    const escapedSubstring = escapeRegExp(substring);
-    const regex = new RegExp(escapedSubstring, "i");
-    return regex.test(str);
+  return {
+    length: toMetres(get("polytunnelLength") ?? get("digoutLength") ?? get("buildingLength")),
+    width: toMetres(get("polytunnelWidth") ?? get("digoutWidth") ?? get("buildingWidth")),
+    height: toMetres(get("digoutDepth") ?? get("buildingHeight")),  // digoutDepth = vertical dimension for concrete
+    units,
   };
+};
 
-  const mainBuildingSuppliersByType = suppliers.filter((supplier) =>
-    supplier.quoteTypesProvided.some((quoteType) => containsSubstring(formAnswers.formName, quoteType))
+// ─── Form Stringifier ────────────────────────────────────────────────────────
+
+const CONTACT_FIELDS = ["first name", "last name", "company name", "company",
+  "email", "email address", "phone number", "phonenumber", "phone", "address"];
+
+const FIELDS_BLOCKLIST = new Set([
+  "firstName", "lastName", "companyName", "company", "email", "emailAddress",
+  "phoneNumber", "address",
+  "formId", "formGuid", "formName", "formType", "formResponse",
+  "lat", "lng", "submitterId", "context", "_context",
+  "howManyQuotes", "howManyQuotesWouldYouLikeToReceive",
+  "_id", "_owner", "_createdDate", "_updatedDate",
+]);
+
+const formatKey = (key) =>
+  typeof key === "string"
+    ? key.replace(/.+_/gi, "").replace(/([a-z])([A-Z])/g, "$1 $2").replace(/^./, (c) => c.toUpperCase())
+    : key;
+
+const formatValue = (val) =>
+  typeof val === "string"
+    ? val.replace(/([a-z])([A-Z])/g, "$1 $2").replace(/^./, (c) => c.toUpperCase())
+    : val;
+
+const formatSection = (fields, useBullets) =>
+  Object.entries(fields)
+    .filter(([, val]) => val !== null && val !== undefined && val !== "")
+    .map(([key, val]) => {
+      const displayVal = key.toLowerCase() === "address"
+        ? val?.formatted ?? JSON.stringify(val)
+        : formatValue(val);
+      return `${useBullets ? "• " : ""}${formatKey(key)} - ${displayVal}`;
+    })
+    .join("\n");
+
+/**
+ * Converts a form object into a human-readable string for email bodies.
+ * Returns { "Form Contact": "...", "Fields": "..." }
+ */
+export const stringifyForm = (formData) => {
+  const { firstName, lastName, companyName, company, email, emailAddress, phoneNumber, address, ...rest } = formData;
+
+  let additionalFields = Object.fromEntries(
+    Object.entries(rest).filter(([key]) => !FIELDS_BLOCKLIST.has(key))
   );
 
-  const mainBuildingSuppliers = {
-    type: { supplierType: formAnswers.formName, baseSupplierType: formAnswers.formName },
-    suppliers: mainBuildingSuppliersByType,
+  // If the form has a structured formResponse (older Wix form format), use those ordered fields
+  if (formData.formResponse?.fields) {
+    additionalFields = formData.formResponse.fields
+      .filter((f) => f.value !== null && f.value !== "" && f.label)
+      .sort((a, b) => a.order - b.order)
+      .reduce((acc, field) => {
+        if (!CONTACT_FIELDS.includes(field.label.toLowerCase())) acc[field.label] = field.value;
+        return acc;
+      }, {});
+  }
+
+  const formString = {
+    "Form Contact": formatSection({ firstName, lastName, companyName, company, email, emailAddress, phoneNumber, address }, false) || "No contact details given",
+    Fields: formatSection(additionalFields, true),
   };
 
-  const nonDimensionSupplierTypes = supplierTypesInForm
-    .filter((s) => !s.hasMinMaxDimensions)
-    .map((type) => ({
-      type: type,
-      suppliers: suppliers.filter((supplier) =>
-        supplier.quoteTypesProvided.some((quoteType) => containsSubstring(type.supplierType, quoteType))
-      ),
-    }));
-
-  const dimensionSupplierTypes = supplierTypesInForm
-    .filter((s) => s.hasMinMaxDimensions)
-    .map((type) => ({
-      type: type,
-      suppliers: suppliers.filter((supplier) => {
-        const { length, width, height } = quoteBuildingDimensions;
-        const isSupplierType = supplier.quoteTypesProvided.some((quoteType) =>
-          containsSubstring(type.supplierType, quoteType)
-        );
-
-        if (!supplier.minMaxMeasurements.hasOwnProperty(type.baseType)) return false;
-
-        const isWithinLength =
-          length >= supplier.minMaxMeasurements[type.baseType].minLength &&
-          length <= supplier.minMaxMeasurements[type.baseType].maxLength;
-        const isWithinWidth = width
-          ? width >= supplier.minMaxMeasurements[type.baseType].minWidth &&
-            width <= supplier.minMaxMeasurements[type.baseType].maxWidth
-          : true;
-        const isWithinHeight = height
-          ? height >= supplier.minMaxMeasurements[type.baseType].minHeight &&
-            height <= supplier.minMaxMeasurements[type.baseType].maxHeight
-          : true;
-        return isWithinLength && isWithinWidth && isWithinHeight && isSupplierType;
-      }),
-    }));
-
-  const sortedSuppliersByDistance = [
-    ...nonDimensionSupplierTypes,
-    ...dimensionSupplierTypes,
-    ...[mainBuildingSuppliers],
-  ]
-    .filter((s) => s.suppliers.length > 0)
-    .map((s) => ({
-      ...s.type,
-      suppliers: sortSuppliersByDistance(s.suppliers, { lat: formAnswers.lat, lng: formAnswers.lng }),
-    }));
-
-  // // Return type -
-  // [
-  //   {
-  //     supplierType: "roofSupplyAndInstall",
-  //     baseType: "roof",
-  //     newBuildings: true,
-  //     repairReplace: false,
-  //     hasMinMaxDimensions: true,
-  //     suppliers: [
-  //       {
-  //         subscriptionEndDate: "2022-08-20",
-  //         latitude: 51.981923,
-  //         _id: "6b1a26fa-56d7-429e-a6da-f12211db6a73",
-  //         _owner: "85839425-0cfe-471f-94da-e4086b1dc961",
-  //         _createdDate: "2025-01-01T13:40:30.828Z",
-  //         minMaxMeasurements: {},
-  //         handlesAsbestos: false,
-  //         emailAddress: "dave@abcxyz.com",
-  //         quoteTypesProvided: ["Mono Pitch", "Concrete Slab", "Mezzanine Floor", "Round House", "Portal Frame"],
-  //         _updatedDate: "2025-08-07T11:39:46.481Z",
-  //         longitude: -3.410408,
-  //         quotesSent: [],
-  //         subscriptionDate: "2021-08-20",
-  //         contactId: "ca6facad-745f-4358-91bc-cf819132739b",
-  //         isActive: true,
-  //         supplierName: "XYZ Corporation",
-  //       },
-  //     ],
-  //   },
-  // ];
-
-  // buildingSuppliers: buildingSuppliers,
-  //   steelErectorSuppliers: steelErectSuppliers,
-  //   steelFabricationSuppliers: steelFabricationSuppliers,
-  //   roofSuppliers: roofSuppliers,
-
-  // Run the fetch for all suppliers
-  // Filter?
-
-  // If they want X supplier quote, get all suppliers of X within 50miles for this supplier
-  // If they want X installation quote, get all installers of X within 50miles for this supplier
-
-  // get all suppliers within 50miles for this suppliers
-
-  // if none then expand the net.
-
-  // return array of suppliers
-
-  // identify the specific form answers for the specific suppliers
-
-  return sortedSuppliersByDistance;
+  TEST_MODE && console.log("Form stringified:", formString);
+  return Object.fromEntries(Object.entries(formString).filter(([, v]) => v));
 };
 
-export const getSuppliers = async (form) => {
-  // identify suppliers for this form
-  // ensure that the IDs are the same for each form
+// ─── Supplier Matching ───────────────────────────────────────────────────────
 
-  // quoteForQuantitySurveyor === "yes"
-  // "details_quoteForInstallation": "quoteFromOtherSteelErector",
-  // "details_quoteForLevellingSite": "",
-  // "solarPanelQuoteFromProvider": "yes",
-  // "floor_concretedFloorQuote": "yes",
-  // "mezzanineFloor_quoteFromSupplier": "quoteFromOtherSteelErector",
+export const getAllFieldsWith = (form, field, searchByValue = false) =>
+  Object.entries(form)
+    .filter(([key, value]) =>
+      searchByValue
+        ? typeof value !== "object" && value !== null && String(value).toLowerCase().includes(field.toLowerCase())
+        : key.toLowerCase().includes(field.toLowerCase())
+    )
+    .map(([key, value]) => ({ field: key, value }));
 
-  // groundworkers and concrete - supply and install is same right?
-  // Would groundworks and concrete boys both quote for a concrete floor? Would it be both?
-  // Steel erector would just be install - or supply too?
+const ASBESTOS_PATTERNS = [
+  "containasbestos", "containsasbestos", "haveasbestos", "hasasbestos",
+  "madeofasbestos", "asbestospresent", "asbestosispresent", "asbestosin",
+  "withasbestos", "includingasbestos", "asbestos",
+];
 
-  // get with collection - SupplierTypes
+const ASBESTOS_ANTI_PATTERNS = [
+  "doesnotcontainasbestos", "doesntcontainasbestos", "doesntcontainsasbestos",
+  "noasbestos", "notmadeofasbestos", "noasbestospresent", "noasbestosispresent",
+  "noasbestosin", "notwithasbestos", "notincludingasbestos",
+];
 
-  const supplierTypeList = await getCollectionData("SupplierTypes", null, null, 100);
-
-  console.log("supplierTypeList", supplierTypeList);
-
-  // PT 1 - Get all supplier types
-  const supplierTypesInForm = getAllSupplierTypesInForm(supplierTypeList, form);
-
-  console.log("Supplier Types in Form: ", supplierTypesInForm);
-
-  // PT 2 - Get filtered suppliers
-  let suppliers = await wixData
-    .query("SupplierList")
-    .hasSome("quoteTypesProvided", supplierTypesInForm)
-    .eq("isActive", true)
-    .limit(1000)
-    .find({ suppressAuth: true })
-    .then((results) => results.items);
-
-  console.log("Suppliers returned: ", suppliers);
-
-  //     "claddingRepairSupply",
-  // "claddingRepairInstall",
-  // "claddingRepairSupplyAndInstall",
-  // "roofRepairSupply", *
-  // "roofRepairInstall", *
-  // "roofRepairSupplyAndInstall", *
-  //     "demolitionStructures",
-  // "demolitionWalls",
-  // "demolitionRoof",
-  // "demolitionCladding",
-  // "demolitionConcrete",
-  // Asbestos filtering for reRoof and reCladding(?) and demolition quotes
-
-  const filteredSuppliers = filterSuppliers(suppliers, supplierTypesInForm, form)
-    .map((supplierType) => {
-      return supplierType.suppliers.map((s) => ({
-        ...s,
-        supplierType: supplierType.supplierType,
-        baseSupplierType:
-          "baseSupplierType" in supplierType ? supplierType.baseSupplierType : supplierType.supplierType,
-      }));
-    })
-    .flat();
-
-  console.log("returning filtered suppliers: ", filteredSuppliers);
-  return filteredSuppliers;
+const matchesAsbestos = (str) => {
+  if (!str || typeof str !== "string") return false;
+  const n = str.toLowerCase().replace(/\s/g, "");
+  if (n === "asbestos") return true;
+  return ASBESTOS_PATTERNS.some((p) => n.includes(p)) && !ASBESTOS_ANTI_PATTERNS.some((p) => n.includes(p));
 };
+
+const checkFormForAsbestos = (formAnswers) =>
+  getAllFieldsWith(formAnswers, "asbestos").some((f) =>
+    matchesAsbestos(f.field) && (f.value === "yes" || f.value === "true" || f.value === true)
+  ) ||
+  getAllFieldsWith(formAnswers, "asbestos", true).some((f) => matchesAsbestos(String(f.value)));
+
+/**
+ * Determines which supplier types are needed based on the form answers.
+ * Returns an array of full supplierType objects (from the SupplierTypes collection).
+ */
+export const getRequiredSupplierTypes = (supplierTypeList, formAnswers) => {
+  const requiredTypeNames = new Set();
+
+  for (const [fieldKey, fieldValue] of Object.entries(formAnswers)) {
+    const normKey = fieldKey.toLowerCase().replace(/[^a-z]/g, "");
+    const normVal = typeof fieldValue === "string" ? fieldValue.toLowerCase().replace(/[^a-z]/g, "") : null;
+
+    const isExplicitYes = fieldValue === "yes" || fieldValue === true;
+    const keyIsQuoteRelated = normKey.includes("supply") || normKey.includes("quote");
+    const valIsQuoteRelated = normVal?.includes("supply") || normVal?.includes("quote");
+
+    if (!isExplicitYes && !keyIsQuoteRelated && !valIsQuoteRelated) continue;
+
+    for (const { supplierType, baseType } of supplierTypeList) {
+      const normType = supplierType.toLowerCase();
+      const normBase = baseType.toLowerCase();
+      if (normKey.includes(normType) || normKey.includes(normBase) ||
+        normVal?.includes(normType) || normVal?.includes(normBase)) {
+        requiredTypeNames.add(supplierType);
+      }
+    }
+  }
+
+  // Fallback: if no types matched via field scanning, match all supplier types whose
+  // baseType appears in the form's formType or formName. This handles forms (like
+  // roundhouse) that have no explicit "quote for X" fields — the submission itself
+  // implies all types for that base are required.
+  if (requiredTypeNames.size === 0) {
+    const normFormType = (formAnswers.formType ?? formAnswers.formName ?? "").toLowerCase().replace(/[^a-z]/g, "");
+    for (const { supplierType, baseType } of supplierTypeList) {
+      if (normFormType.includes(baseType.toLowerCase().replace(/[^a-z]/g, ""))) {
+        requiredTypeNames.add(supplierType);
+      }
+    }
+  }
+
+  return supplierTypeList.filter((st) => requiredTypeNames.has(st.supplierType));
+};
+
+export const sortSuppliersByDistance = (suppliers, { lat, lng }) => {
+  const haversineMetres = (lat1, lng1, lat2, lng2) => {
+    const R = 6371e3;
+    const φ1 = (lat1 * Math.PI) / 180, φ2 = (lat2 * Math.PI) / 180;
+    const Δφ = ((lat2 - lat1) * Math.PI) / 180, Δλ = ((lng2 - lng1) * Math.PI) / 180;
+    const a = Math.sin(Δφ / 2) ** 2 + Math.cos(φ1) * Math.cos(φ2) * Math.sin(Δλ / 2) ** 2;
+    return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  };
+
+  return suppliers
+    .map((s) => ({ ...s, distanceInMetres: haversineMetres(lat, lng, s.latitude, s.longitude) }))
+    .sort((a, b) => a.distanceInMetres - b.distanceInMetres);
+};
+
+/**
+ * Filters suppliers down to those relevant to this form, grouped by type.
+ */
+export const filterSuppliers = (suppliers, requiredSupplierTypes, formAnswers) => {
+  console.log(`Filtering ${suppliers.length} suppliers against ${requiredSupplierTypes.length} required types`);
+
+  if (checkFormForAsbestos(formAnswers)) {
+    console.log("Asbestos detected – filtering to asbestos-capable suppliers only");
+    suppliers = suppliers.filter((s) => s.handlesAsbestos);
+  }
+
+  const dimensions = buildingSizes(formAnswers);
+  const { lat, lng } = formAnswers;
+
+  const typeMatches = (s, supplierType) =>
+    s.quoteTypesProvided.some((qt) => new RegExp(supplierType.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i").test(qt));
+
+  const typeGroups = requiredSupplierTypes.map((typeObj) => ({
+    supplierType: typeObj.supplierType,
+    baseSupplierType: typeObj.baseType,
+    suppliers: suppliers.filter((s) => {
+      if (!typeMatches(s, typeObj.supplierType)) return false;
+      if (!typeObj.hasMinMaxDimensions) return true;
+
+      const limits = s.minMaxMeasurements?.[typeObj.baseType];
+      if (!limits) return true;
+
+      const { length, width, height } = dimensions;
+      return (
+        (length === null || (length >= limits.minLength && length <= limits.maxLength)) &&
+        (width === null || (width >= limits.minWidth && width <= limits.maxWidth)) &&
+        (height === null || (height >= limits.minHeight && height <= limits.maxHeight))
+      );
+    }),
+    }));
+
+  // Also include suppliers matched directly to the main form type (e.g. "Portal Frame")
+  const mainFormGroup = {
+    supplierType: formAnswers.formName,
+    baseSupplierType: formAnswers.formName,
+    suppliers: suppliers.filter((s) => typeMatches(s, formAnswers.formName)),
+  };
+
+  return [...typeGroups, mainFormGroup]
+    .filter((group) => group.suppliers.length > 0)
+    .map((group) => ({
+      ...group,
+      suppliers: lat && lng ? sortSuppliersByDistance(group.suppliers, { lat, lng }) : group.suppliers,
+    }));
+};
+
+// ─── Main Entry Point ─────────────────────────────────────────────────────────
 
 export const invoke = async ({ payload }) => {
-  console.log("Fired, payload:", payload);
+  console.log(`Automation fired for ${formatFormName(payload)}, raw payload:`, JSON.stringify(payload));
 
-  const formObject = prepareFormData(payload);
-  const { formName, formGuid, address, fields } = formObject;
-  const collection = getCollection(formName);
+  // ── Step 1: Parse the raw payload ──────────────────────────────────────────
+  let form = prepareFormData(payload);
+  const formName = formatFormName(payload)
+  console.log("Parsed form – name:", form.formName, "| guid:", form.formGuid);
 
-  console.log(
-    "FORMOBJECT",
-    formObject,
-    "\n",
-    `formName: ${formName}`,
-    "\n",
-    `formGuid: ${formGuid}`,
-    "\n",
-    `collection: ${collection}`
-  );
+  if (!form.formGuid || !form.formName) {
+    await handleErrors(`Form is missing required fields. name="${form.formName}" guid="${form.formGuid}"`);
+    return {};
+  }
 
-  if (formGuid && formName) {
-    let completedForm = await getFormDetailsFromCollection(collection, formGuid);
-    let contactAddress = address ?? completedForm.address;
-    const combinedFormFields = { ...completedForm, ...fields };
-    completedForm = Object.keys(combinedFormFields).reduce((acc, key) => {
-      if (!acc.hasOwnProperty(key)) {
-        acc[key] = combinedFormFields[key];
-      }
-      return acc;
-    }, {});
-
-    const quoteLatLng = getLatLng(completedForm.address);
-
-    if (!quoteLatLng) {
-      handleErrors(`No location or postcode provided for form ${formGuid} - ${JSON.stringify(completedForm.address)}`);
+  // ── Step 2: Fetch full form data from the CMS collection ──────────────────
+  try {
+    const collectionName = findCollectionName(form.formName);
+    if (!collectionName) {
+      await handleErrors(`Could not match form name "${form.formName}" to a CMS collection`);
+      return {};
     }
 
-    console.log("COMPLETED FORM:\n", completedForm);
+    const [dbRecord] = await queryCMS(collectionName, [
+      { filterField: "formGuid", filterValue: form.formGuid },
+    ]);
 
-    const buildingSize = buildingSizes(completedForm);
+    if (!dbRecord) {
+      await handleErrors(`No DB record found for formGuid "${form.formGuid}" in "${collectionName}"`);
+      return {};
+    }
 
-    const suppliers = await getSuppliers({ ...completedForm, ...contactAddress, formName: formName, quoteLatLng });
+    form = { ...form, ...dbRecord };
 
-    console.log("Selected suppliers:", suppliers);
+    if (!form.lat || !form.lng) {
+      const { lat, lng } = findLatLng(form);
+      form.lat = lat;
+      form.lng = lng;
+    }
 
-    // IF only a concrete supplier etc - only send them relative fields
+    if (!form.lat || !form.lng) console.warn(`No lat/lng for "${form.formGuid}" – distance sorting will be skipped`);
 
-    // get form details from collection
+    console.log("Form data merged. lat:", form.lat, "lng:", form.lng);
+  } catch (err) {
+    console.error("Error in Step 2 (fetch form data):", err);
+    await handleErrors(err.message);
+    return {};
+  }
 
-    // send to suppliers - whole form and groundworkers etc.
-    // if xyz is filled, send to groundworkers etc.
+  // ── Step 3: Find matching suppliers ───────────────────────────────────────
+  let flatSuppliers = [];
 
-    const stringifiedForm = stringifyForm(completedForm, formName);
+  try {
+    const supplierTypeList = await queryCMS("SupplierTypes", [], 250);
+    const requiredTypes = getRequiredSupplierTypes(supplierTypeList, form);
 
-    // Not corruntly working...
-    // await saveToDb(formName, formGuid, ["Supplier1", "Supplier2"]);
-    // return {};
+    console.log("Required supplier types:", requiredTypes.map((t) => t.supplierType));
 
-    console.log("Stringified Form", stringifiedForm);
+    const allSuppliers = await queryCMS("SupplierList", [
+      { filterField: "isActive", filterValue: true },
+      { filterField: "quoteTypesProvided", filterValue: requiredTypes.map((t) => t.supplierType), operator: "hasSome" },
+    ], 250);
 
-    console.log(
-      "Building Length:",
-      buildingSize.length,
-      typeof buildingSize.length,
-      "Building Width:",
-      buildingSize.width,
-      typeof buildingSize.width,
-      "Building Height:",
-      buildingSize.height,
-      typeof buildingSize.height
-    );
+    console.log(`${allSuppliers.length} active suppliers retrieved`);
 
-    if (suppliers.length === 0) console.log("No suppliers found!");
-    for (const supplier of suppliers) {
-      console.log("supplier", supplier);
-      const emailOptions = {
-        submittedName: completedForm.firstName + " " + completedForm.lastName,
-        submittedEmail: formObject.email,
-        submittedPhone: formObject.phone ?? "no phone number provided",
-        submittedType: `New ${formName === "Concrete Slab" ? "Concrete Project" : formName}`,
-        buildingSize: `${buildingSize.length}${buildingSize.units} x ${buildingSize.width}${buildingSize.units} ${
-          buildingSize.height ? " x " + buildingSize.height + buildingSize.units : ""
-        }`,
-        submittedDistance: Math.trunc(supplier.distanceInMetres / 1000),
-        // ...(stringifiedForm["Form Details"] && { formDetails: stringifiedForm["Form Details"] }),
-        // ...(stringifiedForm["Form Walls"] && { formWalls: stringifiedForm["Form Walls"] }),
-        // ...(stringifiedForm["Form Roof"] && { formRoof: stringifiedForm["Form Roof"] }),
-        // ...(stringifiedForm["Form Cladding"] && { formCladding: stringifiedForm["Form Cladding"] }),
-        // ...(stringifiedForm["Form Doors"] && { formDoors: stringifiedForm["Form Doors"] }),
-        // ...(stringifiedForm["Form Floor"] && { formFloor: stringifiedForm["Form Floor"] }),
-        ...(stringifiedForm["Fields"] && { formDetails: stringifiedForm["Fields"] }),
-        ...(stringifiedForm["Form Contact"] && { formContact: stringifiedForm["Form Contact"] }),
-      };
+    // Flatten groups and deduplicate by _id so each supplier only gets one email
+    const seenIds = new Set();
+    flatSuppliers = filterSuppliers(allSuppliers, requiredTypes, form)
+      .flatMap((group) => group.suppliers.map((s) => ({
+        ...s,
+        supplierType: group.supplierType,
+        baseSupplierType: group.baseSupplierType,
+      })))
+      .filter((s) => !seenIds.has(s._id) && seenIds.add(s._id));
 
-      console.log("Email built...", emailOptions);
+    console.log(`${flatSuppliers.length} suppliers after filtering and deduplication`);
+  } catch (err) {
+    console.error("Error in Step 3 (find suppliers):", err);
+    await handleErrors(err.message);
+    return {};
+  }
 
-      const secondarySuppliers = ["steelFabricator", "solarPanel", "quantitySurveyor", "groundWorker"];
+  // ── Step 4: Build and send emails ─────────────────────────────────────────
+  try {
+    const emailForm = stringifyForm(form);
+    const buildingSize = buildingSizes(form);
 
-      console.log(
-        `Emailing ${secondarySuppliers.includes(supplier.baseSupplierType) ? "secondary" : "main"} supplier ${
-          supplier.supplierName
-        }`
+    console.log("building size -", buildingSize)
+
+    const sizeString = [buildingSize.length, buildingSize.width, buildingSize.height]
+      .filter(Boolean)
+      .map((v) => `${v}${buildingSize.units}`)
+      .join(" x ") || null;
+
+    const projectType = `New ${formName} project`;
+
+    for (const supplier of flatSuppliers) {
+      console.log(`Sending email to ${supplier.supplierName} (${supplier.supplierType})`);
+      await sendSupplierEmail("new_form_submission",
+        { contactName: supplier.supplierName, contactId: supplier.contactId },
+        {
+          variables: {
+            supplierName: supplier.supplierName,
+            submittedName: `${form.firstName ?? ""} ${form.lastName ?? ""}`.trim(),
+            submittedEmail: form.email ?? "",
+            submittedPhone: form.phoneNumber ?? "No phone number provided",
+            submittedType: projectType,
+            buildingSize: sizeString ?? "N/A",
+            submittedDistance: supplier.distanceInMetres ? Math.trunc(supplier.distanceInMetres / 1000) : "N/A",
+            ...(emailForm["Fields"] && { formDetails: emailForm["Fields"] }),
+            ...(emailForm["Form Contact"] && { formContact: emailForm["Form Contact"] }),
+          }
+        },
       );
-      try {
-        // await saveToDb(formName, formGuid, suppliers);
-        await sendSupplierEmail(supplier, emailOptions, {
-          formGuid: formGuid,
-          formCollection: collection,
-        });
-      } catch (error) {
-        handleErrors(error);
-        console.log(`Error sending email to supplier: ${supplier.supplierName}\n`, error.message);
       }
-    }
-  } else {
-    handleErrors(`Missing formGuid for form ${formName}`);
+  } catch (err) {
+    console.error("Error in Step 4 (send emails):", err);
+    await handleErrors(err.message);
   }
 
   // The function must return an empty object, do not delete
