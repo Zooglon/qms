@@ -4,11 +4,8 @@ import wixLocation from "wix-location";
 // import { captchaAuth } from "backend/captchaModule";
 import { getFormOptions } from "public/formFunctions";
 
-let formName = "polytunnel";
-
-// Google maps as a priority
-
-let version = "000020";
+let formName = "concrete";
+let version = "000021";
 
 let mapCreds;
 let measurementUnits;
@@ -770,6 +767,7 @@ const vrl = $w("#volumeResultLabel-field-concreteSlab");
 const arb = $w("#areaResult-field-concreteSlab");
 const arl = $w("#areaResultLabel-field-concreteSlab");
 const eb = $w("#volumeError-field-concreteSlab");
+let ar = $w("#concreteArea-field-concreteSlab");
 
 const calculateVolume = (li, wi, di, rb, rl) => {
   const l = parseFloat(li.value);
@@ -786,6 +784,8 @@ const calculateVolume = (li, wi, di, rb, rl) => {
   const res = v.toFixed(2);
   rl.expand();
   rb.text = `${res}m³`;
+
+  ar.value = Number(res)
 };
 
 const calculateArea = (li, wi, rb, rl) => {
