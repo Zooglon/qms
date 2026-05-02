@@ -32,6 +32,7 @@ import {
   sortSuppliersByDistance,
   invoke,
   stringifyForm,
+  getTypeRelatedFields,
 } from "../backend/formSubmission.js";
 
 // Mock wix-data at the top level
@@ -1063,5 +1064,599 @@ describe("General tests", () => {
     const result2 = stringifyForm(responseStringifyFormInput);
     expect(result2["Form Contact"]).toContain("Test");
     expect(result2["Fields"]).toContain("Is the site prepared?");
+  });
+});
+
+// ─── getTypeRelatedFields ─────────────────────────────────────────────────────
+
+describe("getTypeRelatedFields - type-specific field extraction", () => {
+  // Simulates a portal frame form with many sub-sections filled in.
+  // Used as the shared "mixed" form for bleed-prevention tests.
+  const mixedPortalFrameForm = {
+    formName: "Portal Frame",
+    // Steel
+    steelOptions: "hot dip galvanised",
+    // Roof
+    roofMaterial: "box profile",
+    roofColour: "anthracite",
+    roofPitch: "15",
+    roofLights: "yes",
+    roofRidgeCaps: "yes",
+    // Solar panels (positive)
+    solarPanels: "yes",
+    solarPanelCoverage: "50%",
+    solarPanelQuoteFromProvider: "yes",
+    solarPanelsInTheFuture: "no",          // negative — excluded
+    // Wall panels — must NOT appear for solarPanel supplier
+    wallPanelHeight: "2m",
+    wallPanelThickness: "100mm",
+    wallPanelHeightCustom: "2.5m",
+    wallNumberOfPanelHeight: "3",
+    // Concrete panels (wall sections) — must NOT appear for solarPanel supplier
+    concretePanelHeight: "600mm",
+    concretePanelThickness: "75mm",
+    // Concrete floor
+    concreteFloor: "yes",
+    concreteFloorFinish: "smooth",
+    concreteFloorReinforcement: "mesh",
+    concreteFloorPowerFloat: "yes",
+    // Mezzanine
+    hasMezzanine: "yes",
+    mezzanineFreestanding: "yes",
+    mezzanineHeight: "2.4",
+    mezzanineFloorOptions: "chequer plate",
+    mezzanineHandrails: "yes",
+    // Guttering
+    claddingGuttering: "yes",
+    gutteringColour: "black",
+    gutteringSideA: "12000",
+    gutteringDownpipeSize: "100mm",
+    gutteringRainwaterCatchment: "no",     // negative — excluded
+    // Cladding
+    cladding: "yes",
+    claddingMaterial: "box profile",
+    claddingColour: "anthracite",
+    claddingHeight: "1.5",
+    claddingType: "composite",
+  };
+
+  // ── solarPanel ──────────────────────────────────────────────────────────────
+
+  describe("solarPanel", () => {
+    test("returns solar-specific fields with positive values", () => {
+      const form = {
+        solarPanels: "yes",
+        solarPanelCoverage: "50%",
+        roofSolarPanels: "yes",
+        roofSolarPanelsCoverage: "75%",
+        solarPanelQuoteFromProvider: "yes",
+      };
+      const result = getTypeRelatedFields(form, "solarPanel");
+      expect(result).toContain("Solar Panels");
+      expect(result).toContain("Solar Panel Coverage");
+      expect(result).toContain("Roof Solar Panels");
+      expect(result).toContain("Solar Panel Quote From Provider");
+    });
+
+    test("excludes negative solar answers (no / false / false-string)", () => {
+      const form = {
+        solarPanels: "no",
+        solarPanelsInTheFuture: false,
+        roofSolarPanels: "false",
+        solarPanelCoverage: "50%",
+      };
+      const result = getTypeRelatedFields(form, "solarPanel");
+      expect(result).toContain("Solar Panel Coverage");
+      expect(result).not.toContain("Solar Panels In The Future");
+      expect(result).not.toContain("Roof Solar Panels");
+    });
+
+    test("does not bleed into wall panel or concrete panel fields", () => {
+      const result = getTypeRelatedFields(mixedPortalFrameForm, "solarPanel");
+      expect(result).toContain("Solar Panels");
+      expect(result).not.toContain("Wall Panel");
+      expect(result).not.toContain("Concrete Panel");
+      expect(result).not.toContain("Number Of Panel");
+    });
+
+    test("does not include unrelated types from a full mixed form", () => {
+      const result = getTypeRelatedFields(mixedPortalFrameForm, "solarPanel");
+      expect(result).not.toContain("Roof Material");
+      expect(result).not.toContain("Steel Options");
+      expect(result).not.toContain("Concrete Floor");
+      expect(result).not.toContain("Mezzanine");
+      expect(result).not.toContain("Guttering");
+      expect(result).not.toContain("Cladding");
+    });
+
+    test("covers future solar question patterns", () => {
+      const form = {
+        solarBatteryCapacity: "10kWh",
+        solarInverterType: "string inverter",
+        solarMountingSystem: "in-roof",
+        solarExportTariff: "yes",
+        solarDilapidationSurveyRequired: "yes",
+      };
+      const result = getTypeRelatedFields(form, "solarPanel");
+      expect(result).toContain("Solar Battery Capacity");
+      expect(result).toContain("Solar Inverter Type");
+      expect(result).toContain("Solar Mounting System");
+      expect(result).toContain("Solar Export Tariff");
+    });
+  });
+
+  // ── roof ───────────────────────────────────────────────────────────────────
+
+  describe("roof", () => {
+    test("returns roof-specific fields", () => {
+      const form = {
+        roofMaterial: "box profile",
+        roofColour: "anthracite",
+        roofPitch: "15",
+        roofLights: "yes",
+        roofRidgeCaps: "yes",
+        roofPurlins: "150x30mm",
+        roofCompositeThickness: "0.7mm",
+      };
+      const result = getTypeRelatedFields(form, "roof");
+      expect(result).toContain("Roof Material");
+      expect(result).toContain("Roof Colour");
+      expect(result).toContain("Roof Pitch");
+      expect(result).toContain("Roof Lights");
+    });
+
+    test("does not bleed into solar, guttering, concrete or steel fields", () => {
+      const result = getTypeRelatedFields(mixedPortalFrameForm, "roof");
+      expect(result).toContain("Roof Material");
+      expect(result).not.toContain("Guttering Colour");
+      expect(result).not.toContain("Concrete Floor");
+      expect(result).not.toContain("Steel Options");
+      expect(result).not.toContain("Cladding Material");
+      expect(result).not.toContain("Mezzanine");
+    });
+
+    test("covers future roof question patterns", () => {
+      const form = {
+        roofInsulationType: "PIR board",
+        roofVentilation: "yes",
+        roofUnderlayType: "breathable membrane",
+        roofSnowLoad: "0.6kN",
+        roofFireRating: "30 minutes",
+      };
+      const result = getTypeRelatedFields(form, "roof");
+      expect(result).toContain("Roof Insulation Type");
+      expect(result).toContain("Roof Ventilation");
+      expect(result).toContain("Roof Underlay Type");
+    });
+  });
+
+  // ── polytunnel ─────────────────────────────────────────────────────────────
+
+  describe("polytunnel", () => {
+    test("returns polytunnel-specific fields", () => {
+      const form = {
+        polytunnelWidth: "9m",
+        polytunnelLength: "100m",
+        polytunnelDoors: "yes",
+        polytunnelAnchoring: "ground stakes",
+        polytunnelUsage: "growing",
+        polytunnelGuttering: "yes",
+        polytunnelCovering: "standard polythene",
+      };
+      const result = getTypeRelatedFields(form, "polytunnel");
+      expect(result).toContain("Polytunnel Width");
+      expect(result).toContain("Polytunnel Length");
+      expect(result).toContain("Polytunnel Doors");
+      expect(result).toContain("Polytunnel Anchoring");
+    });
+
+    test("returns null when form has no polytunnel fields (no bleed from portal frame)", () => {
+      expect(getTypeRelatedFields(mixedPortalFrameForm, "polytunnel")).toBeNull();
+    });
+
+    test("covers future polytunnel question patterns", () => {
+      const form = {
+        polytunnelHeating: "electric",
+        polytunnelIrrigation: "yes",
+        polytunnelFoundationType: "concrete base",
+        polytunnelVentilation: "roll-up sides",
+        polytunnelSteelGauge: "3mm",
+      };
+      const result = getTypeRelatedFields(form, "polytunnel");
+      expect(result).toContain("Polytunnel Heating");
+      expect(result).toContain("Polytunnel Irrigation");
+      expect(result).toContain("Polytunnel Foundation Type");
+    });
+  });
+
+  // ── concrete types ─────────────────────────────────────────────────────────
+
+  describe("concreteBlock", () => {
+    test("returns concrete-related fields", () => {
+      const form = {
+        concreteFloor: "yes",
+        concreteFloorFinish: "smooth",
+        concreteFloorReinforcement: "mesh",
+        concretePanelHeight: "600mm",
+        concretingFloor: "yes",
+        concreteThickness: "200mm",
+        concreteArea: "50",
+      };
+      const result = getTypeRelatedFields(form, "concreteBlock");
+      expect(result).toContain("Concrete Floor");
+      expect(result).toContain("Concrete Floor Finish");
+      expect(result).toContain("Concrete Panel Height");
+      expect(result).toContain("Concrete Thickness");
+    });
+
+    test("does not bleed into steel, roof or solar fields", () => {
+      const result = getTypeRelatedFields(mixedPortalFrameForm, "concreteBlock");
+      expect(result).toContain("Concrete Floor");
+      expect(result).not.toContain("Steel Options");
+      expect(result).not.toContain("Roof Material");
+      expect(result).not.toContain("Solar Panels");
+      expect(result).not.toContain("Mezzanine");
+    });
+
+    test("covers future concrete question patterns", () => {
+      const form = {
+        concreteStrengthClass: "C30/37",
+        concreteWaterCementRatio: "0.45",
+        concreteAdmixture: "plasticiser",
+        concreteCuringMethod: "curing compound",
+        concreteSlumpClass: "S3",
+      };
+      const result = getTypeRelatedFields(form, "concreteBlock");
+      expect(result).toContain("Concrete Strength Class");
+      expect(result).toContain("Concrete Admixture");
+      expect(result).toContain("Concrete Curing Method");
+    });
+  });
+
+  describe("massConcrete", () => {
+    test("returns mass concrete wall fields", () => {
+      const form = {
+        heightMassConcrete: "2m",
+        massConcreteWallThickness: "300mm",
+        massConcreteWallThicknessOther: "custom value",
+      };
+      const result = getTypeRelatedFields(form, "massConcrete");
+      expect(result).toContain("Height Mass Concrete");
+      expect(result).toContain("Mass Concrete Wall Thickness");
+    });
+
+    test("also matches general concrete fields via the concrete token", () => {
+      const form = {
+        concreteFloor: "yes",
+        massConcreteThickness: "200mm",
+        concretingFloor: "yes",
+      };
+      const result = getTypeRelatedFields(form, "massConcrete");
+      expect(result).toContain("Concrete Floor");
+      expect(result).toContain("Mass Concrete Thickness");
+    });
+  });
+
+  // ── steel types ────────────────────────────────────────────────────────────
+
+  describe("steelErector / steelFabricator", () => {
+    test("steelErector returns steel fields", () => {
+      const form = {
+        steelOptions: "hot dip galvanised",
+        steelErectorInstallDate: "spring 2026",
+      };
+      const result = getTypeRelatedFields(form, "steelErector");
+      expect(result).toContain("Steel Options");
+      expect(result).toContain("Steel Erector Install Date");
+    });
+
+    test("steelFabricator also returns steel fields", () => {
+      const form = {
+        steelOptions: "painted",
+        steelFabricatorPreference: "local",
+      };
+      const result = getTypeRelatedFields(form, "steelFabricator");
+      expect(result).toContain("Steel Options");
+      expect(result).toContain("Steel Fabricator Preference");
+    });
+
+    test("does not bleed into concrete, mezzanine, solar or guttering fields", () => {
+      const result = getTypeRelatedFields(mixedPortalFrameForm, "steelErector");
+      expect(result).toContain("Steel Options");
+      expect(result).not.toContain("Concrete Floor");
+      expect(result).not.toContain("Mezzanine");
+      expect(result).not.toContain("Solar Panels");
+      expect(result).not.toContain("Guttering");
+      expect(result).not.toContain("Roof Material");
+    });
+
+    test("covers future steel question patterns", () => {
+      const form = {
+        steelGrade: "S275",
+        steelFinish: "hot dip galvanised",
+        steelConnectionType: "bolted",
+        steelDeliveryAccess: "standard",
+        steelDrawingsRequired: "yes",
+      };
+      const result = getTypeRelatedFields(form, "steelErector");
+      expect(result).toContain("Steel Grade");
+      expect(result).toContain("Steel Finish");
+      expect(result).toContain("Steel Connection Type");
+    });
+  });
+
+  // ── demolition types ───────────────────────────────────────────────────────
+
+  describe("demolition types", () => {
+    test("demolitionRoof returns demolition context fields", () => {
+      // "roof" is 4 chars — only the first token "demolition" is searched.
+      // Demolition contractors see demolition-labelled fields from the form.
+      const form = {
+        demolitionTimescale: "3 months",
+        demolitionWasteDisposal: "skip hire",
+        demolitionAccess: "good",
+        demolitionRoofCondition: "poor",
+        roofMaterial: "fibre cement",  // NOT matched — "roof" token excluded (< 7 chars)
+      };
+      const result = getTypeRelatedFields(form, "demolitionRoof");
+      expect(result).toContain("Demolition Timescale");
+      expect(result).toContain("Demolition Waste Disposal");
+      expect(result).toContain("Demolition Roof Condition");
+      expect(result).not.toContain("Roof Material");
+    });
+
+    test("demolitionCladding returns demolition + cladding fields", () => {
+      const form = {
+        cladding: "yes",
+        claddingType: "box profile",
+        claddingAsbestos: "yes",
+        demolitionWasteDisposal: "contractor removes",
+      };
+      const result = getTypeRelatedFields(form, "demolitionCladding");
+      expect(result).toContain("Cladding Type");
+      expect(result).toContain("Cladding Asbestos");
+      expect(result).toContain("Demolition Waste Disposal");
+    });
+
+    test("demolitionWalls returns demolition-labelled fields", () => {
+      const form = {
+        demolitionTimescale: "4 weeks",
+        demolitionAccess: "restricted",
+        demolitionWasteDisposal: "tip run",
+      };
+      const result = getTypeRelatedFields(form, "demolitionWalls");
+      expect(result).toContain("Demolition Timescale");
+      expect(result).toContain("Demolition Access");
+    });
+
+    test("covers future demolition question patterns", () => {
+      const form = {
+        demolitionPermitRequired: "yes",
+        demolitionHazardousMaterials: "asbestos confirmed",
+        demolitionStructuralSurvey: "required",
+        demolitionNeighbourNotice: "yes",
+      };
+      const result = getTypeRelatedFields(form, "demolitionRoof");
+      expect(result).toContain("Demolition Permit Required");
+      expect(result).toContain("Demolition Hazardous Materials");
+    });
+  });
+
+  // ── quantitySurveyor ───────────────────────────────────────────────────────
+
+  describe("quantitySurveyor", () => {
+    test("returns surveyor-related fields", () => {
+      const form = {
+        concreteSurveyorQuote: "yes",
+        quoteForQuantitySurveyor: "yes",
+      };
+      const result = getTypeRelatedFields(form, "quantitySurveyor");
+      expect(result).toContain("Concrete Surveyor Quote");
+      expect(result).toContain("Quote For Quantity Surveyor");
+    });
+
+    test("covers future quantity surveyor field patterns", () => {
+      const form = {
+        quantitySurveyorRequired: "yes",
+        surveyorVisitDate: "June 2026",
+        surveyorBOQRequired: "yes",
+        quantitySurveyorNotes: "full structural BOQ",
+      };
+      const result = getTypeRelatedFields(form, "quantitySurveyor");
+      expect(result).toContain("Quantity Surveyor Required");
+      expect(result).toContain("Surveyor Visit Date");
+      expect(result).toContain("Quantity Surveyor Notes");
+    });
+  });
+
+  // ── mezzanine ──────────────────────────────────────────────────────────────
+
+  describe("mezzanine", () => {
+    test("returns mezzanine fields", () => {
+      const form = {
+        hasMezzanine: "yes",
+        mezzanineFreestanding: "yes",
+        mezzanineHeight: "2.4",
+        mezzanineFloorOptions: "chequer plate",
+        mezzanineHandrails: "yes",
+        mezzanineFloorAccess: "staircase",
+      };
+      const result = getTypeRelatedFields(form, "mezzanine");
+      expect(result).toContain("Has Mezzanine");
+      expect(result).toContain("Mezzanine Height");
+      expect(result).toContain("Mezzanine Floor Options");
+      expect(result).toContain("Mezzanine Handrails");
+    });
+
+    test("does not bleed into concrete, roof or steel fields", () => {
+      const result = getTypeRelatedFields(mixedPortalFrameForm, "mezzanine");
+      expect(result).toContain("Has Mezzanine");
+      expect(result).not.toContain("Roof Material");
+      expect(result).not.toContain("Concrete Floor Finish");
+      expect(result).not.toContain("Steel Options");
+      expect(result).not.toContain("Solar Panels");
+      expect(result).not.toContain("Guttering Colour");
+    });
+
+    test("covers future mezzanine question patterns", () => {
+      const form = {
+        mezzanineSprinklers: "yes",
+        mezzanineLoadCapacity: "500kg/m2",
+        mezzanineFireRating: "60 minutes",
+        mezzanineStairType: "industrial open riser",
+        mezzanineColumnSpacing: "3m",
+      };
+      const result = getTypeRelatedFields(form, "mezzanine");
+      expect(result).toContain("Mezzanine Sprinklers");
+      expect(result).toContain("Mezzanine Load Capacity");
+      expect(result).toContain("Mezzanine Fire Rating");
+    });
+  });
+
+  // ── guttering ──────────────────────────────────────────────────────────────
+
+  describe("guttering", () => {
+    test("returns guttering fields including sub-section fields from a portal frame form", () => {
+      const form = {
+        claddingGuttering: "yes",
+        gutteringColour: "black",
+        gutteringSideA: "12000",
+        gutteringType: "deep flow",
+        gutteringDownpipeSize: "100mm",
+        gutteringRainwaterCatchment: "yes",
+        gutteringShape: "half-round",
+      };
+      const result = getTypeRelatedFields(form, "guttering");
+      expect(result).toContain("Guttering Colour");
+      expect(result).toContain("Guttering Side A");
+      expect(result).toContain("Guttering Type");
+      expect(result).toContain("Guttering Downpipe Size");
+    });
+
+    test("excludes negative guttering answers", () => {
+      const result = getTypeRelatedFields(mixedPortalFrameForm, "guttering");
+      expect(result).toContain("Guttering Colour");
+      expect(result).not.toContain("Guttering Rainwater Catchment"); // value is "no"
+    });
+
+    test("does not bleed into cladding, solar or roof fields", () => {
+      const result = getTypeRelatedFields(mixedPortalFrameForm, "guttering");
+      expect(result).not.toContain("Cladding Material");
+      expect(result).not.toContain("Solar Panels");
+      expect(result).not.toContain("Roof Material");
+      expect(result).not.toContain("Steel Options");
+    });
+
+    test("covers future guttering question patterns", () => {
+      const form = {
+        gutteringLeafGuard: "yes",
+        gutteringOverflowType: "weir outlet",
+        gutteringFasciaMount: "yes",
+        gutteringSeamType: "solvent weld",
+        gutteringExpansionJoints: "required",
+      };
+      const result = getTypeRelatedFields(form, "guttering");
+      expect(result).toContain("Guttering Leaf Guard");
+      expect(result).toContain("Guttering Overflow Type");
+      expect(result).toContain("Guttering Seam Type");
+    });
+  });
+
+  // ── cladding ───────────────────────────────────────────────────────────────
+
+  describe("cladding", () => {
+    test("returns cladding-specific fields", () => {
+      const form = {
+        cladding: "yes",
+        claddingMaterial: "box profile",
+        claddingColour: "anthracite",
+        claddingHeight: "1.5",
+        claddingType: "composite",
+        claddingTecsFixings: "yes",
+        claddingAsbestos: "yes",
+      };
+      const result = getTypeRelatedFields(form, "cladding");
+      expect(result).toContain("Cladding Material");
+      expect(result).toContain("Cladding Colour");
+      expect(result).toContain("Cladding Height");
+      expect(result).toContain("Cladding Asbestos");
+    });
+
+    test("does not bleed into roof, guttering colour or solar fields", () => {
+      const result = getTypeRelatedFields(mixedPortalFrameForm, "cladding");
+      expect(result).toContain("Cladding Material");
+      expect(result).not.toContain("Roof Material");
+      expect(result).not.toContain("Guttering Colour");
+      expect(result).not.toContain("Solar Panels");
+      expect(result).not.toContain("Steel Options");
+      expect(result).not.toContain("Mezzanine");
+    });
+
+    test("covers future cladding question patterns", () => {
+      const form = {
+        claddingInsulationThickness: "50mm",
+        claddingFireRating: "30 minutes",
+        claddingAcousticGrade: "standard",
+        claddingFixingCentres: "1000mm",
+        claddingBreatherMembrane: "yes",
+      };
+      const result = getTypeRelatedFields(form, "cladding");
+      expect(result).toContain("Cladding Insulation Thickness");
+      expect(result).toContain("Cladding Fire Rating");
+      expect(result).toContain("Cladding Fixing Centres");
+    });
+  });
+
+  // ── edge cases ─────────────────────────────────────────────────────────────
+
+  describe("edge cases", () => {
+    test("returns null for an empty form", () => {
+      expect(getTypeRelatedFields({}, "solarPanel")).toBeNull();
+      expect(getTypeRelatedFields({}, "roof")).toBeNull();
+      expect(getTypeRelatedFields({}, "polytunnel")).toBeNull();
+    });
+
+    test("returns null when all matching fields have negative values", () => {
+      const form = { solarPanels: "no", solarPanelsInTheFuture: "no", roofSolarPanels: false };
+      expect(getTypeRelatedFields(form, "solarPanel")).toBeNull();
+    });
+
+    test("returns null when all matching fields are empty strings", () => {
+      expect(getTypeRelatedFields({ roofMaterial: "", roofColour: "" }, "roof")).toBeNull();
+    });
+
+    test("returns null when all matching fields are null", () => {
+      expect(getTypeRelatedFields({ solarPanels: null, solarPanelCoverage: null }, "solarPanel")).toBeNull();
+    });
+
+    test("handles null and undefined baseType without throwing", () => {
+      const form = { solarPanels: "yes" };
+      expect(() => getTypeRelatedFields(form, null)).not.toThrow();
+      expect(() => getTypeRelatedFields(form, undefined)).not.toThrow();
+      expect(getTypeRelatedFields(form, null)).toBeNull();
+      expect(getTypeRelatedFields(form, undefined)).toBeNull();
+    });
+
+    test("a field matching multiple tokens appears only once in output", () => {
+      // "massConcreteWallThickness" matches both "mass" (first token) and "concrete" (≥7)
+      const form = { massConcreteWallThickness: "300mm" };
+      const result = getTypeRelatedFields(form, "massConcrete");
+      const count = (result.match(/Mass Concrete Wall Thickness/g) || []).length;
+      expect(count).toBe(1);
+    });
+
+    test("excludes fields with boolean false value", () => {
+      const form = { roofLights: false, roofRidgeCaps: "yes" };
+      const result = getTypeRelatedFields(form, "roof");
+      expect(result).toContain("Roof Ridge Caps");
+      expect(result).not.toContain("Roof Lights");
+    });
+
+    test("includes numeric zero as a valid value", () => {
+      const form = { roofPitch: 0, roofLights: "yes" };
+      const result = getTypeRelatedFields(form, "roof");
+      // 0 is a real dimension value, should not be filtered out
+      expect(result).toContain("Roof Pitch");
+    });
   });
 });
