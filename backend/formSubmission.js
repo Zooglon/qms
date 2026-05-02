@@ -8,7 +8,7 @@ import { triggeredEmails } from "wix-crm-backend";
 
 // ─── Config ──────────────────────────────────────────────────────────────────
 
-const TEST_MODE = false;
+const TEST_MODE = false
 
 // ─── CMS Helper ──────────────────────────────────────────────────────────────
 
@@ -58,7 +58,7 @@ const handleErrors = async (msg) => {
 async function sendSupplierEmail(emailId, contact, emailVariables) {
   if (TEST_MODE) {
     console.log("TEST MODE – would send email to:", contact.contactName, "variables:", emailVariables);
-        return;
+    return;
   }
   await triggeredEmails.emailContact(emailId, contact.contactId, emailVariables);
   console.log(`Email sent to: ${contact.contactName}`);
@@ -96,12 +96,10 @@ export const formatFormName = (formObject) => {
   // Parse the verbose formName Wix sends: "Home - submit into Portal Frame Quotes collection"
   const rawFormName = formObject.formName ?? "";
   const submitIndex = rawFormName.indexOf("submit into ");
-  const formName = submitIndex !== -1
+  return submitIndex !== -1
     ? rawFormName.slice(submitIndex + 12).replace(/ (Quotes|Form) collection$/i, "").trim()
     : rawFormName.trim() || "Unknown form";
-
-  return formName;
-}
+};
 
 export const prepareFormData = (rawPayload) => {
   const formObject = {};
@@ -214,8 +212,8 @@ export const buildingSizes = (formFields) => {
 
 // ─── Form Stringifier ────────────────────────────────────────────────────────
 
-const CONTACT_FIELDS = ["first name", "last name", "company name", "company",
-  "email", "email address", "phone number", "phonenumber", "phone", "address"];
+const CONTACT_FIELDS = new Set(["first name", "last name", "company name", "company",
+  "email", "email address", "phone number", "phonenumber", "phone", "address"]);
 
 const FIELDS_BLOCKLIST = new Set([
   "firstName", "lastName", "companyName", "company", "email", "emailAddress",
@@ -260,11 +258,13 @@ export const stringifyForm = (formData) => {
 
   // If the form has a structured formResponse (older Wix form format), use those ordered fields
   if (formData.formResponse?.fields) {
-    additionalFields = formData.formResponse.fields
+    const rawFields = formData.formResponse.fields;
+    const parsedFields = typeof rawFields === "string" ? JSON.parse(rawFields) : rawFields;
+    additionalFields = parsedFields
       .filter((f) => f.value !== null && f.value !== "" && f.label)
       .sort((a, b) => a.order - b.order)
       .reduce((acc, field) => {
-        if (!CONTACT_FIELDS.includes(field.label.toLowerCase())) acc[field.label] = field.value;
+        if (!CONTACT_FIELDS.has(field.label.toLowerCase())) acc[field.label] = field.value;
         return acc;
       }, {});
   }
@@ -289,23 +289,20 @@ export const getAllFieldsWith = (form, field, searchByValue = false) =>
     )
     .map(([key, value]) => ({ field: key, value }));
 
-const ASBESTOS_PATTERNS = [
-  "containasbestos", "containsasbestos", "haveasbestos", "hasasbestos",
-  "madeofasbestos", "asbestospresent", "asbestosispresent", "asbestosin",
-  "withasbestos", "includingasbestos", "asbestos",
-];
-
 const ASBESTOS_ANTI_PATTERNS = [
   "doesnotcontainasbestos", "doesntcontainasbestos", "doesntcontainsasbestos",
   "noasbestos", "notmadeofasbestos", "noasbestospresent", "noasbestosispresent",
   "noasbestosin", "notwithasbestos", "notincludingasbestos",
+  "asbestosfree", "notasbestos",
+  "withoutasbestos", "freeofasbestos", "containsnoasbestos", "hasnoasbestos",
+  "zeroasbestos", "clearofasbestos", "asbestosnotpresent", "asbestosnegative",
+  "noasbestosdetected", "notcontainingasbestos",
 ];
 
-const matchesAsbestos = (str) => {
+export const matchesAsbestos = (str) => {
   if (!str || typeof str !== "string") return false;
   const n = str.toLowerCase().replace(/\s/g, "");
-  if (n === "asbestos") return true;
-  return ASBESTOS_PATTERNS.some((p) => n.includes(p)) && !ASBESTOS_ANTI_PATTERNS.some((p) => n.includes(p));
+  return n.includes("asbestos") && !ASBESTOS_ANTI_PATTERNS.some((p) => n.includes(p));
 };
 
 const checkFormForAsbestos = (formAnswers) =>
@@ -374,44 +371,49 @@ export const sortSuppliersByDistance = (suppliers, { lat, lng }) => {
 /**
  * Filters suppliers down to those relevant to this form, grouped by type.
  */
+const escapeRegex = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
 export const filterSuppliers = (suppliers, requiredSupplierTypes, formAnswers) => {
   console.log(`Filtering ${suppliers.length} suppliers against ${requiredSupplierTypes.length} required types`);
 
-  if (checkFormForAsbestos(formAnswers)) {
-    console.log("Asbestos detected – filtering to asbestos-capable suppliers only");
-    suppliers = suppliers.filter((s) => s.handlesAsbestos);
-  }
+  const hasAsbestos = checkFormForAsbestos(formAnswers);
+  if (hasAsbestos) console.log("Asbestos detected – filtering to asbestos-capable suppliers only");
+  const activeSuppliers = hasAsbestos ? suppliers.filter((s) => s.handlesAsbestos) : suppliers;
 
   const dimensions = buildingSizes(formAnswers);
   const { lat, lng } = formAnswers;
 
-  const typeMatches = (s, supplierType) =>
-    s.quoteTypesProvided.some((qt) => new RegExp(supplierType.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i").test(qt));
+  const typeMatches = (s, regex) =>
+    s.quoteTypesProvided.some((qt) => regex.test(qt));
 
-  const typeGroups = requiredSupplierTypes.map((typeObj) => ({
-    supplierType: typeObj.supplierType,
-    baseSupplierType: typeObj.baseType,
-    suppliers: suppliers.filter((s) => {
-      if (!typeMatches(s, typeObj.supplierType)) return false;
-      if (!typeObj.hasMinMaxDimensions) return true;
+  const typeGroups = requiredSupplierTypes.map((typeObj) => {
+    const regex = new RegExp(escapeRegex(typeObj.supplierType), "i");
+    return {
+      supplierType: typeObj.supplierType,
+      baseSupplierType: typeObj.baseType,
+      suppliers: activeSuppliers.filter((s) => {
+        if (!typeMatches(s, regex)) return false;
+        if (!typeObj.hasMinMaxDimensions) return true;
 
-      const limits = s.minMaxMeasurements?.[typeObj.baseType];
-      if (!limits) return true;
+        const limits = s.minMaxMeasurements?.[typeObj.baseType];
+        if (!limits) return true;
 
-      const { length, width, height } = dimensions;
-      return (
-        (length === null || (length >= limits.minLength && length <= limits.maxLength)) &&
-        (width === null || (width >= limits.minWidth && width <= limits.maxWidth)) &&
-        (height === null || (height >= limits.minHeight && height <= limits.maxHeight))
-      );
-    }),
-    }));
+        const { length, width, height } = dimensions;
+        return (
+          (length === null || (length >= limits.minLength && length <= limits.maxLength)) &&
+          (width === null || (width >= limits.minWidth && width <= limits.maxWidth)) &&
+          (height === null || (height >= limits.minHeight && height <= limits.maxHeight))
+        );
+      }),
+    };
+  });
 
   // Also include suppliers matched directly to the main form type (e.g. "Portal Frame")
+  const mainFormGroupRegex = new RegExp(escapeRegex(formAnswers.formName ?? ""), "i");
   const mainFormGroup = {
     supplierType: formAnswers.formName,
     baseSupplierType: formAnswers.formName,
-    suppliers: suppliers.filter((s) => typeMatches(s, formAnswers.formName)),
+    suppliers: activeSuppliers.filter((s) => typeMatches(s, mainFormGroupRegex)),
   };
 
   return [...typeGroups, mainFormGroup]
@@ -429,7 +431,7 @@ export const invoke = async ({ payload }) => {
 
   // ── Step 1: Parse the raw payload ──────────────────────────────────────────
   let form = prepareFormData(payload);
-  const formName = formatFormName(payload)
+  const formName = form.formName;
   console.log("Parsed form – name:", form.formName, "| guid:", form.formGuid);
 
   if (!form.formGuid || !form.formName) {
@@ -536,7 +538,7 @@ export const invoke = async ({ payload }) => {
           }
         },
       );
-      }
+    }
   } catch (err) {
     console.error("Error in Step 4 (send emails):", err);
     await handleErrors(err.message);
