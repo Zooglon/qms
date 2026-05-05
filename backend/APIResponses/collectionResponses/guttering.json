@@ -1,0 +1,310 @@
+{
+    "details_gutteringTypeShape": "Type H",
+    "formResponse": {
+        "formName": "gutteringrepair",
+        "formGUID": "e257a08b-71e4-4cc9-af29-a3d8dac0a138",
+        "fields": [
+            {
+                "elementId": "line33",
+                "value": null,
+                "order": 0
+            },
+            {
+                "elementId": "formGUID-field-gutteringRepair",
+                "label": "First name",
+                "value": null,
+                "order": 1
+            },
+            {
+                "elementId": "text232",
+                "value": null,
+                "order": 2
+            },
+            {
+                "elementId": "text231",
+                "value": null,
+                "order": 3
+            },
+            {
+                "elementId": "gutteringType-field-guttering",
+                "label": "Guttering type",
+                "value": "blackPVC",
+                "order": 4
+            },
+            {
+                "elementId": "existingOutlets-field-guttering",
+                "label": "Number of existing outlets",
+                "value": "4",
+                "order": 5
+            },
+            {
+                "elementId": "gutteringShape-image-guttering",
+                "value": null,
+                "order": 6
+            },
+            {
+                "elementId": "gutteringShape-field-guttering",
+                "label": "Guttering type/shape",
+                "value": "Type H",
+                "order": 7
+            },
+            {
+                "elementId": "gutteringSideA-field-guttering",
+                "label": "Side A (mm)",
+                "value": "6",
+                "order": 8
+            },
+            {
+                "elementId": "gutteringSideB-field-guttering",
+                "label": "Side B (mm)",
+                "value": "7",
+                "order": 9
+            },
+            {
+                "elementId": "gutteringSideC-field-guttering",
+                "label": "Side C (mm)",
+                "value": "7",
+                "order": 10
+            },
+            {
+                "elementId": "gutteringSideD-field-guttering",
+                "label": "Side D (mm)",
+                "value": "7",
+                "order": 11
+            },
+            {
+                "elementId": "gutteringSideE-field-guttering",
+                "label": "Side E (mm)",
+                "value": null,
+                "order": 12
+            },
+            {
+                "elementId": "gutteringSideF-field-guttering",
+                "label": "Side F (mm)",
+                "value": null,
+                "order": 13
+            },
+            {
+                "elementId": "gutteringSideG-field-guttering",
+                "label": "Side G (mm)",
+                "value": null,
+                "order": 14
+            },
+            {
+                "elementId": "gutteringSideH-field-guttering",
+                "label": "Side H (mm)",
+                "value": null,
+                "order": 15
+            },
+            {
+                "elementId": "gutteringAngle1-field-guttering",
+                "label": "Angle 1 (°)",
+                "value": "7",
+                "order": 16
+            },
+            {
+                "elementId": "gutteringAngle2-field-guttering",
+                "label": "Angle 2 (°)",
+                "value": null,
+                "order": 17
+            },
+            {
+                "elementId": "gutteringColour-field-guttering",
+                "label": "Guttering colour",
+                "value": null,
+                "order": 18
+            },
+            {
+                "elementId": "gutteringColour-image-guttering",
+                "value": null,
+                "order": 19
+            },
+            {
+                "elementId": "downpipeSize-field-guttering",
+                "label": "Size of downpipe",
+                "value": "100mm",
+                "order": 20
+            },
+            {
+                "elementId": "rainwaterCatchment-field-guttering",
+                "label": "Rainwater catchment",
+                "value": "yes",
+                "order": 21
+            },
+            {
+                "elementId": "measurementUnits-field-guttering",
+                "label": "Measurement units",
+                "value": "metric",
+                "order": 22
+            },
+            {
+                "elementId": "buildingLength-field-guttering",
+                "label": "Building length",
+                "value": "5",
+                "order": 23
+            },
+            {
+                "elementId": "text265",
+                "value": null,
+                "order": 24
+            },
+            {
+                "elementId": "buildingHeight-field-guttering",
+                "label": "Building height (to eaves)",
+                "value": "4",
+                "order": 25
+            },
+            {
+                "elementId": "text263",
+                "value": null,
+                "order": 26
+            },
+            {
+                "elementId": "buildingRoofPitch-field-guttering",
+                "label": "Roof pitch (if known)",
+                "value": "45",
+                "order": 27
+            },
+            {
+                "elementId": "radioGroup1",
+                "label": "",
+                "value": null,
+                "order": 28
+            },
+            {
+                "elementId": "rainwaterCatchmentTank-field-guttering",
+                "label": "Tank size (select more than one option for comparison in quote))",
+                "value": [
+                    "1000l"
+                ],
+                "order": 29
+            },
+            {
+                "elementId": "sides-field-guttering",
+                "label": "Guttering sides",
+                "value": "single",
+                "order": 30
+            },
+            {
+                "elementId": "upload-field-guttering",
+                "label": "Site image/video upload",
+                "value": null,
+                "order": 31
+            },
+            {
+                "elementId": "quoteDistance-field-gutteringRepair",
+                "value": null,
+                "order": 32
+            },
+            {
+                "elementId": "text336",
+                "value": null,
+                "order": 33
+            },
+            {
+                "elementId": "text335",
+                "value": null,
+                "order": 34
+            },
+            {
+                "elementId": "line32",
+                "value": null,
+                "order": 35
+            },
+            {
+                "elementId": "text230",
+                "value": null,
+                "order": 36
+            },
+            {
+                "elementId": "input53",
+                "label": "First Name",
+                "value": null,
+                "order": 37
+            },
+            {
+                "elementId": "input52",
+                "label": "Last Name",
+                "value": "Duncan",
+                "order": 38
+            },
+            {
+                "elementId": "input51",
+                "label": "Company Name",
+                "value": null,
+                "order": 39
+            },
+            {
+                "elementId": "input50",
+                "label": "Email",
+                "value": "nduncan992@gmail.com",
+                "order": 40
+            },
+            {
+                "elementId": "input49",
+                "label": "Phone number",
+                "value": "07896205912",
+                "order": 41
+            },
+            {
+                "elementId": "addressInput6",
+                "label": "Address",
+                "value": {
+                    "formatted": "365 Stone Road"
+                },
+                "order": 42
+            },
+            {
+                "elementId": "textBox9",
+                "label": "area details",
+                "value": null,
+                "order": 43
+            },
+            {
+                "elementId": "captcha-gutteringRepair",
+                "value": null,
+                "order": 44
+            },
+            {
+                "elementId": "toggle-gutteringRepair",
+                "value": "",
+                "order": 45
+            },
+            {
+                "elementId": "text300",
+                "value": null,
+                "order": 46
+            },
+            {
+                "elementId": "vectorImage69",
+                "value": null,
+                "order": 47
+            },
+            {
+                "elementId": "submitButton-gutteringRepair",
+                "label": "Submit",
+                "value": null,
+                "order": 48
+            },
+            {
+                "elementId": "text229",
+                "value": null,
+                "order": 49
+            },
+            {
+                "elementId": "submitFailed-gutteringRepair",
+                "value": null,
+                "order": 50
+            }
+        ]
+    },
+    "_id": "db33e3cc-40b2-4704-9938-a5a7f998bf8a",
+    "_owner": "21e6e9c9-5543-4742-9074-08709db1195f",
+    "_createdDate": "2025-12-10T10:04:07.047Z",
+    "formGuid": "e257a08b-71e4-4cc9-af29-a3d8dac0a138",
+    "_updatedDate": "2025-12-10T10:04:07.047Z",
+    "address": {
+        "formatted": "365 Stone Road"
+    },
+    "formType": "GutteringQuotes"
+}

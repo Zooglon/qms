@@ -1,0 +1,352 @@
+{
+    "formResponse": {
+        "formName": "mezzaninefloor",
+        "formGUID": "2945c0f9-9961-4a3e-8408-d2781593603f",
+        "fields": [
+            {
+                "elementId": "line24",
+                "value": null,
+                "order": 0
+            },
+            {
+                "elementId": "formGUID-field-mezzanineFloor",
+                "label": "First name",
+                "value": null,
+                "order": 1
+            },
+            {
+                "elementId": "formTitle-text",
+                "value": null,
+                "order": 2
+            },
+            {
+                "elementId": "quoteForInstallation-field-mezzanineFloor",
+                "label": "Would you like a quote for installation",
+                "value": "quoteFromSupplier",
+                "order": 3
+            },
+            {
+                "elementId": "mezzanineOptions-field-mezzanineFloor",
+                "label": "Mezzanine option",
+                "value": "freestanding",
+                "order": 4
+            },
+            {
+                "elementId": "mainPostDimensionsA-field-mezzanineFloor",
+                "label": "Main post dimension A (mm)",
+                "value": null,
+                "order": 5
+            },
+            {
+                "elementId": "mainPostDimensionsB-field-mezzanineFloor",
+                "label": "Main post dimension B (mm)",
+                "value": null,
+                "order": 6
+            },
+            {
+                "elementId": "mainPostDimensionsC-field-mezzanineFloor",
+                "label": "Main post dimension C (mm)",
+                "value": null,
+                "order": 7
+            },
+            {
+                "elementId": "imageX80",
+                "value": null,
+                "order": 8
+            },
+            {
+                "elementId": "imageX81",
+                "value": null,
+                "order": 9
+            },
+            {
+                "elementId": "gablePosts-field-mezzanineFloor",
+                "label": "Are there gable/intermediate posts",
+                "value": null,
+                "order": 10
+            },
+            {
+                "elementId": "gablePostDimensionsA-field-mezzanineFloor",
+                "label": "Gable post dimension A (mm)",
+                "value": null,
+                "order": 11
+            },
+            {
+                "elementId": "gablePostDimensionsB-field-mezzanineFloor",
+                "label": "Gable post dimension B (mm)",
+                "value": null,
+                "order": 12
+            },
+            {
+                "elementId": "gablePostDimensionsC-field-mezzanineFloor",
+                "label": "Gable post dimension C (mm)",
+                "value": null,
+                "order": 13
+            },
+            {
+                "elementId": "imageX83",
+                "value": null,
+                "order": 14
+            },
+            {
+                "elementId": "imageX82",
+                "value": null,
+                "order": 15
+            },
+            {
+                "elementId": "measurementUnits-field-mezzanineFloor",
+                "label": "Measurement Units",
+                "value": "metric",
+                "order": 16
+            },
+            {
+                "elementId": "buildingLength-field-mezzanineFloor",
+                "label": "Building length",
+                "value": "8",
+                "order": 17
+            },
+            {
+                "elementId": "text202",
+                "value": null,
+                "order": 18
+            },
+            {
+                "elementId": "buildingWidth-field-mezzanineFloor",
+                "label": "Building width",
+                "value": "5",
+                "order": 19
+            },
+            {
+                "elementId": "text203",
+                "value": null,
+                "order": 20
+            },
+            {
+                "elementId": "buildingHeight-field-mezzanineFloor",
+                "label": "Building height",
+                "value": "2",
+                "order": 21
+            },
+            {
+                "elementId": "text204",
+                "value": null,
+                "order": 22
+            },
+            {
+                "elementId": "bayWidth-field-mezzanineFloor",
+                "label": "Bay width (centre to centre)",
+                "value": "20ft",
+                "order": 23
+            },
+            {
+                "elementId": "bayWidthOther-field-mezzanineFloor",
+                "label": "Other",
+                "value": null,
+                "order": 24
+            },
+            {
+                "elementId": "mezzanineOptionsSpan-field-mezzanineFloor",
+                "label": "Mezzanine span options",
+                "value": "clearSpan",
+                "order": 25
+            },
+            {
+                "elementId": "mezzanineOptionsSpanHeight-field-mezzanineFloor",
+                "label": "Mezzanine height",
+                "value": null,
+                "order": 26
+            },
+            {
+                "elementId": "text205",
+                "value": null,
+                "order": 27
+            },
+            {
+                "elementId": "steelOptions-field-mezzanineFloor",
+                "label": "Steel options",
+                "value": "galvanised",
+                "order": 28
+            },
+            {
+                "elementId": "mezzaninePurlins-field-mezzanineFloor",
+                "label": "Mezzanine purlins",
+                "value": [
+                    "timber"
+                ],
+                "order": 29
+            },
+            {
+                "elementId": "mezzanineFloorOptions-field-mezzanineFloor",
+                "label": "Mezzanine floor options",
+                "value": "chipboard18mm",
+                "order": 30
+            },
+            {
+                "elementId": "handRails-field-mezzanineFloor",
+                "label": "Hand rails",
+                "value": "no",
+                "order": 31
+            },
+            {
+                "elementId": "floorAccess-field-mezzanineFloor",
+                "label": "Floor access",
+                "value": [
+                    "ladder"
+                ],
+                "order": 32
+            },
+            {
+                "elementId": "forkliftbay-field-mezzanineFloor",
+                "label": "Forklift Bay",
+                "value": "no",
+                "order": 33
+            },
+            {
+                "elementId": "mezzanineFloorUsage-field-mezzanineFloor",
+                "label": "Floor usage",
+                "value": [
+                    "storage"
+                ],
+                "order": 34
+            },
+            {
+                "elementId": "mezzanineFloorUsageOther-field-mezzanineFloor",
+                "label": "Floor usage other",
+                "value": null,
+                "order": 35
+            },
+            {
+                "elementId": "additionalNotes-field-mezzanineFloor",
+                "label": "Additional notes",
+                "value": null,
+                "order": 36
+            },
+            {
+                "elementId": "uploadButton1",
+                "label": "Site image/video upload",
+                "value": null,
+                "order": 37
+            },
+            {
+                "elementId": "howManyQuotes-field-mezzanineFloor",
+                "label": "How many quotes would you like to recieve?",
+                "value": null,
+                "order": 38
+            },
+            {
+                "elementId": "quoteDistance-field-mezzanineFloor",
+                "value": null,
+                "order": 39
+            },
+            {
+                "elementId": "text313",
+                "value": null,
+                "order": 40
+            },
+            {
+                "elementId": "text312",
+                "value": null,
+                "order": 41
+            },
+            {
+                "elementId": "line25",
+                "value": null,
+                "order": 42
+            },
+            {
+                "elementId": "text201",
+                "value": null,
+                "order": 43
+            },
+            {
+                "elementId": "input35",
+                "label": "First Name",
+                "value": null,
+                "order": 44
+            },
+            {
+                "elementId": "input34",
+                "label": "Last Name",
+                "value": "Duncan",
+                "order": 45
+            },
+            {
+                "elementId": "input33",
+                "label": "Company Name",
+                "value": null,
+                "order": 46
+            },
+            {
+                "elementId": "input32",
+                "label": "Email",
+                "value": "nduncan992@gmail.com",
+                "order": 47
+            },
+            {
+                "elementId": "input31",
+                "label": "Phone number",
+                "value": "07896205912",
+                "order": 48
+            },
+            {
+                "elementId": "addressInput3",
+                "label": "Address",
+                "value": {
+                    "formatted": "365 Stone Road"
+                },
+                "order": 49
+            },
+            {
+                "elementId": "textBox6",
+                "label": "area details",
+                "value": null,
+                "order": 50
+            },
+            {
+                "elementId": "captcha-mezzanineFloor",
+                "value": null,
+                "order": 51
+            },
+            {
+                "elementId": "toggle-mezzanineFloor",
+                "value": "",
+                "order": 52
+            },
+            {
+                "elementId": "text304",
+                "value": null,
+                "order": 53
+            },
+            {
+                "elementId": "vectorImage65",
+                "value": null,
+                "order": 54
+            },
+            {
+                "elementId": "submitButton-mezzanineFloor",
+                "label": "Submit",
+                "value": null,
+                "order": 55
+            },
+            {
+                "elementId": "text219",
+                "value": null,
+                "order": 56
+            },
+            {
+                "elementId": "submitFailed-mezzanineFloor",
+                "value": null,
+                "order": 57
+            }
+        ]
+    },
+    "_id": "1539c4bb-2888-4932-a281-d6524497f725",
+    "_owner": "21e6e9c9-5543-4742-9074-08709db1195f",
+    "_createdDate": "2025-12-10T09:06:24.685Z",
+    "formGuid": "2945c0f9-9961-4a3e-8408-d2781593603f",
+    "_updatedDate": "2025-12-10T09:06:24.685Z",
+    "address": {
+        "formatted": "365 Stone Road"
+    },
+    "formType": "MezzanineFloorForm"
+}
