@@ -289,6 +289,28 @@ export const getAllFieldsWith = (form, field, searchByValue = false) =>
     )
     .map(([key, value]) => ({ field: key, value }));
 
+export const getTypeRelatedFields = (form, baseType) => {
+  const tokens = (baseType ?? "")
+    .replace(/([A-Z])/g, " $1")
+    .toLowerCase()
+    .trim()
+    .split(/\s+/)
+    .filter((t, i) => t.length > 0 && (i === 0 || t.length >= 7));
+
+  const seen = new Set();
+  const fields = {};
+  for (const token of tokens) {
+    for (const { field, value } of getAllFieldsWith(form, token)) {
+      if (!seen.has(field) && value !== null && value !== "" && value !== "no" && value !== "false" && value !== false) {
+        seen.add(field);
+        fields[field] = value;
+      }
+    }
+  }
+
+  return Object.keys(fields).length > 0 ? formatSection(fields, true) : null;
+};
+
 const ASBESTOS_ANTI_PATTERNS = [
   "doesnotcontainasbestos", "doesntcontainasbestos", "doesntcontainsasbestos",
   "noasbestos", "notmadeofasbestos", "noasbestospresent", "noasbestosispresent",
@@ -522,6 +544,7 @@ export const invoke = async ({ payload }) => {
 
     for (const supplier of flatSuppliers) {
       console.log(`Sending email to ${supplier.supplierName} (${supplier.supplierType})`);
+      const typeDetails = getTypeRelatedFields(form, supplier.baseSupplierType);
       await sendSupplierEmail("new_form_submission",
         { contactName: supplier.supplierName, contactId: supplier.contactId },
         {
@@ -535,6 +558,7 @@ export const invoke = async ({ payload }) => {
             submittedDistance: supplier.distanceInMetres ? Math.trunc(supplier.distanceInMetres / 1000) : "N/A",
             ...(emailForm["Fields"] && { formDetails: emailForm["Fields"] }),
             ...(emailForm["Form Contact"] && { formContact: emailForm["Form Contact"] }),
+            ...(typeDetails && { typeDetails }),
           }
         },
       );
