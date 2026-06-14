@@ -2496,12 +2496,12 @@ export const getFormOptions = [
                 required: true,
               },
               {
-                elementID: "cantileverSizeHigh-field-portalFrame",
+                elementID: "cantileverSizeSideA-field-portalFrame",
                 optionValue: "bothSides",
                 required: true,
               },
               {
-                elementID: "cantileverSizeLow-field-portalFrame",
+                elementID: "cantileverSizeSideB-field-portalFrame",
                 optionValue: "bothSides",
                 required: true,
               },
